@@ -124,8 +124,15 @@ if (process.env.NODE_ENV === 'production') {
 
 const PORT = process.env.PORT || 3000;
 // In dev, run on 3001 so Vite can proxy from 3000
-const ACTUAL_PORT = process.env.NODE_ENV === 'production' ? Number(PORT) : 3001;
+const ACTUAL_PORT = process.env.NODE_ENV === 'production' ? 3000 : 3001;
+
+console.log(`Starting server in ${process.env.NODE_ENV || 'development'} mode...`);
+console.log(`__dirname: ${__dirname}`);
+console.log(`clientPath: ${path.join(__dirname, 'client')}`);
 
 app.listen(ACTUAL_PORT, '0.0.0.0', () => {
   console.log(`Server running on http://0.0.0.0:${ACTUAL_PORT}`);
+  if (process.env.NODE_ENV === 'production') {
+    console.log('Serving static files from dist/client');
+  }
 });
