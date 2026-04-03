@@ -1,0 +1,92 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@layer utilities {
+  /* Base standard styles for Technical Summary and LinkedIn */
+  .markdown-technicalSummary, .markdown-linkedinVersion {
+    @apply font-sans text-neutral-800;
+  }
+  .markdown-technicalSummary h1, .markdown-linkedinVersion h1 {
+    @apply text-2xl font-bold mb-4 mt-6 text-neutral-900 tracking-tight;
+  }
+  .markdown-technicalSummary h2, .markdown-linkedinVersion h2 {
+    @apply text-xl font-semibold mb-3 mt-5 text-neutral-800 border-b border-neutral-100 pb-2;
+  }
+  .markdown-technicalSummary h3, .markdown-linkedinVersion h3 {
+    @apply text-lg font-medium mb-2 mt-4 text-neutral-800;
+  }
+  .markdown-technicalSummary p, .markdown-linkedinVersion p {
+    @apply mb-4 leading-relaxed;
+  }
+  .markdown-technicalSummary ul, .markdown-linkedinVersion ul {
+    @apply list-disc pl-5 mb-4 space-y-1 text-neutral-700;
+  }
+  .markdown-technicalSummary ol, .markdown-linkedinVersion ol {
+    @apply list-decimal pl-5 mb-4 space-y-1 text-neutral-700;
+  }
+  .markdown-technicalSummary li, .markdown-linkedinVersion li {
+    @apply mb-1;
+  }
+  .markdown-technicalSummary strong, .markdown-linkedinVersion strong {
+    @apply font-semibold text-neutral-900;
+  }
+  .markdown-technicalSummary em, .markdown-linkedinVersion em {
+    @apply italic;
+  }
+  .markdown-technicalSummary blockquote, .markdown-linkedinVersion blockquote {
+    @apply border-l-4 border-blue-500 pl-4 italic text-neutral-600 my-4 bg-blue-50/50 py-2 pr-2 rounded-r;
+  }
+
+  /* Attestation Style (Formal, Paper-like) */
+  .markdown-attestation {
+    @apply font-serif bg-white p-8 sm:p-12 border border-neutral-200 shadow-[0_0_15px_rgba(0,0,0,0.03)] rounded-sm max-w-3xl mx-auto text-neutral-900;
+  }
+  .markdown-attestation h1 {
+    @apply text-2xl sm:text-3xl font-bold text-center text-neutral-900 mb-8 uppercase tracking-wider;
+  }
+  .markdown-attestation h2 {
+    @apply text-lg font-bold text-neutral-800 mt-6 mb-3;
+  }
+  .markdown-attestation p {
+    @apply mb-4 text-justify leading-loose;
+  }
+  .markdown-attestation strong {
+    @apply font-semibold text-neutral-950;
+  }
+  .markdown-attestation hr {
+    @apply my-8 border-t-2 border-neutral-200;
+  }
+  .markdown-attestation ul {
+    @apply list-disc pl-5 mb-4 space-y-2;
+  }
+
+  /* CV Style (Modern, Accent Colors) */
+  .markdown-cvVersion {
+    @apply font-sans bg-white p-8 sm:p-10 border-t-4 border-blue-600 shadow-sm rounded-lg max-w-3xl mx-auto text-neutral-800;
+  }
+  .markdown-cvVersion h1 {
+    @apply text-3xl sm:text-4xl font-extrabold text-neutral-900 mb-2 tracking-tight;
+  }
+  .markdown-cvVersion h2 {
+    @apply text-lg font-bold text-blue-700 mt-8 mb-4 uppercase tracking-wide border-b border-neutral-200 pb-2;
+  }
+  .markdown-cvVersion h3 {
+    @apply text-lg font-semibold text-neutral-800 mt-4 mb-2;
+  }
+  .markdown-cvVersion p {
+    @apply mb-3 text-neutral-600;
+  }
+  .markdown-cvVersion ul {
+    @apply list-none pl-0 mb-6 space-y-2;
+  }
+  .markdown-cvVersion li {
+    @apply relative pl-5 text-neutral-700;
+  }
+  .markdown-cvVersion li::before {
+    content: "•";
+    @apply absolute left-0 text-blue-500 font-bold;
+  }
+  .markdown-cvVersion strong {
+    @apply font-semibold text-neutral-900;
+  }
+}
