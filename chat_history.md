@@ -67,3 +67,52 @@ J'ai corrigé cela en :
 2.  Ajoutant un gestionnaire de 404 spécifique pour `/api` qui renvoie du JSON.
 3.  Ajoutant un gestionnaire d'erreurs global qui garantit une réponse JSON pour toutes les erreurs survenant sur les routes API.
 4.  Ajoutant des logs de requête en production pour faciliter le débogage futur.
+
+[2026-04-05T09:17:54-07:00]
+Utilisateur :
+Créé par Horacio CHINKOUN DOIT ETRE EN CAPITAL ET SEUL SUR LA DERNIÈRE LIGNE et puis met a jour les fichiers .md
+
+Assistant :
+J'ai mis à jour le footer de la page d'accueil pour que "CRÉÉ PAR HORACIO CHINKOUN" soit en majuscules et sur sa propre ligne. J'ai également mis à jour les fichiers de documentation (.md) pour refléter ces changements.
+
+[2026-04-05T09:28:28-07:00]
+Utilisateur :
+Created by Horacio CHINKOUN doit être en anglais
+
+Assistant :
+J'ai modifié le texte du footer pour qu'il soit en anglais ("CREATED BY HORACIO CHINKOUN") tout en conservant les majuscules et la ligne dédiée. J'ai également mis à jour l'historique du projet.
+
+[2026-04-05T09:36:47-07:00]
+Utilisateur :
+propose des amélioration par rapport au design de l'attestation
+
+Assistant :
+J'ai proposé plusieurs améliorations visuelles et structurelles pour donner à l'attestation un aspect de document officiel (bordures, typographie serif, bloc de signature, filigrane, numéro de référence).
+
+[2026-04-05T09:49:56-07:00]
+Utilisateur :
+Filigrane (Watermark) et  Bordure Institutionnelle uniquement mais c'est uniquement pour voir le rendu donc si elle me plait pas je te dit et tu retire ces modifications
+
+Assistant :
+J'ai ajouté la Bordure Institutionnelle (une double bordure classique) et le Filigrane (Watermark) avec la mention "CERTIFIÉ" en arrière-plan, uniquement pour l'onglet Attestation.
+
+[2026-04-05T10:00:14-07:00]
+Utilisateur :
+on conserve
+
+Assistant :
+J'ai conservé les modifications de design de l'attestation (filigrane et bordure) et mis à jour la documentation du projet pour refléter cette validation.
+
+[2026-04-05T10:05:42-07:00]
+Utilisateur :
+message envoyé il y a 1 heure par github ,verifie si c'est deja corrigé (Action requise : Des secrets ont été détectés)
+
+Assistant :
+J'ai identifié que l'alerte provenait de la clé API Firebase publique présente dans `firebase-applet-config.json`. Bien que cette clé soit publique par nature pour Firebase, j'ai ajouté le fichier au `.gitignore` pour éviter qu'il ne soit poussé sur GitHub à l'avenir et résoudre l'alerte.
+
+[2026-04-05T10:54:43-07:00]
+Utilisateur :
+Implement a theme switcher (e.g., light and dark mode) for the application to improve user experience and accessibility.
+
+Assistant :
+J'ai implémenté le mode sombre (Dark Mode) sur l'ensemble de l'application. J'ai ajouté un bouton de bascule dans l'en-tête, configuré Tailwind CSS pour supporter le mode sombre via des classes, et assuré la persistance du choix de l'utilisateur via le `localStorage` tout en respectant les préférences système par défaut.

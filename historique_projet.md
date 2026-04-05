@@ -30,6 +30,21 @@
 
 ## Historique des modifications
 - **05 Avril 2026**
+  - **Description :** Implémentation d'un commutateur de thème (Mode Clair / Mode Sombre) avec persistance via `localStorage` et détection des préférences système.
+  - **Impact :** Amélioration de l'expérience utilisateur et de l'accessibilité visuelle.
+- **05 Avril 2026**
+  - **Description :** Ajout de `firebase-applet-config.json` au fichier `.gitignore` pour éviter l'exposition de la clé API Firebase sur GitHub (résolution de l'alerte de sécurité "Secret scanning").
+  - **Impact :** Amélioration de la sécurité du dépôt Git.
+- **05 Avril 2026**
+  - **Description :** Validation et conservation du design "Document Officiel" pour l'onglet Attestation (Bordure institutionnelle double et Filigrane "CERTIFIÉ" en arrière-plan).
+  - **Impact :** Amélioration visuelle majeure du rendu de l'attestation, renforçant sa crédibilité professionnelle.
+- **05 Avril 2026**
+  - **Description :** Modification de la mention du footer pour la passer en anglais : "CREATED BY HORACIO CHINKOUN" (toujours en majuscules et sur une ligne dédiée).
+  - **Impact :** Respect des consignes de signature.
+- **05 Avril 2026**
+  - **Description :** Mise à jour du footer de la page d'accueil avec la mention "CRÉÉ PAR HORACIO CHINKOUN" en majuscules sur une ligne dédiée. Rétablissement et amélioration du bouton de données d'exemple (3 profils aléatoires, visible sur mobile).
+  - **Impact :** Amélioration de l'UX (données d'exemple) et respect des consignes de signature.
+- **05 Avril 2026**
   - **Description :** Rendu de l'application 100% autonome (Standalone Mode). Firebase Auth devient optionnel, la clé API est stockée dans le `localStorage` et le bouton de génération est accessible sans compte.
   - **Impact :** L'application peut être exportée et utilisée sur n'importe quel navigateur ou hébergement sans dépendre d'AI Studio ou d'une base de données.
 - **05 Avril 2026**

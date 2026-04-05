@@ -57,3 +57,12 @@
 - **Décision :** Ajouter un banner `createRequire` au script de build esbuild : `--banner:js="import { createRequire } from 'module'; const require = createRequire(import.meta.url);"`.
 - **Alternatives envisagées :** Revenir à un format CJS (rejeté car le projet est configuré en `type: module`). Ne pas bundler les dépendances (rejeté pour garantir l'autonomie du déploiement).
 - **Conséquences :** Le bundle ESM peut désormais exécuter du code CJS qui utilise `require` de manière dynamique, résolvant ainsi les plantages au démarrage sur Cloud Run.
+
+---
+
+## Titre de la décision : Mode 100% Autonome (Standalone)
+- **Date :** 05 Avril 2026
+- **Contexte :** L'application nécessitait un compte Firebase pour fonctionner, ce qui limitait son accessibilité et son exportabilité.
+- **Décision :** Rendre Firebase Auth optionnel. La clé API est désormais stockée dans le `localStorage` du navigateur.
+- **Alternatives envisagées :** Conserver l'obligation de connexion (rejeté pour des raisons d'accessibilité).
+- **Conséquences :** L'application peut être exportée et hébergée n'importe où sans base de données, tout en conservant la possibilité de synchronisation cloud pour les utilisateurs connectés.

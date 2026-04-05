@@ -14,6 +14,11 @@
 - [x] Datalists pour permettre la saisie libre sur le statut et le type de projet.
 - [x] Gestion des erreurs API (retry sur 503, messages clairs pour quota/clé invalide).
 - [x] ErrorBoundary pour la capture et l'affichage des erreurs critiques.
+- [x] Page d'accueil (Landing Page) moderne.
+- [x] Mode 100% Autonome (sans compte requis, clé locale).
+- [x] Bouton de chargement de données d'exemple avec 3 profils aléatoires.
+- [x] Amélioration visuelle de l'Attestation (Bordure institutionnelle et Filigrane).
+- [x] Implémentation du mode sombre (Dark Mode) et commutateur de thème.
 
 ## Bogues corrigés
 - [x] Échec du déploiement Cloud Run (Port binding 0.0.0.0:3000).

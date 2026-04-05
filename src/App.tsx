@@ -17,7 +17,9 @@ import {
   FileDown,
   LogIn,
   LogOut,
-  Settings
+  Settings,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Markdown from 'react-markdown';
@@ -147,7 +149,15 @@ const initialFormData: ProjectData = {
   githubLink: '',
 };
 
-function DocumentationGenerator({ onNavigateHome }: { onNavigateHome: () => void }) {
+function DocumentationGenerator({ 
+  onNavigateHome, 
+  theme, 
+  toggleTheme 
+}: { 
+  onNavigateHome: () => void;
+  theme: 'light' | 'dark';
+  toggleTheme: () => void;
+}) {
   const [formData, setFormData] = useState<ProjectData>(initialFormData);
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -374,23 +384,61 @@ CONTRAINTES :
   };
 
   const fillSampleData = () => {
-    setFormData({
-      developerName: 'Alex Mercer',
-      developerStatus: 'Architecte',
-      clientName: 'Sarah Jenkins',
-      companyName: 'Nexus Logistique',
-      projectName: 'RouteOptima',
-      projectType: 'SaaS',
-      description: 'Une plateforme d\'optimisation d\'itinéraires basée sur le cloud pour les flottes de livraison de taille moyenne, afin de réduire la consommation de carburant et d\'améliorer les délais de livraison.',
-      technologies: 'React, Next.js, Node.js, PostgreSQL, API Google Maps, Redis',
-      keyFeatures: 'Suivi des chauffeurs en temps réel, calcul automatisé des itinéraires, tableau de bord de répartition par glisser-déposer, notifications SMS aux clients.',
-      results: 'Réduction des coûts de carburant moyens de 18 %, amélioration du taux de livraison à temps de 82 % à 96 %, intégration de 50 chauffeurs le premier mois.',
-      duration: '6 mois',
-      clientContact: 's.jenkins@nexuslogistique.com',
-      manualTime: '02 Avril 2026',
-      manualLocation: 'Paris, France',
-      githubLink: 'https://github.com/alexmercer/route-optima',
-    });
+    const sampleProjects: ProjectData[] = [
+      {
+        developerName: 'Alex Mercer',
+        developerStatus: 'Architecte',
+        clientName: 'Sarah Jenkins',
+        companyName: 'Nexus Logistique',
+        projectName: 'RouteOptima',
+        projectType: 'SaaS',
+        description: 'Une plateforme d\'optimisation d\'itinéraires basée sur le cloud pour les flottes de livraison de taille moyenne, afin de réduire la consommation de carburant et d\'améliorer les délais de livraison.',
+        technologies: 'React, Next.js, Node.js, PostgreSQL, API Google Maps, Redis',
+        keyFeatures: 'Suivi des chauffeurs en temps réel, calcul automatisé des itinéraires, tableau de bord de répartition par glisser-déposer, notifications SMS aux clients.',
+        results: 'Réduction des coûts de carburant moyens de 18 %, amélioration du taux de livraison à temps de 82 % à 96 %, intégration de 50 chauffeurs le premier mois.',
+        duration: '6 mois',
+        clientContact: 's.jenkins@nexuslogistique.com',
+        manualTime: '02 Avril 2026',
+        manualLocation: 'Paris, France',
+        githubLink: 'https://github.com/alexmercer/route-optima',
+      },
+      {
+        developerName: 'Emma Dubois',
+        developerStatus: 'Lead Developer',
+        clientName: 'Marc Lemoine',
+        companyName: 'FinTech Solutions',
+        projectName: 'PayFlow',
+        projectType: 'Application Web',
+        description: 'Application de gestion financière pour les PME permettant de centraliser les factures et d\'automatiser les relances.',
+        technologies: 'Vue.js, Python, Django, Stripe API, AWS',
+        keyFeatures: 'Tableau de bord financier, intégration Stripe, génération de factures PDF, système de relance automatique par email.',
+        results: 'Diminution des retards de paiement de 30%, gain de temps estimé à 10h/semaine pour les équipes comptables.',
+        duration: '4 mois',
+        clientContact: 'm.lemoine@fintech-solutions.fr',
+        manualTime: '15 Mars 2026',
+        manualLocation: 'Lyon, France',
+        githubLink: 'https://github.com/emmadubois/payflow',
+      },
+      {
+        developerName: 'Lucas Martin',
+        developerStatus: 'Développeur Full-Stack',
+        clientName: 'Sophie Bernard',
+        companyName: 'EcoShop',
+        projectName: 'EcoMarket',
+        projectType: 'E-commerce',
+        description: 'Place de marché éco-responsable mettant en relation des artisans locaux avec des consommateurs soucieux de l\'environnement.',
+        technologies: 'React, Node.js, Express, MongoDB, Tailwind CSS',
+        keyFeatures: 'Catalogue produits filtrable, panier d\'achat, paiement sécurisé, messagerie intégrée acheteur/vendeur.',
+        results: 'Lancement réussi avec 100+ artisans inscrits le premier mois, 500+ commandes traitées sans incident.',
+        duration: '8 mois',
+        clientContact: 'contact@ecoshop.fr',
+        manualTime: '10 Janvier 2026',
+        manualLocation: 'Bordeaux, France',
+        githubLink: 'https://github.com/lucasmartin/ecomarket',
+      }
+    ];
+    const randomIndex = Math.floor(Math.random() * sampleProjects.length);
+    setFormData(sampleProjects[randomIndex]);
   };
 
   const tabs = [
@@ -402,15 +450,15 @@ CONTRAINTES :
 
   if (!isAuthReady) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-neutral-50">
+      <div className="min-h-screen flex items-center justify-center bg-neutral-50 dark:bg-neutral-950">
         <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-neutral-50 text-neutral-900 font-sans selection:bg-blue-100 selection:text-blue-900">
-      <header className="bg-white border-b border-neutral-200 sticky top-0 z-10">
+    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-50 font-sans selection:bg-blue-100 selection:text-blue-900">
+      <header className="bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div 
             className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
@@ -420,22 +468,31 @@ CONTRAINTES :
             <div className="bg-blue-600 text-white p-1.5 rounded-lg">
               <FileText size={20} />
             </div>
-            <h1 className="text-xl font-semibold tracking-tight text-neutral-900">DocuGen Pro</h1>
+            <h1 className="text-xl font-semibold tracking-tight text-neutral-900 dark:text-white">DocuGen Pro</h1>
           </div>
           
           <div className="flex items-center gap-4">
             <button
+              onClick={toggleTheme}
+              className="p-2 text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800"
+              title={theme === 'light' ? 'Passer en mode sombre' : 'Passer en mode clair'}
+            >
+              {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+            </button>
+
+            <button
               type="button"
               onClick={fillSampleData}
-              className="text-sm font-medium text-neutral-500 hover:text-neutral-900 transition-colors hidden sm:inline"
+              className="text-sm font-medium text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors"
             >
-              Charger des données d'exemple
+              <span className="hidden sm:inline">Charger des données d'exemple</span>
+              <span className="sm:hidden">Exemple</span>
             </button>
 
             {/* Always visible Settings/API Key button */}
             <button 
               onClick={() => setShowSettings(!showSettings)}
-              className="flex items-center gap-2 p-2 px-3 text-neutral-600 hover:bg-neutral-100 rounded-lg transition-colors border border-transparent hover:border-neutral-200"
+              className="flex items-center gap-2 p-2 px-3 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg transition-colors border border-transparent hover:border-neutral-200 dark:hover:border-neutral-700"
               title="Configuration API"
             >
               <Key size={18} className={localApiKey ? "text-green-500" : "text-amber-500"} />
@@ -443,20 +500,20 @@ CONTRAINTES :
             </button>
 
             {user ? (
-              <div className="flex items-center gap-3 ml-2 pl-4 border-l border-neutral-200">
-                <div className="flex items-center gap-2 bg-neutral-100 px-3 py-1.5 rounded-full border border-neutral-200">
+              <div className="flex items-center gap-3 ml-2 pl-4 border-l border-neutral-200 dark:border-neutral-800">
+                <div className="flex items-center gap-2 bg-neutral-100 dark:bg-neutral-800 px-3 py-1.5 rounded-full border border-neutral-200 dark:border-neutral-700">
                   {user.photoURL ? (
                     <img src={user.photoURL} alt={user.displayName || ''} className="w-6 h-6 rounded-full" />
                   ) : (
-                    <UserIcon size={16} className="text-neutral-500" />
+                    <UserIcon size={16} className="text-neutral-500 dark:text-neutral-400" />
                   )}
-                  <span className="text-sm font-medium text-neutral-700 hidden md:inline">
+                  <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300 hidden md:inline">
                     {user.displayName?.split(' ')[0]}
                   </span>
                 </div>
                 <button 
                   onClick={handleLogout}
-                  className="flex items-center gap-2 text-sm font-semibold text-neutral-600 hover:text-red-600 transition-colors"
+                  className="flex items-center gap-2 text-sm font-semibold text-neutral-600 dark:text-neutral-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
                 >
                   <LogOut size={18} />
                   <span className="hidden sm:inline">Déconnexion</span>
@@ -465,7 +522,7 @@ CONTRAINTES :
             ) : (
               <button 
                 onClick={handleLogin}
-                className="flex items-center gap-2 bg-neutral-100 text-neutral-700 px-4 py-2 rounded-xl font-semibold hover:bg-neutral-200 transition-all ml-2"
+                className="flex items-center gap-2 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 px-4 py-2 rounded-xl font-semibold hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-all ml-2"
               >
                 <LogIn size={18} />
                 <span className="hidden sm:inline">Connexion (Optionnel)</span>
@@ -487,22 +544,22 @@ CONTRAINTES :
               onClick={() => setShowSettings(false)}
             >
               <div 
-                className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 border border-neutral-200"
+                className="bg-white dark:bg-neutral-900 rounded-2xl shadow-2xl w-full max-w-md p-6 border border-neutral-200 dark:border-neutral-800"
                 onClick={e => e.stopPropagation()}
               >
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-bold text-neutral-900 flex items-center gap-2">
+                  <h2 className="text-xl font-bold text-neutral-900 dark:text-white flex items-center gap-2">
                     <Settings className="w-5 h-5 text-blue-600" />
                     Configuration de l'Application
                   </h2>
-                  <button onClick={() => setShowSettings(false)} className="text-neutral-400 hover:text-neutral-600">
+                  <button onClick={() => setShowSettings(false)} className="text-neutral-400 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-300">
                     <AlertCircle size={24} className="rotate-45" />
                   </button>
                 </div>
 
                 <div className="space-y-6">
                   <div className="space-y-3">
-                    <label className="text-sm font-semibold text-neutral-700 flex items-center gap-2">
+                    <label className="text-sm font-semibold text-neutral-700 dark:text-neutral-300 flex items-center gap-2">
                       <Key size={16} className="text-blue-500" />
                       Votre Clé API Gemini
                     </label>
@@ -511,16 +568,16 @@ CONTRAINTES :
                       value={localApiKey}
                       onChange={(e) => handleApiKeyChange(e.target.value)}
                       placeholder="AIza..."
-                      className="w-full px-4 py-3 bg-neutral-50 border border-neutral-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm font-mono"
+                      className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm font-mono dark:text-white"
                     />
-                    <div className="text-xs text-neutral-500 space-y-1">
+                    <div className="text-xs text-neutral-500 dark:text-neutral-400 space-y-1">
                       <p>✅ Stockée localement dans votre navigateur.</p>
                       <p>✅ Totalement sécurisé et indépendant.</p>
                       {user && <p>✅ Synchronisée avec votre compte cloud.</p>}
                     </div>
                   </div>
                   
-                  <div className="pt-4 border-t border-neutral-100">
+                  <div className="pt-4 border-t border-neutral-100 dark:border-neutral-800">
                     <button 
                       onClick={() => setShowSettings(false)}
                       className="w-full py-2.5 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors"
@@ -539,16 +596,16 @@ CONTRAINTES :
           {/* Left Column: Form */}
           <div className="lg:col-span-5 xl:col-span-4 space-y-6">
             <div>
-              <h2 className="text-lg font-semibold text-neutral-900">Détails du Projet</h2>
-              <p className="text-sm text-neutral-500 mt-1">Saisissez les informations du projet pour générer la documentation professionnelle.</p>
+              <h2 className="text-lg font-semibold text-neutral-900 dark:text-white">Détails du Projet</h2>
+              <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">Saisissez les informations du projet pour générer la documentation professionnelle.</p>
             </div>
 
-            <form onSubmit={handleGenerate} className="space-y-5 bg-white p-6 rounded-2xl border border-neutral-200 shadow-sm">
+            <form onSubmit={handleGenerate} className="space-y-5 bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-sm">
               
               {!localApiKey && (
-                <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl flex items-start gap-3">
-                  <Key size={20} className="text-blue-600 shrink-0 mt-0.5" />
-                  <div className="text-sm text-blue-800">
+                <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl flex items-start gap-3">
+                  <Key size={20} className="text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+                  <div className="text-sm text-blue-800 dark:text-blue-300">
                     <p className="font-semibold">Mode Autonome : Clé API requise</p>
                     <p>Pour utiliser l'application sans compte, veuillez renseigner votre propre clé API Gemini.</p>
                     <button type="button" onClick={() => setShowSettings(true)} className="mt-2 font-bold underline">Configurer la clé API</button>
@@ -559,8 +616,8 @@ CONTRAINTES :
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-sm font-medium text-neutral-700 flex items-center gap-1.5">
-                      <UserIcon size={14} className="text-neutral-400"/> Nom du Développeur
+                    <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5">
+                      <UserIcon size={14} className="text-neutral-400 dark:text-neutral-500"/> Nom du Développeur
                     </label>
                     <input
                       required
@@ -568,20 +625,20 @@ CONTRAINTES :
                       name="developerName"
                       value={formData.developerName}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                      className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white"
                       placeholder="Jean Dupont"
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-sm font-medium text-neutral-700 flex items-center gap-1.5">
-                      <Briefcase size={14} className="text-neutral-400"/> Statut
+                    <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5">
+                      <Briefcase size={14} className="text-neutral-400 dark:text-neutral-500"/> Statut
                     </label>
                     <input
                       list="status-options"
                       name="developerStatus"
                       value={formData.developerStatus}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                      className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white"
                       placeholder="ex: Architecte Senior"
                     />
                     <datalist id="status-options">
@@ -597,8 +654,8 @@ CONTRAINTES :
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-sm font-medium text-neutral-700 flex items-center gap-1.5">
-                      <UserIcon size={14} className="text-neutral-400"/> Nom du Client
+                    <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5">
+                      <UserIcon size={14} className="text-neutral-400 dark:text-neutral-500"/> Nom du Client
                     </label>
                     <input
                       required
@@ -606,13 +663,13 @@ CONTRAINTES :
                       name="clientName"
                       value={formData.clientName}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                      className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white"
                       placeholder="Marie Martin"
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-sm font-medium text-neutral-700 flex items-center gap-1.5">
-                      <Building2 size={14} className="text-neutral-400"/> Entreprise
+                    <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5">
+                      <Building2 size={14} className="text-neutral-400 dark:text-neutral-500"/> Entreprise
                     </label>
                     <input
                       required
@@ -620,7 +677,7 @@ CONTRAINTES :
                       name="companyName"
                       value={formData.companyName}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                      className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white"
                       placeholder="Acme Corp"
                     />
                   </div>
@@ -628,28 +685,28 @@ CONTRAINTES :
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-sm font-medium text-neutral-700 flex items-center gap-1.5">
-                      <Clock size={14} className="text-neutral-400"/> Heure / Date
+                    <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5">
+                      <Clock size={14} className="text-neutral-400 dark:text-neutral-500"/> Heure / Date
                     </label>
                     <input
                       type="text"
                       name="manualTime"
                       value={formData.manualTime}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                      className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white"
                       placeholder="ex: 02 Avril 2026"
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-sm font-medium text-neutral-700 flex items-center gap-1.5">
-                      <Building2 size={14} className="text-neutral-400"/> Lieu
+                    <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5">
+                      <Building2 size={14} className="text-neutral-400 dark:text-neutral-500"/> Lieu
                     </label>
                     <input
                       type="text"
                       name="manualLocation"
                       value={formData.manualLocation}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                      className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white"
                       placeholder="ex: Paris, France"
                     />
                   </div>
@@ -657,8 +714,8 @@ CONTRAINTES :
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-sm font-medium text-neutral-700 flex items-center gap-1.5">
-                      <Clock size={14} className="text-neutral-400"/> Durée
+                    <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5">
+                      <Clock size={14} className="text-neutral-400 dark:text-neutral-500"/> Durée
                     </label>
                     <input
                       required
@@ -666,20 +723,20 @@ CONTRAINTES :
                       name="duration"
                       value={formData.duration}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                      className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white"
                       placeholder="ex: 3 mois"
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-sm font-medium text-neutral-700 flex items-center gap-1.5">
-                      <Laptop size={14} className="text-neutral-400"/> Type du Projet
+                    <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5">
+                      <Laptop size={14} className="text-neutral-400 dark:text-neutral-500"/> Type du Projet
                     </label>
                     <input
                       list="project-types"
                       name="projectType"
                       value={formData.projectType}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                      className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white"
                       placeholder="ex: SaaS B2B"
                     />
                     <datalist id="project-types">
@@ -694,8 +751,8 @@ CONTRAINTES :
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-sm font-medium text-neutral-700 flex items-center gap-1.5">
-                    <Laptop size={14} className="text-neutral-400"/> Nom du Projet
+                  <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5">
+                    <Laptop size={14} className="text-neutral-400 dark:text-neutral-500"/> Nom du Projet
                   </label>
                   <input
                     required
@@ -703,85 +760,85 @@ CONTRAINTES :
                     name="projectName"
                     value={formData.projectName}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                    className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white"
                     placeholder="Projet Alpha"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-sm font-medium text-neutral-700 flex items-center gap-1.5">
-                    <Code size={14} className="text-neutral-400"/> Lien GitHub du dépôt (Optionnel)
+                  <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5">
+                    <Code size={14} className="text-neutral-400 dark:text-neutral-500"/> Lien GitHub du dépôt (Optionnel)
                   </label>
                   <input
                     type="url"
                     name="githubLink"
                     value={formData.githubLink}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                    className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white"
                     placeholder="https://github.com/votre-pseudo/votre-projet"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-sm font-medium text-neutral-700">Description</label>
+                  <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300">Description</label>
                   <textarea
                     required
                     name="description"
                     value={formData.description}
                     onChange={handleInputChange}
                     rows={3}
-                    className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none"
+                    className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none dark:text-white"
                     placeholder="Décrivez brièvement ce que fait le projet..."
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-sm font-medium text-neutral-700">Technologies Utilisées</label>
+                  <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300">Technologies Utilisées</label>
                   <input
                     required
                     type="text"
                     name="technologies"
                     value={formData.technologies}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                    className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white"
                     placeholder="React, Node.js, PostgreSQL..."
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-sm font-medium text-neutral-700">Fonctionnalités Clés Livrées</label>
+                  <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300">Fonctionnalités Clés Livrées</label>
                   <textarea
                     required
                     name="keyFeatures"
                     value={formData.keyFeatures}
                     onChange={handleInputChange}
                     rows={3}
-                    className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none"
+                    className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none dark:text-white"
                     placeholder="Authentification utilisateur, intégration de paiement, tableau de bord en temps réel..."
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-sm font-medium text-neutral-700">Résultats Obtenus</label>
+                  <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300">Résultats Obtenus</label>
                   <textarea
                     required
                     name="results"
                     value={formData.results}
                     onChange={handleInputChange}
                     rows={2}
-                    className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none"
+                    className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none dark:text-white"
                     placeholder="Augmentation de la conversion de 20%, réduction du temps de chargement de 2s..."
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-sm font-medium text-neutral-700">Contact Client (Optionnel)</label>
+                  <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300">Contact Client (Optionnel)</label>
                   <input
                     type="text"
                     name="clientContact"
                     value={formData.clientContact}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                    className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white"
                     placeholder="email@exemple.com ou numéro de téléphone"
                   />
                 </div>
@@ -790,7 +847,7 @@ CONTRAINTES :
               <button
                 type="submit"
                 disabled={isGenerating}
-                className={`w-full py-2.5 px-4 bg-neutral-900 hover:bg-neutral-800 text-white text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed`}
+                className={`w-full py-2.5 px-4 bg-neutral-900 dark:bg-neutral-100 hover:bg-neutral-800 dark:hover:bg-white text-white dark:text-neutral-900 text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed`}
               >
                 {isGenerating ? (
                   <>
@@ -806,7 +863,7 @@ CONTRAINTES :
               </button>
 
               {error && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2 text-red-700 text-sm">
+                <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-start gap-2 text-red-700 dark:text-red-400 text-sm">
                   <AlertCircle size={16} className="mt-0.5 shrink-0" />
                   <p>{error}</p>
                 </div>
@@ -817,9 +874,9 @@ CONTRAINTES :
           {/* Right Column: Results */}
           <div className="lg:col-span-7 xl:col-span-8">
             {generatedDocs ? (
-              <div className="bg-white rounded-2xl border border-neutral-200 shadow-sm overflow-hidden h-full flex flex-col min-h-[600px]">
+              <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-sm overflow-hidden h-full flex flex-col min-h-[600px]">
                 {/* Tabs */}
-                <div className="flex overflow-x-auto border-b border-neutral-200 bg-neutral-50/50 scrollbar-hide">
+                <div className="flex overflow-x-auto border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-950/50 scrollbar-hide">
                   {tabs.map((tab) => {
                     const Icon = tab.icon;
                     const isActive = activeTab === tab.id;
@@ -829,7 +886,7 @@ CONTRAINTES :
                         type="button"
                         onClick={() => setActiveTab(tab.id as keyof GeneratedDocs)}
                         className={`flex items-center gap-2 px-5 py-3.5 text-sm font-medium transition-colors relative whitespace-nowrap ${
-                          isActive ? 'text-blue-600' : 'text-neutral-500 hover:text-neutral-700 hover:bg-neutral-100/50'
+                          isActive ? 'text-blue-600 dark:text-blue-400' : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300 hover:bg-neutral-100/50 dark:hover:bg-neutral-800/50'
                         }`}
                       >
                         <Icon size={16} />
@@ -848,7 +905,7 @@ CONTRAINTES :
                 </div>
 
                 {/* Content Area */}
-                <div className="flex-1 p-6 lg:p-8 overflow-y-auto relative bg-white">
+                <div className="flex-1 p-6 lg:p-8 overflow-y-auto relative bg-white dark:bg-neutral-900">
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={activeTab}
@@ -856,13 +913,13 @@ CONTRAINTES :
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.2 }}
-                      className="prose prose-sm sm:prose-base prose-neutral max-w-none"
+                      className="prose prose-sm sm:prose-base prose-neutral dark:prose-invert max-w-none"
                     >
                       <div className="flex justify-end mb-4 sticky top-0 z-10 gap-2">
                         <button
                           type="button"
                           onClick={exportToPDF}
-                          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-md transition-colors shadow-sm border border-red-100"
+                          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-md transition-colors shadow-sm border border-red-100 dark:border-red-800"
                         >
                           <FileDown size={14} />
                           PDF
@@ -870,7 +927,7 @@ CONTRAINTES :
                         <button
                           type="button"
                           onClick={exportToWord}
-                          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors shadow-sm border border-blue-100"
+                          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-md transition-colors shadow-sm border border-blue-100 dark:border-blue-800"
                         >
                           <Download size={14} />
                           Word
@@ -878,12 +935,12 @@ CONTRAINTES :
                         <button
                           type="button"
                           onClick={() => copyToClipboard(generatedDocs[activeTab], activeTab)}
-                          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-neutral-600 bg-neutral-100 hover:bg-neutral-200 rounded-md transition-colors shadow-sm border border-neutral-200"
+                          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-neutral-600 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-md transition-colors shadow-sm border border-neutral-200 dark:border-neutral-700"
                         >
                           {copiedTab === activeTab ? (
                             <>
-                              <CheckCircle2 size={14} className="text-green-600" />
-                              <span className="text-green-700">Copié !</span>
+                              <CheckCircle2 size={14} className="text-green-600 dark:text-green-400" />
+                              <span className="text-green-700 dark:text-green-300">Copié !</span>
                             </>
                           ) : (
                             <>
@@ -893,20 +950,36 @@ CONTRAINTES :
                           )}
                         </button>
                       </div>
-                      <div id="markdown-content" className={`markdown-${activeTab} font-serif leading-relaxed text-neutral-800`}>
-                        <Markdown>{generatedDocs[activeTab]}</Markdown>
+                      <div 
+                        id="markdown-content" 
+                        className={`markdown-${activeTab} font-serif leading-relaxed text-neutral-800 dark:text-neutral-200 relative ${
+                          activeTab === 'attestation' 
+                            ? 'border-4 border-double border-neutral-300 dark:border-neutral-600 p-8 sm:p-12 bg-white dark:bg-neutral-900 shadow-sm min-h-[500px]' 
+                            : ''
+                        }`}
+                      >
+                        {activeTab === 'attestation' && (
+                          <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none overflow-hidden opacity-[0.04] dark:opacity-[0.08]">
+                            <span className="text-7xl md:text-[120px] font-black tracking-widest text-neutral-900 dark:text-white -rotate-45 select-none">
+                              CERTIFIÉ
+                            </span>
+                          </div>
+                        )}
+                        <div className="relative z-10">
+                          <Markdown>{generatedDocs[activeTab]}</Markdown>
+                        </div>
                       </div>
                     </motion.div>
                   </AnimatePresence>
                 </div>
               </div>
             ) : (
-              <div className="h-full min-h-[600px] bg-neutral-50/50 rounded-2xl border border-neutral-200 border-dashed flex flex-col items-center justify-center text-center p-8">
-                <div className="w-16 h-16 bg-white rounded-2xl shadow-sm border border-neutral-100 flex items-center justify-center mb-4">
-                  <FileText size={32} className="text-neutral-300" />
+              <div className="h-full min-h-[600px] bg-neutral-50/50 dark:bg-neutral-900/50 rounded-2xl border border-neutral-200 dark:border-neutral-800 border-dashed flex flex-col items-center justify-center text-center p-8">
+                <div className="w-16 h-16 bg-white dark:bg-neutral-800 rounded-2xl shadow-sm border border-neutral-100 dark:border-neutral-700 flex items-center justify-center mb-4">
+                  <FileText size={32} className="text-neutral-300 dark:text-neutral-600" />
                 </div>
-                <h3 className="text-lg font-medium text-neutral-900 mb-2">Aucun document généré pour le moment</h3>
-                <p className="text-neutral-500 max-w-md">
+                <h3 className="text-lg font-medium text-neutral-900 dark:text-white mb-2">Aucun document généré pour le moment</h3>
+                <p className="text-neutral-500 dark:text-neutral-400 max-w-md">
                   Remplissez le formulaire des détails du projet et cliquez sur générer pour créer des attestations professionnelles, des résumés techniques, des entrées de CV et des publications LinkedIn.
                 </p>
               </div>
@@ -921,13 +994,35 @@ CONTRAINTES :
 
 export default function App() {
   const [currentView, setCurrentView] = useState<'home' | 'app'>('home');
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'dark' || saved === 'light') return saved;
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    return 'light';
+  });
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+  };
 
   return (
     <ErrorBoundary>
       {currentView === 'home' ? (
-        <LandingPage onStart={() => setCurrentView('app')} />
+        <LandingPage onStart={() => setCurrentView('app')} theme={theme} toggleTheme={toggleTheme} />
       ) : (
-        <DocumentationGenerator onNavigateHome={() => setCurrentView('home')} />
+        <DocumentationGenerator onNavigateHome={() => setCurrentView('home')} theme={theme} toggleTheme={toggleTheme} />
       )}
     </ErrorBoundary>
   );
