@@ -1,0 +1,85 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: users
+    // Document ID: {userId} (Firebase Auth UID)
+    // Fields:
+    //   - uid: string (required, immutable) - The user's UID
+    //   - email: string (required, email format) - The user's email
+    //   - useCustomApiKey: boolean (required) - Preference for custom API key
+    //   - userApiKey: string (optional, minLen 1, maxLen 100) - The custom API key
+    //   - createdAt: timestamp (optional, immutable) - Creation time
+    //   - updatedAt: timestamp (optional) - Last update time
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isValidEmail(email) {
+      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+    function isValidUserProfile(data) {
+      return hasRequiredFields(['uid', 'email', 'useCustomApiKey']) &&
+             hasOnlyAllowedFields(['uid', 'email', 'useCustomApiKey', 'userApiKey', 'createdAt', 'updatedAt']) &&
+             data.uid == request.auth.uid &&
+             data.email == request.auth.token.email &&
+             isValidEmail(data.email) &&
+             data.useCustomApiKey is bool &&
+             (!('userApiKey' in data) || (data.userApiKey is string && data.userApiKey.size() > 0 && data.userApiKey.size() <= 100)) &&
+             (!('createdAt' in data) || data.createdAt is timestamp) &&
+             (!('updatedAt' in data) || data.updatedAt is timestamp);
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+    match /users/{userId} {
+      // Users can only read their own profile
+      allow read: if isOwner(userId);
+      
+      // Users can only create their own profile with valid data
+      allow create: if isOwner(userId) && isValidUserProfile(request.resource.data);
+      
+      // Users can only update their own profile with valid data
+      // Ensure uid and email are not modified
+      allow update: if isOwner(userId) && 
+                      isValidUserProfile(request.resource.data) &&
+                      request.resource.data.uid == resource.data.uid &&
+                      request.resource.data.email == resource.data.email &&
+                      (!('createdAt' in resource.data) || request.resource.data.createdAt == resource.data.createdAt);
+      
+      // Users can delete their own profile
+      allow delete: if isOwner(userId);
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

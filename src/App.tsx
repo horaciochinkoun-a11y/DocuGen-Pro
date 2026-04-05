@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, Component, ErrorInfo, ReactNode } from 'react';
 import { 
   FileText, 
   Briefcase, 
@@ -9,15 +9,106 @@ import {
   Copy, 
   AlertCircle,
   Building2,
-  User,
+  User as UserIcon,
   Clock,
   Laptop,
   Key,
   Download,
-  FileDown
+  FileDown,
+  LogIn,
+  LogOut,
+  Settings
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Markdown from 'react-markdown';
+import { generateProfessionalDocs, GeneratedDocs } from './services/geminiService';
+import LandingPage from './components/LandingPage';
+import { 
+  auth, 
+  db, 
+  signInWithPopup, 
+  signOut, 
+  onAuthStateChanged, 
+  doc, 
+  setDoc, 
+  updateDoc, 
+  onSnapshot, 
+  googleProvider,
+  handleFirestoreError,
+  OperationType,
+  User
+} from './firebase';
+
+// Error Boundary Component
+interface ErrorBoundaryProps {
+  children: ReactNode;
+}
+
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error: Error | null;
+}
+
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error("ErrorBoundary caught an error", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      let errorMessage = "Une erreur inattendue s'est produite.";
+      try {
+        if (this.state.error?.message) {
+          const parsedError = JSON.parse(this.state.error.message);
+          if (parsedError.error) {
+            errorMessage = `Erreur Firestore (${parsedError.operationType}) : ${parsedError.error}`;
+          }
+        }
+      } catch {
+        errorMessage = this.state.error?.message || errorMessage;
+      }
+
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+          <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center border border-red-100">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <AlertCircle className="w-8 h-8 text-red-600" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Oups ! Quelque chose s'est mal passé</h2>
+            <p className="text-gray-600 mb-8">{errorMessage}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="w-full py-3 px-6 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200"
+            >
+              Recharger l'application
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
+// User Profile Interface
+interface UserProfile {
+  uid: string;
+  email: string;
+  useCustomApiKey: boolean;
+  userApiKey?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
 
 // Define the form data structure
 interface ProjectData {
@@ -38,14 +129,6 @@ interface ProjectData {
   githubLink: string;
 }
 
-// Define the generated documents structure
-interface GeneratedDocs {
-  attestation: string;
-  technicalSummary: string;
-  cvVersion: string;
-  linkedinVersion: string;
-}
-
 const initialFormData: ProjectData = {
   developerName: '',
   developerStatus: 'Senior',
@@ -64,14 +147,96 @@ const initialFormData: ProjectData = {
   githubLink: '',
 };
 
-export default function DocumentationGenerator() {
+function DocumentationGenerator({ onNavigateHome }: { onNavigateHome: () => void }) {
   const [formData, setFormData] = useState<ProjectData>(initialFormData);
-  const [userApiKey, setUserApiKey] = useState('');
+  const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [isAuthReady, setIsAuthReady] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedDocs, setGeneratedDocs] = useState<GeneratedDocs | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<keyof GeneratedDocs>('attestation');
   const [copiedTab, setCopiedTab] = useState<string | null>(null);
+  const [showSettings, setShowSettings] = useState(false);
+  
+  // Local API Key state (Standalone mode)
+  const [localApiKey, setLocalApiKey] = useState(() => localStorage.getItem('gemini_api_key') || '');
+
+  // Auth Listener
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setIsAuthReady(true);
+      if (!currentUser) {
+        setProfile(null);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Profile Listener
+  useEffect(() => {
+    if (!user) return;
+
+    const profileRef = doc(db, 'users', user.uid);
+    const unsubscribe = onSnapshot(profileRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.data() as UserProfile;
+        setProfile(data);
+        // Sync Firebase key to local storage if local is empty
+        if (data.userApiKey && !localStorage.getItem('gemini_api_key')) {
+          setLocalApiKey(data.userApiKey);
+          localStorage.setItem('gemini_api_key', data.userApiKey);
+        }
+      } else {
+        // Create initial profile if it doesn't exist
+        const initialProfile = {
+          uid: user.uid,
+          email: user.email || '',
+          useCustomApiKey: false,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        };
+        setDoc(profileRef, initialProfile).catch(err => handleFirestoreError(err, OperationType.CREATE, 'users'));
+      }
+    }, (err) => {
+      handleFirestoreError(err, OperationType.GET, `users/${user.uid}`);
+    });
+
+    return () => unsubscribe();
+  }, [user]);
+
+  const handleLogin = async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("Échec de la connexion. Veuillez réessayer.");
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      setShowSettings(false);
+    } catch (err) {
+      console.error("Logout error:", err);
+    }
+  };
+
+  const handleApiKeyChange = (val: string) => {
+    setLocalApiKey(val);
+    localStorage.setItem('gemini_api_key', val);
+    
+    // Sync with Firebase if logged in
+    if (user && profile) {
+      updateDoc(doc(db, 'users', user.uid), {
+        userApiKey: val,
+        useCustomApiKey: true,
+        updatedAt: new Date()
+      }).catch(err => console.error("Failed to sync API key to profile", err));
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -145,21 +310,8 @@ CONTRAINTES :
 - NE PAS avoir l'air d'une IA.
 `;
 
-      const response = await fetch('/api/generate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ prompt, apiKey: userApiKey }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Erreur lors de la génération.');
-      }
-
-      setGeneratedDocs(data as GeneratedDocs);
+      const data = await generateProfessionalDocs(prompt, localApiKey);
+      setGeneratedDocs(data);
       setActiveTab('attestation');
     } catch (err: unknown) {
       const error = err as Error;
@@ -248,27 +400,140 @@ CONTRAINTES :
     { id: 'linkedinVersion', label: 'Post LinkedIn', icon: Linkedin },
   ] as const;
 
+  if (!isAuthReady) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-neutral-50">
+        <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-neutral-50 text-neutral-900 font-sans selection:bg-blue-100 selection:text-blue-900">
       <header className="bg-white border-b border-neutral-200 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <div 
+            className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+            onClick={onNavigateHome}
+            title="Retour à l'accueil"
+          >
             <div className="bg-blue-600 text-white p-1.5 rounded-lg">
               <FileText size={20} />
             </div>
             <h1 className="text-xl font-semibold tracking-tight text-neutral-900">DocuGen Pro</h1>
           </div>
-          <button
-            type="button"
-            onClick={fillSampleData}
-            className="text-sm font-medium text-neutral-500 hover:text-neutral-900 transition-colors"
-          >
-            Charger des données d'exemple
-          </button>
+          
+          <div className="flex items-center gap-4">
+            <button
+              type="button"
+              onClick={fillSampleData}
+              className="text-sm font-medium text-neutral-500 hover:text-neutral-900 transition-colors hidden sm:inline"
+            >
+              Charger des données d'exemple
+            </button>
+
+            {/* Always visible Settings/API Key button */}
+            <button 
+              onClick={() => setShowSettings(!showSettings)}
+              className="flex items-center gap-2 p-2 px-3 text-neutral-600 hover:bg-neutral-100 rounded-lg transition-colors border border-transparent hover:border-neutral-200"
+              title="Configuration API"
+            >
+              <Key size={18} className={localApiKey ? "text-green-500" : "text-amber-500"} />
+              <span className="hidden sm:inline text-sm font-medium">Clé API</span>
+            </button>
+
+            {user ? (
+              <div className="flex items-center gap-3 ml-2 pl-4 border-l border-neutral-200">
+                <div className="flex items-center gap-2 bg-neutral-100 px-3 py-1.5 rounded-full border border-neutral-200">
+                  {user.photoURL ? (
+                    <img src={user.photoURL} alt={user.displayName || ''} className="w-6 h-6 rounded-full" />
+                  ) : (
+                    <UserIcon size={16} className="text-neutral-500" />
+                  )}
+                  <span className="text-sm font-medium text-neutral-700 hidden md:inline">
+                    {user.displayName?.split(' ')[0]}
+                  </span>
+                </div>
+                <button 
+                  onClick={handleLogout}
+                  className="flex items-center gap-2 text-sm font-semibold text-neutral-600 hover:text-red-600 transition-colors"
+                >
+                  <LogOut size={18} />
+                  <span className="hidden sm:inline">Déconnexion</span>
+                </button>
+              </div>
+            ) : (
+              <button 
+                onClick={handleLogin}
+                className="flex items-center gap-2 bg-neutral-100 text-neutral-700 px-4 py-2 rounded-xl font-semibold hover:bg-neutral-200 transition-all ml-2"
+              >
+                <LogIn size={18} />
+                <span className="hidden sm:inline">Connexion (Optionnel)</span>
+              </button>
+            )}
+          </div>
         </div>
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Settings Modal */}
+        <AnimatePresence>
+          {showSettings && (
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-neutral-900/50 backdrop-blur-sm"
+              onClick={() => setShowSettings(false)}
+            >
+              <div 
+                className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 border border-neutral-200"
+                onClick={e => e.stopPropagation()}
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl font-bold text-neutral-900 flex items-center gap-2">
+                    <Settings className="w-5 h-5 text-blue-600" />
+                    Configuration de l'Application
+                  </h2>
+                  <button onClick={() => setShowSettings(false)} className="text-neutral-400 hover:text-neutral-600">
+                    <AlertCircle size={24} className="rotate-45" />
+                  </button>
+                </div>
+
+                <div className="space-y-6">
+                  <div className="space-y-3">
+                    <label className="text-sm font-semibold text-neutral-700 flex items-center gap-2">
+                      <Key size={16} className="text-blue-500" />
+                      Votre Clé API Gemini
+                    </label>
+                    <input
+                      type="password"
+                      value={localApiKey}
+                      onChange={(e) => handleApiKeyChange(e.target.value)}
+                      placeholder="AIza..."
+                      className="w-full px-4 py-3 bg-neutral-50 border border-neutral-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm font-mono"
+                    />
+                    <div className="text-xs text-neutral-500 space-y-1">
+                      <p>✅ Stockée localement dans votre navigateur.</p>
+                      <p>✅ Totalement sécurisé et indépendant.</p>
+                      {user && <p>✅ Synchronisée avec votre compte cloud.</p>}
+                    </div>
+                  </div>
+                  
+                  <div className="pt-4 border-t border-neutral-100">
+                    <button 
+                      onClick={() => setShowSettings(false)}
+                      className="w-full py-2.5 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors"
+                    >
+                      Enregistrer et fermer
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           
           {/* Left Column: Form */}
@@ -280,26 +545,22 @@ CONTRAINTES :
 
             <form onSubmit={handleGenerate} className="space-y-5 bg-white p-6 rounded-2xl border border-neutral-200 shadow-sm">
               
-              <div className="space-y-1.5 mb-6 pb-6 border-b border-neutral-200">
-                <label className="text-sm font-medium text-neutral-700 flex items-center gap-1.5">
-                  <Key size={14} className="text-neutral-400"/> Clé API Gemini (Optionnel)
-                </label>
-                <input
-                  type="password"
-                  name="apiKey"
-                  value={userApiKey}
-                  onChange={(e) => setUserApiKey(e.target.value)}
-                  className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
-                  placeholder="AIzaSy..."
-                />
-                <p className="text-xs text-neutral-500">Laissez vide pour utiliser la clé du serveur, ou entrez la vôtre pour une utilisation locale (recommandé si le quota est dépassé).</p>
-              </div>
+              {!localApiKey && (
+                <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl flex items-start gap-3">
+                  <Key size={20} className="text-blue-600 shrink-0 mt-0.5" />
+                  <div className="text-sm text-blue-800">
+                    <p className="font-semibold">Mode Autonome : Clé API requise</p>
+                    <p>Pour utiliser l'application sans compte, veuillez renseigner votre propre clé API Gemini.</p>
+                    <button type="button" onClick={() => setShowSettings(true)} className="mt-2 font-bold underline">Configurer la clé API</button>
+                  </div>
+                </div>
+              )}
 
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1.5">
                     <label className="text-sm font-medium text-neutral-700 flex items-center gap-1.5">
-                      <User size={14} className="text-neutral-400"/> Nom du Développeur
+                      <UserIcon size={14} className="text-neutral-400"/> Nom du Développeur
                     </label>
                     <input
                       required
@@ -337,7 +598,7 @@ CONTRAINTES :
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1.5">
                     <label className="text-sm font-medium text-neutral-700 flex items-center gap-1.5">
-                      <User size={14} className="text-neutral-400"/> Nom du Client
+                      <UserIcon size={14} className="text-neutral-400"/> Nom du Client
                     </label>
                     <input
                       required
@@ -529,7 +790,7 @@ CONTRAINTES :
               <button
                 type="submit"
                 disabled={isGenerating}
-                className="w-full py-2.5 px-4 bg-neutral-900 hover:bg-neutral-800 text-white text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                className={`w-full py-2.5 px-4 bg-neutral-900 hover:bg-neutral-800 text-white text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed`}
               >
                 {isGenerating ? (
                   <>
@@ -655,5 +916,19 @@ CONTRAINTES :
         </div>
       </main>
     </div>
+  );
+}
+
+export default function App() {
+  const [currentView, setCurrentView] = useState<'home' | 'app'>('home');
+
+  return (
+    <ErrorBoundary>
+      {currentView === 'home' ? (
+        <LandingPage onStart={() => setCurrentView('app')} />
+      ) : (
+        <DocumentationGenerator onNavigateHome={() => setCurrentView('home')} />
+      )}
+    </ErrorBoundary>
   );
 }

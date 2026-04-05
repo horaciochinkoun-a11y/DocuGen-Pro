@@ -13,13 +13,13 @@
   - Gestion sécurisée de la clé API (serveur ou utilisateur).
 
 ## Architecture
-- **Description de l’architecture globale :** Application Full-Stack avec un frontend React (SPA) et un backend Express léger servant d'API proxy et de serveur de fichiers statiques en production.
+- **Description de l’architecture globale :** Application Full-Stack avec un frontend React (SPA) gérant directement les appels à l'IA (Gemini SDK) et un backend Express servant uniquement les fichiers statiques et les futures routes d'administration.
 - **Technologies utilisées :**
-  - **Interface utilisateur :** React 19, Vite, Tailwind CSS, Lucide React (icônes), Framer Motion (animations), React Markdown.
-  - **Serveur :** Node.js, Express 5.
+  - **Interface utilisateur :** React 19, Vite, Tailwind CSS, Lucide React, Framer Motion, React Markdown, @google/genai (SDK).
+  - **Serveur :** Node.js, Express 5 (Service statique uniquement).
   - **Base de données :** Aucune (les données sont traitées en mémoire et via l'API Gemini).
   - **Hébergement :** Google Cloud Run (conteneurisé).
-- **Flux de données :** Le client envoie les données du formulaire au backend Express (`/api/generate`). Le backend sécurise la requête, appelle l'API Google Gemini, récupère le JSON généré, et le renvoie au client pour affichage.
+- **Flux de données :** Le client gère directement la génération de documents via le SDK Google Gemini (`@google/genai`). Les données du formulaire sont envoyées à l'IA, et les documents générés sont affichés et exportés localement. Le backend sert uniquement de serveur de fichiers statiques.
 
 ## Décisions techniques
 - **Liste des principaux choix techniques :**
@@ -29,6 +29,24 @@
 - **Justification de chaque décision :** Voir le fichier `decisions_log.md` pour plus de détails.
 
 ## Historique des modifications
+- **05 Avril 2026**
+  - **Description :** Rendu de l'application 100% autonome (Standalone Mode). Firebase Auth devient optionnel, la clé API est stockée dans le `localStorage` et le bouton de génération est accessible sans compte.
+  - **Impact :** L'application peut être exportée et utilisée sur n'importe quel navigateur ou hébergement sans dépendre d'AI Studio ou d'une base de données.
+- **05 Avril 2026**
+  - **Description :** Intégration de Firebase (Auth & Firestore) et mise en place d'un ErrorBoundary.
+  - **Impact :** Possibilité de se connecter pour synchroniser ses préférences (clé API personnalisée) sur le cloud.
+- **05 Avril 2026**
+  - **Description :** Migration vers une architecture "Frontend-First" pour les appels Gemini. Création de `geminiService.ts` côté client et suppression de la route proxy `/api/generate`.
+  - **Impact :** Résolution définitive de l'erreur 403 `API_KEY_SERVICE_BLOCKED` et amélioration de la sécurité des clés API.
+- **05 Avril 2026**
+  - **Description :** Optimisation du processus de build et du serveur. Passage à `--packages=external` pour esbuild, ajout de vérifications de l'existence des fichiers statiques au démarrage, et correction de bugs mineurs (imports ESM, variables inutilisées).
+  - **Impact :** Déploiement plus robuste et meilleur diagnostic en production.
+- **05 Avril 2026**
+  - **Description :** Résolution de l'erreur `Unexpected token '<'` en production. Amélioration du routage Express 5, ajout d'un gestionnaire d'erreurs global pour garantir des réponses JSON sur `/api`, et ajout de logs de requête.
+  - **Impact :** L'application fonctionne désormais correctement en dehors de l'environnement de développement.
+- **05 Avril 2026**
+  - **Description :** Résolution de l'erreur `Dynamic require of "node:events" is not supported` lors du déploiement. Ajout d'un banner `createRequire` dans le build esbuild pour supporter les dépendances CommonJS dans un bundle ESM.
+  - **Impact :** Le serveur démarre désormais correctement sur Cloud Run malgré le bundling complet.
 - **03 Avril 2026**
   - **Description :** Ajout des champs manuels (heure, lieu, statut libre, lien GitHub) et correction majeure du déploiement Cloud Run (port 3000, bind 0.0.0.0, Express 5 `*all`, bundling esbuild).
   - **Impact :** L'application est désormais déployable et fonctionnelle en production. L'utilisateur a plus de flexibilité sur les données générées.
