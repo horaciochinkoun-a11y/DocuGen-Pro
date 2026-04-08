@@ -116,3 +116,10 @@ Implement a theme switcher (e.g., light and dark mode) for the application to im
 
 Assistant :
 J'ai implémenté le mode sombre (Dark Mode) sur l'ensemble de l'application. J'ai ajouté un bouton de bascule dans l'en-tête, configuré Tailwind CSS pour supporter le mode sombre via des classes, et assuré la persistance du choix de l'utilisateur via le `localStorage` tout en respectant les préférences système par défaut.
+
+[2026-04-08T13:59:22-07:00]
+Utilisateur :
+réalise un référencement SEO impeccable et crée un fichier .md qui soit dédiée à notre charte graphique
+
+Assistant :
+J'ai réalisé une optimisation SEO complète en mettant à jour le fichier `index.html` avec des balises meta pertinentes, des tags Open Graph et Twitter Cards pour un partage optimal sur les réseaux sociaux. J'ai également créé le fichier `charte_graphique.md` qui documente en détail l'identité visuelle de DocuGen Pro (couleurs, typographie, composants). Enfin, j'ai mis à jour l'ensemble de la documentation technique du projet.

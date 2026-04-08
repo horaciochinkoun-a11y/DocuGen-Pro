@@ -19,6 +19,8 @@
 - [x] Bouton de chargement de données d'exemple avec 3 profils aléatoires.
 - [x] Amélioration visuelle de l'Attestation (Bordure institutionnelle et Filigrane).
 - [x] Implémentation du mode sombre (Dark Mode) et commutateur de thème.
+- [x] Optimisation SEO impeccable (Meta tags, OG, Twitter Cards).
+- [x] Rédaction de la Charte Graphique officielle.
 
 ## Bogues corrigés
 - [x] Échec du déploiement Cloud Run (Port binding 0.0.0.0:3000).

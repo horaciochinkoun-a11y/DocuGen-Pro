@@ -60,9 +60,11 @@
 
 ---
 
-## Titre de la décision : Mode 100% Autonome (Standalone)
-- **Date :** 05 Avril 2026
-- **Contexte :** L'application nécessitait un compte Firebase pour fonctionner, ce qui limitait son accessibilité et son exportabilité.
-- **Décision :** Rendre Firebase Auth optionnel. La clé API est désormais stockée dans le `localStorage` du navigateur.
-- **Alternatives envisagées :** Conserver l'obligation de connexion (rejeté pour des raisons d'accessibilité).
-- **Conséquences :** L'application peut être exportée et hébergée n'importe où sans base de données, tout en conservant la possibilité de synchronisation cloud pour les utilisateurs connectés.
+## Titre de la décision : Optimisation SEO et Charte Graphique
+- **Date :** 08 Avril 2026
+- **Contexte :** L'application manquait de visibilité sur les moteurs de recherche et de documentation sur son identité visuelle.
+- **Décision :** 
+  1. Implémenter une stratégie SEO complète (Meta tags, Open Graph, Twitter Cards).
+  2. Créer un document de référence pour la charte graphique.
+- **Alternatives envisagées :** Utiliser un plugin SEO automatique (rejeté pour garder un contrôle total sur les balises).
+- **Conséquences :** Amélioration du taux de clic lors du partage sur les réseaux sociaux et cohérence visuelle accrue pour les futurs développements.

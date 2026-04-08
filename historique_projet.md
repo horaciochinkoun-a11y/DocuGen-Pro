@@ -29,6 +29,9 @@
 - **Justification de chaque décision :** Voir le fichier `decisions_log.md` pour plus de détails.
 
 ## Historique des modifications
+- **08 Avril 2026**
+  - **Description :** Optimisation SEO complète (balises meta, Open Graph, Twitter Cards, structure sémantique) et création d'une charte graphique dédiée (`charte_graphique.md`).
+  - **Impact :** Meilleure visibilité sur les moteurs de recherche et documentation claire de l'identité visuelle.
 - **05 Avril 2026**
   - **Description :** Implémentation d'un commutateur de thème (Mode Clair / Mode Sombre) avec persistance via `localStorage` et détection des préférences système.
   - **Impact :** Amélioration de l'expérience utilisateur et de l'accessibilité visuelle.
