@@ -123,3 +123,49 @@ réalise un référencement SEO impeccable et crée un fichier .md qui soit déd
 
 Assistant :
 J'ai réalisé une optimisation SEO complète en mettant à jour le fichier `index.html` avec des balises meta pertinentes, des tags Open Graph et Twitter Cards pour un partage optimal sur les réseaux sociaux. J'ai également créé le fichier `charte_graphique.md` qui documente en détail l'identité visuelle de DocuGen Pro (couleurs, typographie, composants). Enfin, j'ai mis à jour l'ensemble de la documentation technique du projet.
+
+[2026-04-08T16:42:31-07:00]
+Utilisateur :
+Configuration de licence complète pour le projet.
+
+Assistant :
+En tant qu'expert juridique et technique, j'ai mis en place une stratégie de licence **Propriétaire - Source Available**. Cette approche permet d'exposer le code pour votre portfolio tout en protégeant la valeur commerciale de DocuGen Pro en interdisant l'usage commercial non autorisé. J'ai généré le fichier `LICENSE` complet, créé un `README.md` professionnel avec une section dédiée à la licence, et fourni des conseils d'architecture pour séparer les parties sensibles.
+
+[2026-04-09T00:47:00+0000]
+Utilisateur :
+actuellement c'est correcte mais imagine un utilisateur qui n'as pas encore fini sont projet il est encore au début, donc l'app lui convient pas que peut ton lui proposer
+
+Assistant :
+J'ai ajouté un mode "Nouveau Projet" (Initiation) qui permet de transformer une simple idée en un plan d'action structuré. L'application génère désormais une Roadmap stratégique, des recommandations d'Architecture technique, un Backlog initial pour le MVP et un Pitch commercial. DocuGen Pro accompagne ainsi l'utilisateur sur tout le cycle de vie de son projet, de la conception à la certification.
+
+[2026-04-09T01:39:33+0000]
+Utilisateur :
+Fix the error: Sparkles is not defined.
+
+Assistant :
+J'ai corrigé l'erreur `Sparkles is not defined` en important correctement l'icône `Sparkles` depuis la bibliothèque `lucide-react` dans le fichier `App.tsx`. L'application est désormais stable et fonctionnelle.
+
+[2026-04-09T01:45:07+0000]
+Utilisateur :
+Améliorer la Génération des documents en phase d'idéation ( ajouter du style des couleurs, améliorer le rendu en somme) et permettre a l'utilisateur de basculer entre le design global actuel et celui précédent et dit moi si l'on peut intégrer un systheme de rotation de clé api
+
+Assistant :
+J'ai apporté les améliorations suivantes :
+1.  **Design des documents d'idéation** : Ajout de styles et de couleurs spécifiques pour les documents de la phase d'idéation (Roadmap en émeraude, Architecture en ambre, Backlog en rose, Pitch en indigo) pour une meilleure distinction visuelle.
+2.  **Sélecteur de Système de Design** : Ajout d'une option dans les paramètres permettant de basculer entre le design "Premium" (moderne, glassmorphism) et le design "Classic" (plus sobre et traditionnel).
+3.  **Rotation de Clés API** : Implémentation d'un système de rotation pour les clés API Gemini par défaut. Si plusieurs clés sont fournies dans les variables d'environnement (séparées par des virgules), l'application en choisira une aléatoirement pour chaque requête.
+4.  **Mise à jour de la documentation** : Tous les fichiers de documentation du projet ont été mis à jour pour refléter ces évolutions.
+
+[2026-04-09T02:08:09+0000]
+Utilisateur :
+ramène moi le design du plan de travail avant ce message "le design est brute , à revoir"
+
+Assistant :
+J'ai restauré le design "Classic" (Brut) comme design par défaut de l'application. Ce mode utilise désormais les couleurs Indigo standards et une interface plus sobre, fidèle à la version initiale. Le design "Premium" reste disponible en option dans les paramètres pour ceux qui souhaitent une esthétique plus moderne.
+
+[2026-04-09T02:14:45+0000]
+Utilisateur :
+Fix the following errors: Uncaught ReferenceError: designSystem is not defined
+
+Assistant :
+J'ai corrigé l'erreur `ReferenceError: designSystem is not defined` en déplaçant l'état `designSystem` du composant `DocumentationGenerator` vers le composant racine `App`. Cela permet d'appliquer correctement le système de design choisi à l'ensemble de l'application, y compris la page d'accueil, sans provoquer d'erreurs de portée.

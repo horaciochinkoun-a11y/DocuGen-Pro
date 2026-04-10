@@ -19,7 +19,9 @@ import {
   LogOut,
   Settings,
   Sun,
-  Moon
+  Moon,
+  Sparkles,
+  Palette
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Markdown from 'react-markdown';
@@ -41,7 +43,7 @@ import {
   User
 } from './firebase';
 
-// Error Boundary Component
+// Composant de gestion des erreurs (Error Boundary)
 interface ErrorBoundaryProps {
   children: ReactNode;
 }
@@ -152,13 +154,18 @@ const initialFormData: ProjectData = {
 function DocumentationGenerator({ 
   onNavigateHome, 
   theme, 
-  toggleTheme 
+  toggleTheme,
+  designSystem,
+  setDesignSystem
 }: { 
   onNavigateHome: () => void;
   theme: 'light' | 'dark';
   toggleTheme: () => void;
+  designSystem: 'premium' | 'classic';
+  setDesignSystem: (ds: 'premium' | 'classic') => void;
 }) {
   const [formData, setFormData] = useState<ProjectData>(initialFormData);
+  const [projectPhase, setProjectPhase] = useState<'completion' | 'initiation'>('completion');
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isAuthReady, setIsAuthReady] = useState(false);
@@ -169,10 +176,10 @@ function DocumentationGenerator({
   const [copiedTab, setCopiedTab] = useState<string | null>(null);
   const [showSettings, setShowSettings] = useState(false);
   
-  // Local API Key state (Standalone mode)
+  // État local de la clé API (Mode autonome sans backend)
   const [localApiKey, setLocalApiKey] = useState(() => localStorage.getItem('gemini_api_key') || '');
 
-  // Auth Listener
+  // Écouteur d'état d'authentification Firebase
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -184,7 +191,7 @@ function DocumentationGenerator({
     return () => unsubscribe();
   }, []);
 
-  // Profile Listener
+  // Écouteur pour récupérer et synchroniser le profil utilisateur depuis Firestore
   useEffect(() => {
     if (!user) return;
 
@@ -259,7 +266,7 @@ function DocumentationGenerator({
     setError(null);
 
     try {
-      const prompt = `
+      const prompt = projectPhase === 'completion' ? `
 Tu es un expert en documentation professionnelle pour les projets freelance et SaaS.
 Agis en tant que chef de projet senior et expert en audit. Ton objectif est de générer des documents qui pourraient passer pour de vrais dossiers internes d'entreprise.
 
@@ -312,17 +319,55 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
 - Engageant mais toujours professionnel.
 - Mettre l'accent sur le schéma : problème -> solution -> résultat.
 - Mentionne subtilement l'expertise en tant que ${formData.developerStatus}.
+` : `
+Tu es un consultant en stratégie produit et architecte logiciel senior.
+Ton objectif est d'aider un utilisateur à lancer un nouveau projet en transformant une idée brute en un plan d'action professionnel et structuré.
 
-CONTRAINTES :
-- Éviter les phrases génériques.
-- Être précis et crédible.
-- Utiliser des résultats mesurables ou réalistes.
-- NE PAS avoir l'air d'une IA.
+DONNÉES D'ENTRÉE :
+- Porteur du projet : ${formData.developerName}
+- Rôle visé : ${formData.developerStatus}
+- Client/Cible : ${formData.clientName}
+- Nom de l'entreprise/SaaS : ${formData.companyName}
+- Nom du projet : ${formData.projectName}
+- Type de projet : ${formData.projectType}
+- Vision du projet : ${formData.description}
+- Technologies envisagées : ${formData.technologies}
+- Fonctionnalités principales souhaitées : ${formData.keyFeatures}
+- Objectifs attendus : ${formData.results}
+- Durée estimée du lancement : ${formData.duration}
+
+TÂCHE :
+Génère les 4 documents stratégiques suivants.
+IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS EN MARKDOWN.
+
+1. FEUILLE DE ROUTE & JALONS (roadmap)
+- Titre : \`# FEUILLE DE ROUTE STRATÉGIQUE : [Nom du Projet]\`.
+- Découpage en phases (Phase 1 : Fondations, Phase 2 : MVP, Phase 3 : Scale).
+- Jalons clairs avec livrables attendus.
+- Estimation réaliste des délais.
+
+2. ARCHITECTURE & STACK RECOMMANDÉE (architecture)
+- Titre : \`# ARCHITECTURE TECHNIQUE ET STACK LOGICIELLE\`.
+- Justification des choix technologiques par rapport au projet.
+- Schéma conceptuel de l'architecture (en texte/Markdown).
+- Recommandations sur l'hébergement et la scalabilité.
+
+3. BACKLOG INITIAL & DÉFINITION DU MVP (backlog)
+- Titre : \`# BACKLOG PRODUIT ET PÉRIMÈTRE MVP\`.
+- Liste des User Stories prioritaires pour le lancement.
+- Définition stricte de ce qui est "In Scope" et "Out of Scope" pour la V1.
+- Critères d'acceptation pour les fonctionnalités clés.
+
+4. PITCH & STRATÉGIE DE LANCEMENT (pitch)
+- Titre : \`# PITCH COMMERCIAL ET STRATÉGIE GO-TO-MARKET\`.
+- Elevator Pitch (30 secondes).
+- Analyse de la proposition de valeur unique (USP).
+- Canaux d'acquisition suggérés pour les premiers utilisateurs.
 `;
 
-      const data = await generateProfessionalDocs(prompt, localApiKey);
+      const data = await generateProfessionalDocs(prompt, localApiKey, projectPhase);
       setGeneratedDocs(data);
-      setActiveTab('attestation');
+      setActiveTab(projectPhase === 'completion' ? 'attestation' : 'roadmap');
     } catch (err: unknown) {
       const error = err as Error;
       console.error('Erreur de génération:', error);
@@ -384,7 +429,7 @@ CONTRAINTES :
   };
 
   const fillSampleData = () => {
-    const sampleProjects: ProjectData[] = [
+    const completionSamples: ProjectData[] = [
       {
         developerName: 'Alex Mercer',
         developerStatus: 'Architecte',
@@ -418,35 +463,62 @@ CONTRAINTES :
         manualTime: '15 Mars 2026',
         manualLocation: 'Lyon, France',
         githubLink: 'https://github.com/emmadubois/payflow',
-      },
-      {
-        developerName: 'Lucas Martin',
-        developerStatus: 'Développeur Full-Stack',
-        clientName: 'Sophie Bernard',
-        companyName: 'EcoShop',
-        projectName: 'EcoMarket',
-        projectType: 'E-commerce',
-        description: 'Place de marché éco-responsable mettant en relation des artisans locaux avec des consommateurs soucieux de l\'environnement.',
-        technologies: 'React, Node.js, Express, MongoDB, Tailwind CSS',
-        keyFeatures: 'Catalogue produits filtrable, panier d\'achat, paiement sécurisé, messagerie intégrée acheteur/vendeur.',
-        results: 'Lancement réussi avec 100+ artisans inscrits le premier mois, 500+ commandes traitées sans incident.',
-        duration: '8 mois',
-        clientContact: 'contact@ecoshop.fr',
-        manualTime: '10 Janvier 2026',
-        manualLocation: 'Bordeaux, France',
-        githubLink: 'https://github.com/lucasmartin/ecomarket',
       }
     ];
-    const randomIndex = Math.floor(Math.random() * sampleProjects.length);
-    setFormData(sampleProjects[randomIndex]);
+
+    const initiationSamples: ProjectData[] = [
+      {
+        developerName: 'Thomas Klein',
+        developerStatus: 'Entrepreneur Tech',
+        clientName: 'Propriétaires de chiens',
+        companyName: 'PawConnect',
+        projectName: 'PawConnect',
+        projectType: 'Application Mobile',
+        description: 'Une application de mise en relation entre propriétaires de chiens pour des promenades groupées et du gardiennage collaboratif.',
+        technologies: 'React Native, Firebase, Google Maps SDK',
+        keyFeatures: 'Géolocalisation en temps réel, messagerie instantanée, profils de chiens, système de notation.',
+        results: 'Atteindre 1000 utilisateurs actifs en 3 mois, valider le concept de gardiennage gratuit entre voisins.',
+        duration: '3 mois (Phase MVP)',
+        clientContact: '',
+        manualTime: '',
+        manualLocation: 'Berlin, Allemagne',
+        githubLink: '',
+      },
+      {
+        developerName: 'Julie Morel',
+        developerStatus: 'Full-Stack Dev',
+        clientName: 'Restaurants Locaux',
+        companyName: 'ZeroWaste Menu',
+        projectName: 'ZeroWaste Menu',
+        projectType: 'SaaS B2B',
+        description: 'Outil de gestion de stock intelligent pour restaurants permettant de réduire le gaspillage alimentaire en suggérant des menus basés sur les produits proches de la péremption.',
+        technologies: 'Next.js, Tailwind CSS, OpenAI API (pour suggestions)',
+        keyFeatures: 'Scan de factures, alertes péremption, générateur de menus IA, analytics de gaspillage.',
+        results: 'Réduire le gaspillage de 25% chez les restaurateurs partenaires.',
+        duration: '5 mois',
+        clientContact: '',
+        manualTime: '',
+        manualLocation: 'Nantes, France',
+        githubLink: '',
+      }
+    ];
+
+    const samples = projectPhase === 'completion' ? completionSamples : initiationSamples;
+    const randomIndex = Math.floor(Math.random() * samples.length);
+    setFormData(samples[randomIndex]);
   };
 
-  const tabs = [
+  const tabs = projectPhase === 'completion' ? [
     { id: 'attestation', label: 'Attestation', icon: FileText },
     { id: 'technicalSummary', label: 'Résumé Technique', icon: Code },
     { id: 'cvVersion', label: 'Version CV', icon: Briefcase },
     { id: 'linkedinVersion', label: 'Post LinkedIn', icon: Linkedin },
-  ] as const;
+  ] : [
+    { id: 'roadmap', label: 'Roadmap', icon: Clock },
+    { id: 'architecture', label: 'Architecture', icon: Laptop },
+    { id: 'backlog', label: 'Backlog/MVP', icon: Code },
+    { id: 'pitch', label: 'Pitch/Stratégie', icon: Linkedin },
+  ];
 
   if (!isAuthReady) {
     return (
@@ -457,75 +529,77 @@ CONTRAINTES :
   }
 
   return (
-    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-50 font-sans selection:bg-blue-100 selection:text-blue-900">
-      <header className="bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 sticky top-0 z-10">
+    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-50 font-sans selection:bg-brand-100 selection:text-brand-900">
+      <header className="glass sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div 
-            className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+            className="flex items-center gap-2.5 cursor-pointer group transition-all"
             onClick={onNavigateHome}
             title="Retour à l'accueil"
           >
-            <div className="bg-blue-600 text-white p-1.5 rounded-lg">
+            <div className="bg-brand-600 text-white p-2 rounded-xl shadow-lg shadow-brand-500/20 group-hover:scale-110 transition-transform">
               <FileText size={20} />
             </div>
-            <h1 className="text-xl font-semibold tracking-tight text-neutral-900 dark:text-white">DocuGen Pro</h1>
+            <h1 className="text-xl font-bold tracking-tight text-neutral-900 dark:text-white">DocuGen <span className="text-brand-600 dark:text-brand-400">Pro</span></h1>
           </div>
           
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 sm:gap-6">
+            <div className="hidden md:flex items-center gap-4">
+              <button
+                type="button"
+                onClick={fillSampleData}
+                className="text-sm font-medium text-neutral-500 hover:text-brand-600 dark:text-neutral-400 dark:hover:text-brand-400 transition-colors flex items-center gap-2"
+              >
+                <Sparkles size={16} />
+                Charger un exemple
+              </button>
+            </div>
+
+            {/* Always visible Settings/API Key button */}
+            <button 
+              onClick={() => setShowSettings(!showSettings)}
+              className="flex items-center gap-2 p-2 px-3 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-all border border-neutral-200 dark:border-neutral-700 shadow-sm"
+              title="Configuration API"
+            >
+              <Key size={18} className={localApiKey ? "text-green-500" : "text-amber-500"} />
+              <span className="hidden sm:inline text-sm font-semibold">Clé API</span>
+            </button>
+
             <button
               onClick={toggleTheme}
-              className="p-2 text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800"
+              className="p-2.5 text-neutral-500 hover:text-brand-600 dark:text-neutral-400 dark:hover:text-brand-400 transition-all rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm"
               title={theme === 'light' ? 'Passer en mode sombre' : 'Passer en mode clair'}
             >
               {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
             </button>
 
-            <button
-              type="button"
-              onClick={fillSampleData}
-              className="text-sm font-medium text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors"
-            >
-              <span className="hidden sm:inline">Charger des données d'exemple</span>
-              <span className="sm:hidden">Exemple</span>
-            </button>
-
-            {/* Always visible Settings/API Key button */}
-            <button 
-              onClick={() => setShowSettings(!showSettings)}
-              className="flex items-center gap-2 p-2 px-3 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg transition-colors border border-transparent hover:border-neutral-200 dark:hover:border-neutral-700"
-              title="Configuration API"
-            >
-              <Key size={18} className={localApiKey ? "text-green-500" : "text-amber-500"} />
-              <span className="hidden sm:inline text-sm font-medium">Clé API</span>
-            </button>
-
             {user ? (
               <div className="flex items-center gap-3 ml-2 pl-4 border-l border-neutral-200 dark:border-neutral-800">
-                <div className="flex items-center gap-2 bg-neutral-100 dark:bg-neutral-800 px-3 py-1.5 rounded-full border border-neutral-200 dark:border-neutral-700">
+                <div className="flex items-center gap-2 bg-white dark:bg-neutral-900 px-3 py-1.5 rounded-xl border border-neutral-200 dark:border-neutral-700 shadow-sm">
                   {user.photoURL ? (
                     <img src={user.photoURL} alt={user.displayName || ''} className="w-6 h-6 rounded-full" />
                   ) : (
                     <UserIcon size={16} className="text-neutral-500 dark:text-neutral-400" />
                   )}
-                  <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300 hidden md:inline">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300 hidden md:inline">
                     {user.displayName?.split(' ')[0]}
                   </span>
                 </div>
                 <button 
                   onClick={handleLogout}
-                  className="flex items-center gap-2 text-sm font-semibold text-neutral-600 dark:text-neutral-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                  className="p-2 text-neutral-500 hover:text-red-600 dark:text-neutral-400 dark:hover:text-red-400 transition-all"
+                  title="Déconnexion"
                 >
-                  <LogOut size={18} />
-                  <span className="hidden sm:inline">Déconnexion</span>
+                  <LogOut size={20} />
                 </button>
               </div>
             ) : (
               <button 
                 onClick={handleLogin}
-                className="flex items-center gap-2 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 px-4 py-2 rounded-xl font-semibold hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-all ml-2"
+                className="flex items-center gap-2 bg-brand-600 text-white px-5 py-2.5 rounded-xl font-bold hover:bg-brand-700 transition-all shadow-lg shadow-brand-500/20 active:scale-95"
               >
                 <LogIn size={18} />
-                <span className="hidden sm:inline">Connexion (Optionnel)</span>
+                <span className="hidden sm:inline">Connexion</span>
               </button>
             )}
           </div>
@@ -533,7 +607,7 @@ CONTRAINTES :
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Settings Modal */}
+        {/* Fenêtre modale des paramètres */}
         <AnimatePresence>
           {showSettings && (
             <motion.div 
@@ -549,7 +623,7 @@ CONTRAINTES :
               >
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-xl font-bold text-neutral-900 dark:text-white flex items-center gap-2">
-                    <Settings className="w-5 h-5 text-blue-600" />
+                    <Settings className="w-5 h-5 text-brand-600" />
                     Configuration de l'Application
                   </h2>
                   <button onClick={() => setShowSettings(false)} className="text-neutral-400 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-300">
@@ -558,9 +632,39 @@ CONTRAINTES :
                 </div>
 
                 <div className="space-y-6">
+                  {/* Sélecteur du système de design */}
                   <div className="space-y-3">
-                    <label className="text-sm font-semibold text-neutral-700 dark:text-neutral-300 flex items-center gap-2">
-                      <Key size={16} className="text-blue-500" />
+                    <label className="text-sm font-bold text-neutral-700 dark:text-neutral-300 flex items-center gap-2">
+                      <Palette size={16} className="text-brand-500" />
+                      Système de Design
+                    </label>
+                    <div className="flex bg-neutral-100 dark:bg-neutral-800 p-1 rounded-xl border border-neutral-200 dark:border-neutral-700">
+                      <button
+                        onClick={() => setDesignSystem('premium')}
+                        className={`flex-1 py-2 text-xs font-black uppercase tracking-widest rounded-lg transition-all ${
+                          designSystem === 'premium' 
+                            ? 'bg-white dark:bg-neutral-700 text-brand-600 dark:text-brand-400 shadow-sm' 
+                            : 'text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'
+                        }`}
+                      >
+                        Premium
+                      </button>
+                      <button
+                        onClick={() => setDesignSystem('classic')}
+                        className={`flex-1 py-2 text-xs font-black uppercase tracking-widest rounded-lg transition-all ${
+                          designSystem === 'classic' 
+                            ? 'bg-white dark:bg-neutral-700 text-brand-600 dark:text-brand-400 shadow-sm' 
+                            : 'text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'
+                        }`}
+                      >
+                        Classic
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <label className="text-sm font-bold text-neutral-700 dark:text-neutral-300 flex items-center gap-2">
+                      <Key size={16} className="text-brand-500" />
                       Votre Clé API Gemini
                     </label>
                     <input
@@ -580,7 +684,7 @@ CONTRAINTES :
                   <div className="pt-4 border-t border-neutral-100 dark:border-neutral-800">
                     <button 
                       onClick={() => setShowSettings(false)}
-                      className="w-full py-2.5 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors"
+                      className="w-full py-3 bg-brand-600 text-white rounded-xl font-bold hover:bg-brand-700 transition-all shadow-lg shadow-brand-500/20 active:scale-[0.98]"
                     >
                       Enregistrer et fermer
                     </button>
@@ -591,33 +695,78 @@ CONTRAINTES :
           )}
         </AnimatePresence>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
           
           {/* Left Column: Form */}
-          <div className="lg:col-span-5 xl:col-span-4 space-y-6">
-            <div>
-              <h2 className="text-lg font-semibold text-neutral-900 dark:text-white">Détails du Projet</h2>
-              <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">Saisissez les informations du projet pour générer la documentation professionnelle.</p>
+          <div className="lg:col-span-5 xl:col-span-4 space-y-8">
+            <div className="bg-white dark:bg-neutral-900 rounded-3xl p-8 border border-neutral-200 dark:border-neutral-800 shadow-soft">
+              <div className="flex items-center gap-4 mb-8">
+                <div className="w-12 h-12 bg-brand-50 dark:bg-brand-900/20 rounded-2xl flex items-center justify-center text-brand-600 dark:text-brand-400">
+                  <Settings size={24} />
+                </div>
+                <div>
+                  <h2 className="text-xl font-black text-neutral-900 dark:text-white tracking-tight">Configuration</h2>
+                  <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
+                    {projectPhase === 'completion' ? 'Phase de Livraison' : 'Phase d\'Idéation'}
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex p-1.5 bg-neutral-100 dark:bg-neutral-950 rounded-2xl w-full mb-10">
+                <button
+                  onClick={() => {
+                    setProjectPhase('completion');
+                    setGeneratedDocs(null);
+                  }}
+                  className={`flex-1 flex items-center justify-center gap-2 py-3 text-xs font-black uppercase tracking-widest rounded-xl transition-all ${
+                    projectPhase === 'completion'
+                      ? 'bg-white dark:bg-neutral-800 text-brand-600 dark:text-brand-400 shadow-soft'
+                      : 'text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'
+                  }`}
+                >
+                  <CheckCircle2 size={16} />
+                  Terminé
+                </button>
+                <button
+                  onClick={() => {
+                    setProjectPhase('initiation');
+                    setGeneratedDocs(null);
+                  }}
+                  className={`flex-1 flex items-center justify-center gap-2 py-3 text-xs font-black uppercase tracking-widest rounded-xl transition-all ${
+                    projectPhase === 'initiation'
+                      ? 'bg-white dark:bg-neutral-800 text-brand-600 dark:text-brand-400 shadow-soft'
+                      : 'text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'
+                  }`}
+                >
+                  <Sparkles size={16} />
+                  Nouveau
+                </button>
+              </div>
             </div>
 
-            <form onSubmit={handleGenerate} className="space-y-5 bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-sm">
+            <form onSubmit={handleGenerate} className="space-y-6 bg-white dark:bg-neutral-900 p-8 rounded-3xl border border-neutral-200 dark:border-neutral-800 shadow-soft">
               
               {!localApiKey && (
-                <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl flex items-start gap-3">
-                  <Key size={20} className="text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
-                  <div className="text-sm text-blue-800 dark:text-blue-300">
-                    <p className="font-semibold">Mode Autonome : Clé API requise</p>
-                    <p>Pour utiliser l'application sans compte, veuillez renseigner votre propre clé API Gemini.</p>
-                    <button type="button" onClick={() => setShowSettings(true)} className="mt-2 font-bold underline">Configurer la clé API</button>
+                <div className="mb-8 p-5 bg-brand-50 dark:bg-brand-900/20 border border-brand-200 dark:border-brand-800 rounded-2xl flex items-start gap-4">
+                  <div className="w-10 h-10 bg-brand-100 dark:bg-brand-800 rounded-xl flex items-center justify-center text-brand-600 dark:text-brand-400 shrink-0">
+                    <Key size={20} />
+                  </div>
+                  <div className="text-sm text-brand-900 dark:text-brand-100">
+                    <p className="font-bold mb-1">Mode Autonome : Clé API requise</p>
+                    <p className="opacity-80">Pour utiliser l'application sans compte, veuillez renseigner votre propre clé API Gemini.</p>
+                    <button type="button" onClick={() => setShowSettings(true)} className="mt-3 font-black uppercase tracking-widest text-xs underline hover:text-brand-700 transition-colors">
+                      Configurer maintenant
+                    </button>
                   </div>
                 </div>
               )}
 
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5">
-                      <UserIcon size={14} className="text-neutral-400 dark:text-neutral-500"/> Nom du Développeur
+              <div className="space-y-6">
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-xs font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                      <UserIcon size={14} className="text-brand-500" />
+                      {projectPhase === 'completion' ? 'Développeur' : 'Porteur du Projet'}
                     </label>
                     <input
                       required
@@ -625,20 +774,21 @@ CONTRAINTES :
                       name="developerName"
                       value={formData.developerName}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white"
-                      placeholder="Jean Dupont"
+                      className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
+                      placeholder={projectPhase === 'completion' ? "Jean Dupont" : "Votre nom"}
                     />
                   </div>
-                  <div className="space-y-1.5">
-                    <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5">
-                      <Briefcase size={14} className="text-neutral-400 dark:text-neutral-500"/> Statut
+                  <div className="space-y-2">
+                    <label className="text-xs font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                      <Briefcase size={14} className="text-brand-500" />
+                      {projectPhase === 'completion' ? 'Statut' : 'Rôle visé'}
                     </label>
                     <input
                       list="status-options"
                       name="developerStatus"
                       value={formData.developerStatus}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white"
+                      className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
                       placeholder="ex: Architecte Senior"
                     />
                     <datalist id="status-options">
@@ -655,7 +805,7 @@ CONTRAINTES :
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1.5">
                     <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5">
-                      <UserIcon size={14} className="text-neutral-400 dark:text-neutral-500"/> Nom du Client
+                      <UserIcon size={14} className="text-neutral-400 dark:text-neutral-500"/> {projectPhase === 'completion' ? 'Nom du Client' : 'Cible / Client visé'}
                     </label>
                     <input
                       required
@@ -664,12 +814,12 @@ CONTRAINTES :
                       value={formData.clientName}
                       onChange={handleInputChange}
                       className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white"
-                      placeholder="Marie Martin"
+                      placeholder={projectPhase === 'completion' ? "Marie Martin" : "ex: Freelances, PME..."}
                     />
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5">
-                      <Building2 size={14} className="text-neutral-400 dark:text-neutral-500"/> Entreprise
+                      <Building2 size={14} className="text-neutral-400 dark:text-neutral-500"/> {projectPhase === 'completion' ? 'Entreprise' : 'Nom du SaaS / Entité'}
                     </label>
                     <input
                       required
@@ -779,55 +929,67 @@ CONTRAINTES :
                   />
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300">Description</label>
+                <div className="space-y-2">
+                  <label className="text-xs font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                    <FileText size={14} className="text-brand-500" />
+                    {projectPhase === 'completion' ? 'Description' : 'Vision du Projet'}
+                  </label>
                   <textarea
                     required
                     name="description"
                     value={formData.description}
                     onChange={handleInputChange}
                     rows={3}
-                    className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none dark:text-white"
-                    placeholder="Décrivez brièvement ce que fait le projet..."
+                    className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all resize-none dark:text-white"
+                    placeholder={projectPhase === 'completion' ? "Décrivez brièvement ce que fait le projet..." : "Quelle est l'idée principale et le problème résolu ?"}
                   />
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300">Technologies Utilisées</label>
+                <div className="space-y-2">
+                  <label className="text-xs font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                    <Laptop size={14} className="text-brand-500" />
+                    {projectPhase === 'completion' ? 'Technologies Utilisées' : 'Technologies Envisagées'}
+                  </label>
                   <input
                     required
                     type="text"
                     name="technologies"
                     value={formData.technologies}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white"
+                    className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
                     placeholder="React, Node.js, PostgreSQL..."
                   />
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300">Fonctionnalités Clés Livrées</label>
+                <div className="space-y-2">
+                  <label className="text-xs font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                    <Sparkles size={14} className="text-brand-500" />
+                    {projectPhase === 'completion' ? 'Fonctionnalités Clés Livrées' : 'Fonctionnalités Principales Souhaitées'}
+                  </label>
                   <textarea
                     required
                     name="keyFeatures"
                     value={formData.keyFeatures}
                     onChange={handleInputChange}
                     rows={3}
-                    className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none dark:text-white"
+                    className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all resize-none dark:text-white"
                     placeholder="Authentification utilisateur, intégration de paiement, tableau de bord en temps réel..."
                   />
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300">Résultats Obtenus</label>
+                <div className="space-y-2">
+                  <label className="text-xs font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                    <CheckCircle2 size={14} className="text-brand-500" />
+                    {projectPhase === 'completion' ? 'Résultats Obtenus' : 'Objectifs Attendus'}
+                  </label>
                   <textarea
                     required
                     name="results"
                     value={formData.results}
                     onChange={handleInputChange}
                     rows={2}
-                    className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none dark:text-white"
-                    placeholder="Augmentation de la conversion de 20%, réduction du temps de chargement de 2s..."
+                    className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all resize-none dark:text-white"
+                    placeholder={projectPhase === 'completion' ? "Augmentation de la conversion de 20%..." : "Quels sont les indicateurs de succès visés ?"}
                   />
                 </div>
 
@@ -847,16 +1009,16 @@ CONTRAINTES :
               <button
                 type="submit"
                 disabled={isGenerating}
-                className={`w-full py-2.5 px-4 bg-neutral-900 dark:bg-neutral-100 hover:bg-neutral-800 dark:hover:bg-white text-white dark:text-neutral-900 text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed`}
+                className="w-full py-4 bg-brand-600 hover:bg-brand-700 text-white rounded-2xl font-black uppercase tracking-[0.2em] text-sm transition-all shadow-xl shadow-brand-500/20 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed group active:scale-[0.98]"
               >
                 {isGenerating ? (
                   <>
-                    <Loader2 size={16} className="animate-spin" />
-                    Génération des documents...
+                    <Loader2 size={20} className="animate-spin" />
+                    Génération...
                   </>
                 ) : (
                   <>
-                    <FileText size={16} />
+                    <Sparkles size={20} className="group-hover:rotate-12 transition-transform" />
                     Générer la Documentation
                   </>
                 )}
@@ -872,11 +1034,11 @@ CONTRAINTES :
           </div>
 
           {/* Right Column: Results */}
-          <div className="lg:col-span-7 xl:col-span-8">
+          <div className="lg:col-span-7 xl:col-span-8 h-full">
             {generatedDocs ? (
-              <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-sm overflow-hidden h-full flex flex-col min-h-[600px]">
+              <div className="bg-white dark:bg-neutral-900 rounded-3xl border border-neutral-200 dark:border-neutral-800 shadow-soft overflow-hidden h-full flex flex-col min-h-[700px]">
                 {/* Tabs */}
-                <div className="flex overflow-x-auto border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-950/50 scrollbar-hide">
+                <div className="flex overflow-x-auto border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-950/50 scrollbar-hide p-2 gap-1">
                   {tabs.map((tab) => {
                     const Icon = tab.icon;
                     const isActive = activeTab === tab.id;
@@ -885,20 +1047,14 @@ CONTRAINTES :
                         key={tab.id}
                         type="button"
                         onClick={() => setActiveTab(tab.id as keyof GeneratedDocs)}
-                        className={`flex items-center gap-2 px-5 py-3.5 text-sm font-medium transition-colors relative whitespace-nowrap ${
-                          isActive ? 'text-blue-600 dark:text-blue-400' : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300 hover:bg-neutral-100/50 dark:hover:bg-neutral-800/50'
+                        className={`flex items-center gap-2 px-5 py-3 text-xs font-black uppercase tracking-widest rounded-xl transition-all whitespace-nowrap relative ${
+                          isActive 
+                            ? 'bg-white dark:bg-neutral-800 text-brand-600 dark:text-brand-400 shadow-soft' 
+                            : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300 hover:bg-white/50 dark:hover:bg-neutral-800/50'
                         }`}
                       >
                         <Icon size={16} />
                         {tab.label}
-                        {isActive && (
-                          <motion.div
-                            layoutId="activeTab"
-                            className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600"
-                            initial={false}
-                            transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                          />
-                        )}
                       </button>
                     );
                   })}
@@ -915,11 +1071,11 @@ CONTRAINTES :
                       transition={{ duration: 0.2 }}
                       className="prose prose-sm sm:prose-base prose-neutral dark:prose-invert max-w-none"
                     >
-                      <div className="flex justify-end mb-4 sticky top-0 z-10 gap-2">
+                      <div className="flex justify-end mb-6 sticky top-0 z-10 gap-3">
                         <button
                           type="button"
                           onClick={exportToPDF}
-                          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-md transition-colors shadow-sm border border-red-100 dark:border-red-800"
+                          className="flex items-center gap-2 px-4 py-2 text-xs font-black uppercase tracking-widest text-red-600 dark:text-red-400 bg-white dark:bg-neutral-900 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all shadow-soft border border-neutral-200 dark:border-neutral-800"
                         >
                           <FileDown size={14} />
                           PDF
@@ -927,7 +1083,7 @@ CONTRAINTES :
                         <button
                           type="button"
                           onClick={exportToWord}
-                          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-md transition-colors shadow-sm border border-blue-100 dark:border-blue-800"
+                          className="flex items-center gap-2 px-4 py-2 text-xs font-black uppercase tracking-widest text-brand-600 dark:text-brand-400 bg-white dark:bg-neutral-900 hover:bg-brand-50 dark:hover:bg-brand-900/20 rounded-xl transition-all shadow-soft border border-neutral-200 dark:border-neutral-800"
                         >
                           <Download size={14} />
                           Word
@@ -935,12 +1091,12 @@ CONTRAINTES :
                         <button
                           type="button"
                           onClick={() => copyToClipboard(generatedDocs[activeTab], activeTab)}
-                          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-neutral-600 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-md transition-colors shadow-sm border border-neutral-200 dark:border-neutral-700"
+                          className="flex items-center gap-2 px-4 py-2 text-xs font-black uppercase tracking-widest text-neutral-600 dark:text-neutral-400 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 rounded-xl transition-all shadow-soft border border-neutral-200 dark:border-neutral-800"
                         >
                           {copiedTab === activeTab ? (
                             <>
                               <CheckCircle2 size={14} className="text-green-600 dark:text-green-400" />
-                              <span className="text-green-700 dark:text-green-300">Copié !</span>
+                              <span className="text-green-700 dark:text-green-300">Copié</span>
                             </>
                           ) : (
                             <>
@@ -953,15 +1109,15 @@ CONTRAINTES :
                       <div 
                         id="markdown-content" 
                         className={`markdown-${activeTab} font-serif leading-relaxed text-neutral-800 dark:text-neutral-200 relative ${
-                          activeTab === 'attestation' 
+                          activeTab === 'attestation' || activeTab === 'roadmap'
                             ? 'border-4 border-double border-neutral-300 dark:border-neutral-600 p-8 sm:p-12 bg-white dark:bg-neutral-900 shadow-sm min-h-[500px]' 
                             : ''
                         }`}
                       >
-                        {activeTab === 'attestation' && (
+                        {(activeTab === 'attestation' || activeTab === 'roadmap') && (
                           <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none overflow-hidden opacity-[0.04] dark:opacity-[0.08]">
                             <span className="text-7xl md:text-[120px] font-black tracking-widest text-neutral-900 dark:text-white -rotate-45 select-none">
-                              CERTIFIÉ
+                              {activeTab === 'attestation' ? 'CERTIFIÉ' : 'ROADMAP'}
                             </span>
                           </div>
                         )}
@@ -1003,6 +1159,18 @@ export default function App() {
     return 'light';
   });
 
+  const [designSystem, setDesignSystem] = useState<'premium' | 'classic'>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('designSystem');
+      return (saved === 'classic' || saved === 'premium') ? saved : 'classic';
+    }
+    return 'classic';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('designSystem', designSystem);
+  }, [designSystem]);
+
   useEffect(() => {
     const root = window.document.documentElement;
     if (theme === 'dark') {
@@ -1019,11 +1187,19 @@ export default function App() {
 
   return (
     <ErrorBoundary>
-      {currentView === 'home' ? (
-        <LandingPage onStart={() => setCurrentView('app')} theme={theme} toggleTheme={toggleTheme} />
-      ) : (
-        <DocumentationGenerator onNavigateHome={() => setCurrentView('home')} theme={theme} toggleTheme={toggleTheme} />
-      )}
+      <div className={designSystem === 'classic' ? 'classic-design' : ''}>
+        {currentView === 'home' ? (
+          <LandingPage onStart={() => setCurrentView('app')} theme={theme} toggleTheme={toggleTheme} />
+        ) : (
+          <DocumentationGenerator 
+            onNavigateHome={() => setCurrentView('home')} 
+            theme={theme} 
+            toggleTheme={toggleTheme}
+            designSystem={designSystem}
+            setDesignSystem={setDesignSystem}
+          />
+        )}
+      </div>
     </ErrorBoundary>
   );
 }

@@ -1,20 +1,22 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# DocuGen Pro 🚀
 
-# Run and deploy your AI Studio app
+Générateur intelligent de documentation professionnelle pour freelances et projets SaaS. Transformez vos détails de projet en documents (Attestations, Résumés Techniques, CV, LinkedIn) en quelques secondes grâce à l'IA.
 
-This contains everything you need to run your app locally.
+## 🛠 Technologies
+- **Frontend:** React, Vite, Tailwind CSS, Framer Motion
+- **IA:** Google Gemini SDK
+- **Backend:** Node.js, Express
+- **Design:** Charte graphique sur mesure
 
-View your app in AI Studio: https://ai.studio/apps/7728ab8d-b583-4201-a962-b5af133b9435
+## 📜 Licence
 
-## Run Locally
+Ce projet est sous licence **Propriétaire - Source Available**.
 
-**Prerequisites:**  Node.js
+- ✅ **Usage Personnel & Portfolio :** Autorisé (consultation, test, évaluation).
+- ❌ **Usage Commercial :** Interdit sans autorisation préalable.
+- ❌ **Redistribution :** Interdite.
 
+Pour plus de détails, veuillez consulter le fichier [LICENSE](./LICENSE).
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+---
+CREATED BY **HORACIO CHINKOUN**

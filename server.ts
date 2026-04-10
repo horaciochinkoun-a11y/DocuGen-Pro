@@ -14,7 +14,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Request logger for debugging production issues
+// Logger de requêtes pour le débogage en production
 app.use((req, res, next) => {
   if (process.env.NODE_ENV === 'production') {
     console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
@@ -22,16 +22,16 @@ app.use((req, res, next) => {
   next();
 });
 
-// Serve static files in production
+// Servir les fichiers statiques en production
 if (process.env.NODE_ENV === 'production') {
   const clientPath = path.join(__dirname, 'client');
   console.log(`Configuring static files from: ${clientPath}`);
   
   app.use(express.static(clientPath));
   
-  // SPA Fallback: handle all GET requests that don't match a static file or API
+  // Fallback SPA : gère toutes les requêtes GET qui ne correspondent pas à un fichier statique ou à une API
   app.get('*all', (req, res, next) => {
-    // If it's an API request that reached here, it's a 404 for the API
+    // Si c'est une requête API qui arrive ici, c'est une erreur 404 pour l'API
     if (req.path.startsWith('/api')) {
       return next();
     }
@@ -39,12 +39,12 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-// Custom 404 handler for API routes to ensure JSON response
+// Gestionnaire 404 personnalisé pour les routes API afin de garantir une réponse JSON
 app.use('/api', (req, res) => {
   res.status(404).json({ error: `Route API non trouvée : ${req.method} ${req.path}` });
 });
 
-// Global error handler to ensure JSON response for API errors
+// Gestionnaire d'erreurs global pour garantir une réponse JSON pour les erreurs API
 app.use((err: Error & { status?: number }, req: express.Request, res: express.Response, next: express.NextFunction) => {
   console.error('Unhandled Error:', err);
   if (req.path.startsWith('/api') || req.headers.accept?.includes('application/json')) {
@@ -56,7 +56,7 @@ app.use((err: Error & { status?: number }, req: express.Request, res: express.Re
   next(err);
 });
 
-// In dev, run on 3001 so Vite can proxy from 3000
+// En développement, exécuter sur le port 3001 pour que Vite puisse faire un proxy depuis le port 3000
 const ACTUAL_PORT = process.env.NODE_ENV === 'production' ? 3000 : 3001;
 
 console.log(`Starting server in ${process.env.NODE_ENV || 'development'} mode...`);
@@ -64,7 +64,7 @@ console.log(`__dirname: ${__dirname}`);
 const clientPath = path.join(__dirname, 'client');
 console.log(`clientPath: ${clientPath}`);
 
-// Check if clientPath exists
+// Vérifier si le dossier clientPath existe
 if (existsSync(clientPath)) {
   console.log(`clientPath exists. Contents: ${readdirSync(clientPath).join(', ')}`);
 } else {

@@ -1,94 +1,160 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap');
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-serif: "Playfair Display", ui-serif, Georgia, serif;
+  
+  --color-brand-50: #f0f7ff;
+  --color-brand-100: #e0effe;
+  --color-brand-200: #bae0fd;
+  --color-brand-300: #7cc8fb;
+  --color-brand-400: #36acf7;
+  --color-brand-500: #0c91eb;
+  --color-brand-600: #0074ca;
+  --color-brand-700: #015ca3;
+  --color-brand-800: #064f86;
+  --color-brand-900: #0b426f;
+  --color-brand-950: #072a4a;
+}
+
+@layer base {
+  body {
+    @apply font-sans antialiased bg-neutral-50 text-neutral-900 dark:bg-neutral-950 dark:text-neutral-50;
+  }
+}
+
 @layer utilities {
+  /* Glassmorphism effects */
+  .glass {
+    @apply bg-white/70 dark:bg-neutral-900/70 backdrop-blur-md border border-white/20 dark:border-neutral-800/50;
+  }
+  
+  /* Soft shadows */
+  .shadow-soft {
+    box-shadow: 0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
   /* Base standard styles for Technical Summary and LinkedIn */
   .markdown-technicalSummary, .markdown-linkedinVersion {
     @apply font-sans text-neutral-800 dark:text-neutral-200;
   }
   .markdown-technicalSummary h1, .markdown-linkedinVersion h1 {
-    @apply text-2xl font-bold mb-4 mt-6 text-neutral-900 dark:text-white tracking-tight;
+    @apply text-3xl font-extrabold mb-6 mt-8 text-neutral-900 dark:text-white tracking-tight leading-tight;
   }
   .markdown-technicalSummary h2, .markdown-linkedinVersion h2 {
-    @apply text-xl font-semibold mb-3 mt-5 text-neutral-800 dark:text-neutral-200 border-b border-neutral-100 dark:border-neutral-800 pb-2;
+    @apply text-xl font-bold mb-4 mt-8 text-neutral-800 dark:text-neutral-100 border-l-4 border-brand-500 pl-4 py-1 bg-brand-50/30 dark:bg-brand-900/10 rounded-r;
   }
   .markdown-technicalSummary h3, .markdown-linkedinVersion h3 {
-    @apply text-lg font-medium mb-2 mt-4 text-neutral-800 dark:text-neutral-200;
+    @apply text-lg font-semibold mb-3 mt-6 text-neutral-800 dark:text-neutral-200;
   }
   .markdown-technicalSummary p, .markdown-linkedinVersion p {
-    @apply mb-4 leading-relaxed;
+    @apply mb-4 leading-relaxed text-[15px] sm:text-base;
   }
   .markdown-technicalSummary ul, .markdown-linkedinVersion ul {
-    @apply list-disc pl-5 mb-4 space-y-1 text-neutral-700 dark:text-neutral-300;
-  }
-  .markdown-technicalSummary ol, .markdown-linkedinVersion ol {
-    @apply list-decimal pl-5 mb-4 space-y-1 text-neutral-700 dark:text-neutral-300;
+    @apply list-none pl-0 mb-6 space-y-3;
   }
   .markdown-technicalSummary li, .markdown-linkedinVersion li {
-    @apply mb-1;
+    @apply relative pl-6 text-neutral-700 dark:text-neutral-300 before:content-[''] before:absolute before:left-0 before:top-[0.6em] before:w-1.5 before:h-1.5 before:bg-brand-500 before:rounded-full;
   }
   .markdown-technicalSummary strong, .markdown-linkedinVersion strong {
-    @apply font-semibold text-neutral-900 dark:text-white;
-  }
-  .markdown-technicalSummary em, .markdown-linkedinVersion em {
-    @apply italic;
+    @apply font-bold text-neutral-900 dark:text-white;
   }
   .markdown-technicalSummary blockquote, .markdown-linkedinVersion blockquote {
-    @apply border-l-4 border-blue-500 pl-4 italic text-neutral-600 dark:text-neutral-400 my-4 bg-blue-50/50 dark:bg-blue-900/20 py-2 pr-2 rounded-r;
+    @apply border-l-4 border-brand-500 pl-6 italic text-neutral-700 dark:text-neutral-300 my-6 bg-brand-50/50 dark:bg-brand-900/20 py-4 pr-4 rounded-r shadow-sm;
   }
+
+  /* Ideation Phase Styles */
+  /* Roadmap - Emerald */
+  .markdown-roadmap h1 { @apply text-emerald-600 dark:text-emerald-400 font-black; }
+  .markdown-roadmap h2 { @apply border-emerald-500 bg-emerald-50/30 dark:bg-emerald-900/10 text-emerald-800 dark:text-emerald-100; }
+  .markdown-roadmap li::before { @apply bg-emerald-500; }
+
+  /* Architecture - Amber */
+  .markdown-architecture h1 { @apply text-amber-600 dark:text-amber-400 font-black; }
+  .markdown-architecture h2 { @apply border-amber-500 bg-amber-50/30 dark:bg-amber-900/10 text-amber-800 dark:text-amber-100; }
+  .markdown-architecture li::before { @apply bg-amber-500; }
+
+  /* Backlog - Rose */
+  .markdown-backlog h1 { @apply text-rose-600 dark:text-rose-400 font-black; }
+  .markdown-backlog h2 { @apply border-rose-500 bg-rose-50/30 dark:bg-rose-900/10 text-rose-800 dark:text-rose-100; }
+  .markdown-backlog li::before { @apply bg-rose-500; }
+
+  /* Pitch - Indigo */
+  .markdown-pitch h1 { @apply text-indigo-600 dark:text-indigo-400 font-black; }
+  .markdown-pitch h2 { @apply border-indigo-500 bg-indigo-50/30 dark:bg-indigo-900/10 text-indigo-800 dark:text-indigo-100; }
+  .markdown-pitch li::before { @apply bg-indigo-500; }
 
   /* Attestation Style (Formal, Paper-like) */
   .markdown-attestation {
-    @apply font-serif bg-white dark:bg-neutral-900 p-8 sm:p-12 border border-neutral-200 dark:border-neutral-800 shadow-[0_0_15px_rgba(0,0,0,0.03)] dark:shadow-[0_0_15px_rgba(0,0,0,0.2)] rounded-sm max-w-3xl mx-auto text-neutral-900 dark:text-neutral-100;
+    @apply font-serif bg-white dark:bg-neutral-900 p-10 sm:p-16 border border-neutral-200 dark:border-neutral-800 shadow-xl rounded-sm max-w-3xl mx-auto text-neutral-900 dark:text-neutral-100;
   }
   .markdown-attestation h1 {
-    @apply text-2xl sm:text-3xl font-bold text-center text-neutral-900 dark:text-white mb-8 uppercase tracking-wider;
+    @apply text-3xl sm:text-4xl font-black text-center text-neutral-900 dark:text-white mb-12 uppercase tracking-[0.2em] leading-tight;
   }
   .markdown-attestation h2 {
-    @apply text-lg font-bold text-neutral-800 dark:text-neutral-200 mt-6 mb-3;
+    @apply text-xl font-bold text-neutral-800 dark:text-neutral-200 mt-10 mb-4 border-b-2 border-neutral-100 dark:border-neutral-800 pb-2;
   }
   .markdown-attestation p {
-    @apply mb-4 text-justify leading-loose;
-  }
-  .markdown-attestation strong {
-    @apply font-semibold text-neutral-950 dark:text-white;
+    @apply mb-6 text-justify leading-[1.8] text-lg;
   }
   .markdown-attestation hr {
-    @apply my-8 border-t-2 border-neutral-200 dark:border-neutral-800;
-  }
-  .markdown-attestation ul {
-    @apply list-disc pl-5 mb-4 space-y-2;
+    @apply my-12 border-t-2 border-neutral-100 dark:border-neutral-800;
   }
 
   /* CV Style (Modern, Accent Colors) */
   .markdown-cvVersion {
-    @apply font-sans bg-white dark:bg-neutral-900 p-8 sm:p-10 border-t-4 border-blue-600 dark:border-blue-500 shadow-sm rounded-lg max-w-3xl mx-auto text-neutral-800 dark:text-neutral-200;
+    @apply font-sans bg-white dark:bg-neutral-900 p-10 sm:p-14 border-t-8 border-brand-600 dark:border-brand-500 shadow-2xl rounded-xl max-w-3xl mx-auto text-neutral-800 dark:text-neutral-200;
   }
   .markdown-cvVersion h1 {
-    @apply text-3xl sm:text-4xl font-extrabold text-neutral-900 dark:text-white mb-2 tracking-tight;
+    @apply text-4xl sm:text-5xl font-black text-neutral-900 dark:text-white mb-4 tracking-tighter leading-none;
   }
   .markdown-cvVersion h2 {
-    @apply text-lg font-bold text-blue-700 dark:text-blue-400 mt-8 mb-4 uppercase tracking-wide border-b border-neutral-200 dark:border-neutral-800 pb-2;
-  }
-  .markdown-cvVersion h3 {
-    @apply text-lg font-semibold text-neutral-800 dark:text-neutral-200 mt-4 mb-2;
-  }
-  .markdown-cvVersion p {
-    @apply mb-3 text-neutral-600 dark:text-neutral-400;
+    @apply text-sm font-black text-brand-600 dark:text-brand-400 mt-10 mb-6 uppercase tracking-[0.15em] flex items-center gap-3 after:content-[''] after:h-px after:flex-1 after:bg-neutral-200 dark:after:bg-neutral-800;
   }
   .markdown-cvVersion ul {
-    @apply list-none pl-0 mb-6 space-y-2;
+    @apply list-none pl-0 mb-8 space-y-3;
   }
-  .markdown-cvVersion li {
-    @apply relative pl-5 text-neutral-700 dark:text-neutral-300;
+  /* Classic Design System Overrides (Le design "Brut") */
+  .classic-design {
+    --color-brand-50: #f5f3ff;
+    --color-brand-100: #ede9fe;
+    --color-brand-200: #ddd6fe;
+    --color-brand-300: #c4b5fd;
+    --color-brand-400: #a78bfa;
+    --color-brand-500: #8b5cf6;
+    --color-brand-600: #7c3aed;
+    --color-brand-700: #6d28d9;
+    --color-brand-800: #5b21b6;
+    --color-brand-900: #4c1d95;
+    --color-brand-950: #2e1065;
   }
-  .markdown-cvVersion li::before {
-    content: "•";
-    @apply absolute left-0 text-blue-500 dark:text-blue-400 font-bold;
+  .classic-design .glass {
+    @apply bg-white dark:bg-neutral-900 backdrop-blur-none border-neutral-200 dark:border-neutral-800 shadow-sm;
   }
-  .markdown-cvVersion strong {
-    @apply font-semibold text-neutral-900 dark:text-white;
+  .classic-design .shadow-soft {
+    @apply shadow-md border border-neutral-200 dark:border-neutral-800;
+  }
+  .classic-design .rounded-3xl, .classic-design .rounded-2xl, .classic-design .rounded-xl {
+    @apply rounded-lg;
+  }
+  .classic-design .font-serif {
+    @apply font-sans;
+  }
+  .classic-design .font-black {
+    @apply font-bold;
+  }
+  .classic-design .tracking-tighter, .classic-design .tracking-tight, .classic-design .tracking-widest {
+    @apply tracking-normal;
+  }
+  .classic-design .uppercase {
+    @apply normal-case;
+  }
+  .classic-design .border-double {
+    @apply border-solid;
   }
 }

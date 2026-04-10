@@ -29,6 +29,24 @@
 - **Justification de chaque décision :** Voir le fichier `decisions_log.md` pour plus de détails.
 
 ## Historique des modifications
+- **09 Avril 2026**
+  - **Description :** Restauration du design "Classic" (Brut) comme design par défaut suite au retour utilisateur. Le design "Premium" reste disponible en option dans les réglages. Amélioration du mode Classic pour correspondre fidèlement à l'interface initiale (couleurs Indigo, bordures simples).
+  - **Impact :** Retour à une interface plus familière et sobre par défaut, tout en conservant les capacités de personnalisation.
+- **09 Avril 2026**
+  - **Description :** Amélioration du rendu des documents en phase d'idéation (Roadmap, Architecture, Backlog, Pitch) avec des thèmes de couleurs spécifiques (Emerald, Amber, Rose, Indigo). Implémentation d'un commutateur de système de design permettant de basculer entre le style "Premium" et un style "Classic" plus sobre. Mise en place d'un système de rotation de clés API Gemini pour les clés par défaut.
+  - **Impact :** Meilleure lisibilité des documents d'idéation et flexibilité accrue sur l'apparence de l'interface.
+- **09 Avril 2026**
+  - **Description :** Refonte complète de l'identité visuelle (Design Overhaul). Introduction d'un système de design "Premium SaaS" avec typographies raffinées (Inter, Playfair Display), effets de verre (Glassmorphism), et une palette de couleurs "Brand" cohérente.
+  - **Impact :** Amélioration radicale de la perception de qualité et de professionnalisme de l'application.
+- **08 Avril 2026**
+  - **Description :** Ajout du mode "Nouveau Projet" (Initiation). Permet de générer des roadmaps, des architectures recommandées et des backlogs MVP pour les projets au stade de l'idée.
+  - **Impact :** Élargissement de la cible utilisateur aux porteurs de projets en phase de démarrage.
+- **08 Avril 2026**
+  - **Description :** Préparation du déploiement externe sur Vercel. Mise à jour du service Gemini pour supporter `import.meta.env` et documentation de la procédure de transfert.
+  - **Impact :** Permet le déploiement de l'application sur des comptes Vercel tiers.
+- **08 Avril 2026**
+  - **Description :** Mise en place d'une stratégie de licence hybride (Propriétaire - Source Available) et création des fichiers `LICENSE` et `README.md`.
+  - **Impact :** Protection de la propriété intellectuelle tout en permettant l'exposition du code pour le portfolio.
 - **08 Avril 2026**
   - **Description :** Optimisation SEO complète (balises meta, Open Graph, Twitter Cards, structure sémantique) et création d'une charte graphique dédiée (`charte_graphique.md`).
   - **Impact :** Meilleure visibilité sur les moteurs de recherche et documentation claire de l'identité visuelle.

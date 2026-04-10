@@ -68,3 +68,50 @@
   2. Créer un document de référence pour la charte graphique.
 - **Alternatives envisagées :** Utiliser un plugin SEO automatique (rejeté pour garder un contrôle total sur les balises).
 - **Conséquences :** Amélioration du taux de clic lors du partage sur les réseaux sociaux et cohérence visuelle accrue pour les futurs développements.
+
+---
+
+---
+
+## Titre de la décision : Mode "Nouveau Projet" (Initiation)
+- **Date :** 08 Avril 2026
+- **Contexte :** Les utilisateurs au début d'un projet ne trouvaient pas d'utilité immédiate à l'application.
+- **Décision :** Ajouter un mode "Initiation" pour transformer les idées en plans d'action (Roadmap, Architecture, Backlog).
+- **Alternatives envisagées :** Créer une application séparée.
+- **Conséquences :** Élargissement de la base d'utilisateurs potentiels et accompagnement sur tout le cycle de vie du projet.
+
+---
+
+## Titre de la décision : Refonte de l'Identité Visuelle (Design Overhaul)
+- **Date :** 09 Avril 2026
+- **Contexte :** L'interface initiale était jugée trop "brute" et manquait de polish pour un outil professionnel.
+- **Décision :** Adopter un style "Premium SaaS" utilisant le Glassmorphism, des ombres douces (`shadow-soft`), et une typographie hybride (Sans-serif pour l'interface, Serif pour les titres élégants).
+- **Alternatives envisagées :** Style Minimaliste pur (trop froid), Style Brutaliste (trop clivant).
+- **Conséquences :** Meilleure rétention utilisateur, image de marque renforcée, interface plus agréable à utiliser au quotidien.
+
+---
+
+## Titre de la décision : Restauration du Design "Classic" par défaut
+- **Date :** 09 Avril 2026
+- **Contexte :** Suite aux retours utilisateur, le design "Premium SaaS" a été jugé trop éloigné de l'interface initiale ("brute").
+- **Décision :** Définir le système de design "Classic" comme valeur par défaut au démarrage de l'application. Le design "Premium" reste accessible via les paramètres pour les utilisateurs souhaitant une expérience plus moderne.
+- **Alternatives envisagées :** Supprimer totalement le design Premium (rejeté pour garder la flexibilité).
+- **Conséquences :** Satisfaction de l'utilisateur principal tout en conservant les avancées esthétiques comme option secondaire.
+
+---
+
+## Titre de la décision : Système de Design Hybride (Premium vs Classic)
+- **Date :** 09 Avril 2026
+- **Contexte :** Certains utilisateurs peuvent préférer une interface plus sobre et traditionnelle que le style "Premium SaaS" par défaut, ou avoir besoin d'une interface plus légère.
+- **Décision :** Implémenter un commutateur de système de design. Le style "Classic" désactive les effets de verre, réduit les arrondis et utilise une palette de couleurs plus neutre (Slate/Gray).
+- **Alternatives envisagées :** Ne proposer qu'un seul design (rejeté pour maximiser la satisfaction utilisateur).
+- **Conséquences :** Complexité accrue du CSS (nécessite des classes conditionnelles), mais offre une personnalisation appréciée par les utilisateurs professionnels.
+
+---
+
+## Titre de la décision : Rotation de Clés API Gemini
+- **Date :** 09 Avril 2026
+- **Contexte :** Pour éviter d'atteindre trop rapidement les quotas de l'API Gemini sur une seule clé par défaut, il est nécessaire de répartir la charge.
+- **Décision :** Implémenter une rotation aléatoire des clés API par défaut. Le service `geminiService` accepte désormais une liste de clés séparées par des virgules dans les variables d'environnement.
+- **Alternatives envisagées :** Utiliser un proxy backend avec gestion de file d'attente (plus complexe).
+- **Conséquences :** Augmente la résilience de l'application face aux limites de quota.
