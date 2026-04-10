@@ -169,3 +169,10 @@ Fix the following errors: Uncaught ReferenceError: designSystem is not defined
 
 Assistant :
 J'ai corrigé l'erreur `ReferenceError: designSystem is not defined` en déplaçant l'état `designSystem` du composant `DocumentationGenerator` vers le composant racine `App`. Cela permet d'appliquer correctement le système de design choisi à l'ensemble de l'application, y compris la page d'accueil, sans provoquer d'erreurs de portée.
+
+[2026-04-10T06:50:09+0000]
+Utilisateur :
+crée un fichier markdown dans lequel sera détaillé le contenu de chaque dossier et fichier du projet, ce qu'on y trouve , les responsabilités de chaque fichier et dossier et leur importance ajoute d'autres élément qui m'ont échapper
+
+Assistant :
+J'ai créé le fichier `structure_projet.md` à la racine du projet. Ce document contient une vue d'ensemble détaillée de l'architecture de l'application, l'explication du rôle et de l'importance de chaque dossier (`src/components`, `src/services`, etc.) et fichier clé (`App.tsx`, `server.ts`, `geminiService.ts`, etc.). J'y ai également ajouté une section sur le flux de données (Data Flow) et les concepts clés (Architecture Frontend-First, Système de Design Hybride, Résilience de l'IA) pour offrir une compréhension complète du système.

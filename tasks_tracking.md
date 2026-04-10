@@ -47,4 +47,5 @@
 
 ## Tâches en cours
 - [ ] Maintenance et mise à jour continue de la documentation du projet.
+- [x] Création du document `structure_projet.md` pour détailler l'architecture.
 - [ ] Surveillance de la stabilité du déploiement suite aux dernières corrections.

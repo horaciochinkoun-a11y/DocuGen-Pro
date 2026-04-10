@@ -29,6 +29,9 @@
 - **Justification de chaque décision :** Voir le fichier `decisions_log.md` pour plus de détails.
 
 ## Historique des modifications
+- **10 Avril 2026**
+  - **Description :** Création du document `structure_projet.md` détaillant l'arborescence, les responsabilités de chaque fichier/dossier, le flux de données et les concepts architecturaux clés. Traduction en français des commentaires principaux dans le code source (`App.tsx`, `LandingPage.tsx`, `server.ts`).
+  - **Impact :** Amélioration significative de la maintenabilité, de la lisibilité du code pour les développeurs francophones et pérennisation de la connaissance du projet.
 - **09 Avril 2026**
   - **Description :** Restauration du design "Classic" (Brut) comme design par défaut suite au retour utilisateur. Le design "Premium" reste disponible en option dans les réglages. Amélioration du mode Classic pour correspondre fidèlement à l'interface initiale (couleurs Indigo, bordures simples).
   - **Impact :** Retour à une interface plus familière et sobre par défaut, tout en conservant les capacités de personnalisation.
