@@ -39,55 +39,34 @@
     box-shadow: 0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   }
   
-  /* Base standard styles for Technical Summary and LinkedIn */
-  .markdown-technicalSummary, .markdown-linkedinVersion {
+  /* Base standard styles for Technical Summary, LinkedIn, and Ideation docs */
+  .markdown-technicalSummary, .markdown-linkedinVersion, .markdown-roadmap, .markdown-architecture, .markdown-backlog, .markdown-pitch {
     @apply font-sans text-neutral-800 dark:text-neutral-200;
   }
-  .markdown-technicalSummary h1, .markdown-linkedinVersion h1 {
+  .markdown-technicalSummary h1, .markdown-linkedinVersion h1, .markdown-roadmap h1, .markdown-architecture h1, .markdown-backlog h1, .markdown-pitch h1 {
     @apply text-3xl font-extrabold mb-6 mt-8 text-neutral-900 dark:text-white tracking-tight leading-tight;
   }
-  .markdown-technicalSummary h2, .markdown-linkedinVersion h2 {
+  .markdown-technicalSummary h2, .markdown-linkedinVersion h2, .markdown-roadmap h2, .markdown-architecture h2, .markdown-backlog h2, .markdown-pitch h2 {
     @apply text-xl font-bold mb-4 mt-8 text-neutral-800 dark:text-neutral-100 border-l-4 border-brand-500 pl-4 py-1 bg-brand-50/30 dark:bg-brand-900/10 rounded-r;
   }
-  .markdown-technicalSummary h3, .markdown-linkedinVersion h3 {
+  .markdown-technicalSummary h3, .markdown-linkedinVersion h3, .markdown-roadmap h3, .markdown-architecture h3, .markdown-backlog h3, .markdown-pitch h3 {
     @apply text-lg font-semibold mb-3 mt-6 text-neutral-800 dark:text-neutral-200;
   }
-  .markdown-technicalSummary p, .markdown-linkedinVersion p {
+  .markdown-technicalSummary p, .markdown-linkedinVersion p, .markdown-roadmap p, .markdown-architecture p, .markdown-backlog p, .markdown-pitch p {
     @apply mb-4 leading-relaxed text-[15px] sm:text-base;
   }
-  .markdown-technicalSummary ul, .markdown-linkedinVersion ul {
+  .markdown-technicalSummary ul, .markdown-linkedinVersion ul, .markdown-roadmap ul, .markdown-architecture ul, .markdown-backlog ul, .markdown-pitch ul {
     @apply list-none pl-0 mb-6 space-y-3;
   }
-  .markdown-technicalSummary li, .markdown-linkedinVersion li {
+  .markdown-technicalSummary li, .markdown-linkedinVersion li, .markdown-roadmap li, .markdown-architecture li, .markdown-backlog li, .markdown-pitch li {
     @apply relative pl-6 text-neutral-700 dark:text-neutral-300 before:content-[''] before:absolute before:left-0 before:top-[0.6em] before:w-1.5 before:h-1.5 before:bg-brand-500 before:rounded-full;
   }
-  .markdown-technicalSummary strong, .markdown-linkedinVersion strong {
+  .markdown-technicalSummary strong, .markdown-linkedinVersion strong, .markdown-roadmap strong, .markdown-architecture strong, .markdown-backlog strong, .markdown-pitch strong {
     @apply font-bold text-neutral-900 dark:text-white;
   }
-  .markdown-technicalSummary blockquote, .markdown-linkedinVersion blockquote {
+  .markdown-technicalSummary blockquote, .markdown-linkedinVersion blockquote, .markdown-roadmap blockquote, .markdown-architecture blockquote, .markdown-backlog blockquote, .markdown-pitch blockquote {
     @apply border-l-4 border-brand-500 pl-6 italic text-neutral-700 dark:text-neutral-300 my-6 bg-brand-50/50 dark:bg-brand-900/20 py-4 pr-4 rounded-r shadow-sm;
   }
-
-  /* Ideation Phase Styles */
-  /* Roadmap - Emerald */
-  .markdown-roadmap h1 { @apply text-emerald-600 dark:text-emerald-400 font-black; }
-  .markdown-roadmap h2 { @apply border-emerald-500 bg-emerald-50/30 dark:bg-emerald-900/10 text-emerald-800 dark:text-emerald-100; }
-  .markdown-roadmap li::before { @apply bg-emerald-500; }
-
-  /* Architecture - Amber */
-  .markdown-architecture h1 { @apply text-amber-600 dark:text-amber-400 font-black; }
-  .markdown-architecture h2 { @apply border-amber-500 bg-amber-50/30 dark:bg-amber-900/10 text-amber-800 dark:text-amber-100; }
-  .markdown-architecture li::before { @apply bg-amber-500; }
-
-  /* Backlog - Rose */
-  .markdown-backlog h1 { @apply text-rose-600 dark:text-rose-400 font-black; }
-  .markdown-backlog h2 { @apply border-rose-500 bg-rose-50/30 dark:bg-rose-900/10 text-rose-800 dark:text-rose-100; }
-  .markdown-backlog li::before { @apply bg-rose-500; }
-
-  /* Pitch - Indigo */
-  .markdown-pitch h1 { @apply text-indigo-600 dark:text-indigo-400 font-black; }
-  .markdown-pitch h2 { @apply border-indigo-500 bg-indigo-50/30 dark:bg-indigo-900/10 text-indigo-800 dark:text-indigo-100; }
-  .markdown-pitch li::before { @apply bg-indigo-500; }
 
   /* Attestation Style (Formal, Paper-like) */
   .markdown-attestation {
@@ -119,27 +98,29 @@
   .markdown-cvVersion ul {
     @apply list-none pl-0 mb-8 space-y-3;
   }
-  /* Classic Design System Overrides (Le design "Brut") */
+  /* Classic Design System Overrides (Minimalist, Corporate, Sharp) */
   .classic-design {
-    --color-brand-50: #f5f3ff;
-    --color-brand-100: #ede9fe;
-    --color-brand-200: #ddd6fe;
-    --color-brand-300: #c4b5fd;
-    --color-brand-400: #a78bfa;
-    --color-brand-500: #8b5cf6;
-    --color-brand-600: #7c3aed;
-    --color-brand-700: #6d28d9;
-    --color-brand-800: #5b21b6;
-    --color-brand-900: #4c1d95;
-    --color-brand-950: #2e1065;
+    --color-brand-50: #f0fdf4;
+    --color-brand-100: #dcfce7;
+    --color-brand-200: #bbf7d0;
+    --color-brand-300: #86efac;
+    --color-brand-400: #4ade80;
+    --color-brand-500: #22c55e;
+    --color-brand-600: #16a34a;
+    --color-brand-700: #15803d;
+    --color-brand-800: #166534;
+    --color-brand-900: #14532d;
+    --color-brand-950: #052e16;
   }
   .classic-design .glass {
-    @apply bg-white dark:bg-neutral-900 backdrop-blur-none border-neutral-200 dark:border-neutral-800 shadow-sm;
+    @apply bg-white dark:bg-neutral-900 backdrop-blur-none border-neutral-300 dark:border-neutral-700 shadow-none;
   }
   .classic-design .shadow-soft {
-    @apply shadow-md border border-neutral-200 dark:border-neutral-800;
+    @apply shadow-none border-2 border-neutral-200 dark:border-neutral-800;
   }
-  .classic-design .rounded-3xl, .classic-design .rounded-2xl, .classic-design .rounded-xl {
+  .classic-design .rounded-3xl, 
+  .classic-design .rounded-2xl,
+  .classic-design .rounded-xl {
     @apply rounded-lg;
   }
   .classic-design .font-serif {
@@ -148,13 +129,24 @@
   .classic-design .font-black {
     @apply font-bold;
   }
-  .classic-design .tracking-tighter, .classic-design .tracking-tight, .classic-design .tracking-widest {
+  .classic-design .tracking-tighter,
+  .classic-design .tracking-tight {
+    @apply tracking-normal;
+  }
+  .classic-design .tracking-widest {
     @apply tracking-normal;
   }
   .classic-design .uppercase {
     @apply normal-case;
   }
   .classic-design .border-double {
-    @apply border-solid;
+    @apply border-solid border-2;
+  }
+  .classic-design .sticky {
+    @apply static;
+  }
+  .classic-design .prose h1,
+  .classic-design .prose h2 {
+    @apply border-b-2 border-neutral-100 dark:border-neutral-800 pb-2 mb-6;
   }
 }

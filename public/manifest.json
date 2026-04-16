@@ -1,0 +1,17 @@
+{
+  "name": "DocuGen Pro",
+  "short_name": "DocuGen",
+  "description": "Générateur de Documentation de Projet IA par Aurion Labs-G",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0074ca",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

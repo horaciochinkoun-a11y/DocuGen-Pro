@@ -1,27 +1,24 @@
-DROITS D'AUTEUR ET LICENCE LOGICIELLE - DOCUGEN PRO
+# Proprietary License - DocuGen Pro
 
-Copyright (c) 2026 Horacio CHINKOUN. Tous droits réservés.
+Copyright (c) 2026 Aurion Labs-G. All rights reserved.
 
-1. DÉFINITIONS
-"Logiciel" désigne l'ensemble du code source, des prompts IA, des designs et de la documentation associés au projet DocuGen Pro.
-"Auteur" désigne Horacio CHINKOUN.
+DocuGen Pro is a product of Aurion Labs-G.
 
-2. OCTROI DE LICENCE
-Par la présente, l'Auteur accorde une licence limitée, non exclusive et non transférable pour utiliser le Logiciel selon les conditions suivantes :
+## 1. Ownership
+The Software and all intellectual property rights therein are and shall remain the sole and exclusive property of Aurion Labs-G.
 
-a) Usage Personnel et Portfolio : Vous êtes autorisé à consulter, télécharger et exécuter le Logiciel à des fins d'apprentissage, de test personnel ou pour l'évaluation des compétences techniques de l'Auteur dans le cadre d'un recrutement.
-b) Modifications : Vous pouvez modifier le code pour votre usage personnel uniquement. Toute redistribution du code modifié est soumise aux mêmes restrictions que le code original.
+## 2. License Grant
+Subject to the terms and conditions of this License, Aurion Labs-G hereby grants you a non-exclusive, non-transferable, limited license to use the Software solely for your own personal or internal business purposes.
 
-3. RESTRICTIONS
-Sauf autorisation écrite expresse de l'Auteur, il est strictement INTERDIT de :
-a) Utiliser le Logiciel ou toute partie de celui-ci à des fins commerciales.
-b) Héberger, redistribuer ou vendre le Logiciel en tant que service (SaaS) ou produit autonome.
-c) Supprimer ou modifier les mentions de copyright ou de paternité de l'Auteur.
+## 3. Restrictions
+You shall not:
+- Sublicense, sell, lease, or rent the Software.
+- Decompile, reverse engineer, or disassemble the Software.
+- Modify or create derivative works based on the Software.
+- Remove any proprietary notices or labels on the Software.
 
-4. PROPRIÉTÉ INTELLECTUELLE
-Le Logiciel est protégé par les lois sur le droit d'auteur et les traités internationaux. L'Auteur conserve l'intégralité des droits, titres et intérêts relatifs au Logiciel, y compris tous les droits de propriété intellectuelle.
+## 4. Disclaimer of Warranty
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 
-5. EXCLUSION DE GARANTIE
-LE LOGICIEL EST FOURNI "EN L'ÉTAT", SANS GARANTIE D'AUCUNE SORTE, EXPRESSE OU IMPLICITE. EN AUCUN CAS L'AUTEUR NE POURRA ÊTRE TENU RESPONSABLE DE TOUTE RÉCLAMATION, DOMMAGE OU AUTRE RESPONSABILITÉ DÉCOULANT DE L'UTILISATION DU LOGICIEL.
-
-Pour toute demande de licence commerciale ou de partenariat, veuillez contacter : horaciochinkoun@gmail.com
+## 5. Limitation of Liability
+IN NO EVENT SHALL AURION LABS-G BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

@@ -1,6 +1,6 @@
-# Architecture et Structure du Projet DocuGen Pro
+# Architecture et Structure du Projet DocuGen Pro (Aurion Labs-G)
 
-Ce document détaille l'organisation du code source, le rôle de chaque fichier et dossier, ainsi que les concepts architecturaux clés du projet. Il sert de guide de référence pour tout développeur intervenant sur l'application.
+Ce document détaille l'organisation du code source de DocuGen Pro, un produit de **Aurion Labs-G**. Il sert de guide de référence pour tout développeur intervenant sur l'application.
 
 ## 📂 Arborescence Globale
 

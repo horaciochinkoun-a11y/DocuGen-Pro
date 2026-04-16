@@ -176,3 +176,64 @@ crée un fichier markdown dans lequel sera détaillé le contenu de chaque dossi
 
 Assistant :
 J'ai créé le fichier `structure_projet.md` à la racine du projet. Ce document contient une vue d'ensemble détaillée de l'architecture de l'application, l'explication du rôle et de l'importance de chaque dossier (`src/components`, `src/services`, etc.) et fichier clé (`App.tsx`, `server.ts`, `geminiService.ts`, etc.). J'y ai également ajouté une section sur le flux de données (Data Flow) et les concepts clés (Architecture Frontend-First, Système de Design Hybride, Résilience de l'IA) pour offrir une compréhension complète du système.
+
+[2026-04-12T07:50:57+0000]
+Utilisateur :
+Je veux harmoniser toute la documentation juridique et branding de mon projet. Contexte : Mon entreprise mère s'appelle "Aurion Labs-G". Elle est propriétaire de tous mes logiciels et services et de Mon application actuelle. DocuGen Pro reste le nom commercial du produit. Aurion Labs-G doit apparaître comme éditeur / détenteur des droits.
+
+Assistant :
+J'ai procédé à l'harmonisation complète du branding et de la documentation juridique du projet. DocuGen Pro est désormais officiellement rattaché à **Aurion Labs-G**. Les modifications incluent la mise à jour des métadonnées SEO, des footers (Landing Page et App), ainsi que la création des fichiers `LICENSE`, `LEGAL_MENTIONS.md` et `TERMS_OF_SERVICE.md`. Toute la documentation technique a également été mise à jour pour refléter cette nouvelle identité institutionnelle.
+
+[2026-04-12T15:27:00+0000]
+Utilisateur :
+je n'aime pas l'affichage (contexte : problèmes de réactivité mobile et zone de prévisualisation vide).
+
+Assistant :
+J'ai effectué une série d'améliorations majeures sur l'interface utilisateur, en mettant l'accent sur l'expérience mobile et l'engagement des nouveaux utilisateurs :
+1.  **Optimisation Mobile** : Refonte du Header pour éviter la troncature du logo sur petit écran et rendre les boutons plus compacts.
+2.  **Formulaires Responsives** : Passage à une grille adaptative pour les champs de saisie, assurant une lisibilité parfaite sur smartphone.
+3.  **Empty State Dynamique** : Création d'un état vide visuellement riche dans la zone de prévisualisation avec des icônes animées et des suggestions de documents pour guider l'utilisateur dès son arrivée.
+4.  **Raffinement du Design Classic** : Ajustement des styles "Brut" pour un rendu plus professionnel (arrondis, typographie, ombres) tout en conservant l'esprit initial.
+5.  **Mise à jour de la documentation** : Tous les fichiers de suivi du projet ont été actualisés pour refléter ces changements.
+
+[2026-04-15T05:26:17-07:00]
+Utilisateur :
+SUR MOBILE L'ON NE VOIS PAS LES BOUTONS DE CAS D'EXEMPLE
+
+Assistant :
+Le problème est corrigé. Le bouton "Exemple" (qui permet de charger des données de test) était effectivement masqué sur les petits écrans. Je l'ai rendu visible en permanence sur mobile, avec son icône et son texte. J'ai également ajusté les espacements de l'en-tête pour m'assurer que tous les boutons (Logo, Exemple, Clé API, Thème, Connexion) s'affichent correctement sans déborder, même sur les plus petits smartphones.
+
+[2026-04-15T05:45:19-07:00]
+Utilisateur :
+propulsée n'est toujours pas bien affichées
+
+Assistant :
+C'est corrigé ! J'ai forcé un retour à la ligne après "Votre documentation" pour que le mot "propulsée" ait suffisamment d'espace sur mobile. J'ai également ajouté une règle pour permettre aux mots trop longs de se scinder si nécessaire (`break-words`), garantissant ainsi que le texte ne débordera plus jamais de l'écran, quelle que soit sa taille.
+
+[2026-04-15T06:10:51-07:00]
+Utilisateur :
+le rendu pour la phase d'idéation nécessite des améliorations
+
+Assistant :
+Le problème est réglé ! Les documents générés lors de la phase d'idéation (Roadmap, Architecture, Backlog, Pitch) s'affichaient sans mise en forme car ils n'héritaient pas des styles CSS de base (typographie, espacements, listes) définis pour les autres documents. J'ai mis à jour le fichier CSS pour que ces documents bénéficient de la même présentation claire et professionnelle, tout en conservant leurs couleurs thématiques spécifiques (émeraude, ambre, rose, indigo).
+
+[2026-04-15T07:22:26-07:00]
+Utilisateur :
+ce n'est toujours pas optimal, elle doit adopter le style de la phase de livraison et ne plus avoir différente couleur
+
+Assistant :
+Compris. J'ai supprimé les couleurs spécifiques (émeraude, ambre, rose, indigo) qui étaient appliquées aux documents de la phase d'idéation. Désormais, la Roadmap, l'Architecture, le Backlog et le Pitch utilisent exactement le même style visuel que les documents de la phase de livraison (Résumé Technique, LinkedIn), avec la couleur bleue principale ("brand") de l'application pour les titres, les citations et les puces. Le rendu est maintenant parfaitement uniforme sur l'ensemble de l'application.
+
+[2026-04-16T02:16:07-07:00]
+Utilisateur :
+Je souhaite que ce soit ce logo qui apparaisse lorsque l'utilisateur souhaite ajouter l'application à son écran d'accueil.
+
+Assistant :
+C'est fait ! J'ai configuré l'application pour qu'elle utilise le logo officiel (le carré bleu avec l'icône de document) comme icône d'accueil. Pour cela, j'ai créé un fichier `manifest.json` et une icône vectorielle (`icon.svg`) qui reproduit exactement le design de votre logo. Désormais, quand un utilisateur choisit "Ajouter à l'écran d'accueil" sur son smartphone, c'est bien ce logo qui apparaîtra.
+
+[2026-04-16T02:33:37-07:00]
+Utilisateur :
+validé (pour l'implémentation de l'historique)
+
+Assistant :
+C'est fait ! J'ai implémenté le système d'historique complet. Désormais, chaque fois que vous générez une documentation, elle est automatiquement sauvegardée dans votre navigateur (localStorage). Vous pouvez accéder à vos 30 dernières générations via le nouveau bouton "Historique" dans la barre de navigation. Vous pouvez recharger un ancien projet en un clic ou supprimer ceux dont vous n'avez plus besoin. L'historique conserve les données du formulaire ainsi que les documents générés, que ce soit pour la phase de livraison ou d'idéation.

@@ -21,7 +21,11 @@ import {
   Sun,
   Moon,
   Sparkles,
-  Palette
+  Palette,
+  MapPin,
+  History,
+  Trash2,
+  ChevronRight
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Markdown from 'react-markdown';
@@ -151,6 +155,15 @@ const initialFormData: ProjectData = {
   githubLink: '',
 };
 
+// History Item Interface
+interface HistoryItem {
+  id: string;
+  timestamp: number;
+  formData: ProjectData;
+  generatedDocs: GeneratedDocs;
+  phase: 'completion' | 'initiation';
+}
+
 function DocumentationGenerator({ 
   onNavigateHome, 
   theme, 
@@ -175,6 +188,11 @@ function DocumentationGenerator({
   const [activeTab, setActiveTab] = useState<keyof GeneratedDocs>('attestation');
   const [copiedTab, setCopiedTab] = useState<string | null>(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [history, setHistory] = useState<HistoryItem[]>(() => {
+    const saved = localStorage.getItem('docugen_history');
+    return saved ? JSON.parse(saved) : [];
+  });
   
   // État local de la clé API (Mode autonome sans backend)
   const [localApiKey, setLocalApiKey] = useState(() => localStorage.getItem('gemini_api_key') || '');
@@ -368,6 +386,18 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
       const data = await generateProfessionalDocs(prompt, localApiKey, projectPhase);
       setGeneratedDocs(data);
       setActiveTab(projectPhase === 'completion' ? 'attestation' : 'roadmap');
+
+      // Save to history
+      const newHistoryItem: HistoryItem = {
+        id: crypto.randomUUID(),
+        timestamp: Date.now(),
+        formData: { ...formData },
+        generatedDocs: data,
+        phase: projectPhase
+      };
+      const updatedHistory = [newHistoryItem, ...history].slice(0, 30); // Keep last 30
+      setHistory(updatedHistory);
+      localStorage.setItem('docugen_history', JSON.stringify(updatedHistory));
     } catch (err: unknown) {
       const error = err as Error;
       console.error('Erreur de génération:', error);
@@ -508,6 +538,21 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
     setFormData(samples[randomIndex]);
   };
 
+  const loadHistoryItem = (item: HistoryItem) => {
+    setFormData(item.formData);
+    setGeneratedDocs(item.generatedDocs);
+    setProjectPhase(item.phase);
+    setActiveTab(item.phase === 'completion' ? 'attestation' : 'roadmap');
+    setShowHistory(false);
+  };
+
+  const deleteHistoryItem = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    const updatedHistory = history.filter(item => item.id !== id);
+    setHistory(updatedHistory);
+    localStorage.setItem('docugen_history', JSON.stringify(updatedHistory));
+  };
+
   const tabs = projectPhase === 'completion' ? [
     { id: 'attestation', label: 'Attestation', icon: FileText },
     { id: 'technicalSummary', label: 'Résumé Technique', icon: Code },
@@ -533,72 +578,75 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
       <header className="glass sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div 
-            className="flex items-center gap-2.5 cursor-pointer group transition-all"
+            className="flex items-center gap-2 sm:gap-3 cursor-pointer group transition-all min-w-0"
             onClick={onNavigateHome}
             title="Retour à l'accueil"
           >
-            <div className="bg-brand-600 text-white p-2 rounded-xl shadow-lg shadow-brand-500/20 group-hover:scale-110 transition-transform">
-              <FileText size={20} />
+            <div className="bg-brand-600 text-white p-1.5 sm:p-2 rounded-lg sm:rounded-xl shadow-lg shadow-brand-500/20 group-hover:scale-110 transition-transform shrink-0">
+              <FileText size={18} className="sm:w-5 sm:h-5" />
             </div>
-            <h1 className="text-xl font-bold tracking-tight text-neutral-900 dark:text-white">DocuGen <span className="text-brand-600 dark:text-brand-400">Pro</span></h1>
+            <h1 className="text-lg sm:text-xl font-bold tracking-tight text-neutral-900 dark:text-white truncate">
+              DocuGen <span className="text-brand-600 dark:text-brand-400">Pro</span>
+            </h1>
           </div>
           
-          <div className="flex items-center gap-3 sm:gap-6">
-            <div className="hidden md:flex items-center gap-4">
-              <button
-                type="button"
-                onClick={fillSampleData}
-                className="text-sm font-medium text-neutral-500 hover:text-brand-600 dark:text-neutral-400 dark:hover:text-brand-400 transition-colors flex items-center gap-2"
-              >
-                <Sparkles size={16} />
-                Charger un exemple
-              </button>
-            </div>
+          <div className="flex items-center gap-1.5 sm:gap-4 shrink-0">
+            <button
+              type="button"
+              onClick={() => setShowHistory(!showHistory)}
+              className={`flex items-center gap-1.5 p-1.5 px-2 sm:p-2 sm:px-3 transition-all rounded-xl border shadow-sm ${
+                showHistory 
+                  ? "bg-brand-600 border-brand-600 text-white" 
+                  : "text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900"
+              }`}
+              title="Historique des documents"
+            >
+              <History size={16} />
+              <span className="hidden sm:inline text-[10px] font-black uppercase tracking-widest">Historique</span>
+            </button>
 
-            {/* Always visible Settings/API Key button */}
+            <button
+              type="button"
+              onClick={fillSampleData}
+              className="flex items-center gap-1.5 p-1.5 px-2 sm:p-2 sm:px-3 text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/20 transition-all rounded-xl border border-brand-200 dark:border-brand-800 bg-brand-50/50 dark:bg-brand-900/10 shadow-sm"
+              title="Charger un exemple"
+            >
+              <Sparkles size={16} />
+              <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest">Exemple</span>
+            </button>
+
             <button 
               onClick={() => setShowSettings(!showSettings)}
-              className="flex items-center gap-2 p-2 px-3 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-all border border-neutral-200 dark:border-neutral-700 shadow-sm"
+              className="flex items-center gap-2 p-1.5 sm:p-2 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-all border border-neutral-200 dark:border-neutral-700 shadow-sm"
               title="Configuration API"
             >
-              <Key size={18} className={localApiKey ? "text-green-500" : "text-amber-500"} />
-              <span className="hidden sm:inline text-sm font-semibold">Clé API</span>
+              <Key size={16} className={`sm:w-[18px] sm:h-[18px] ${localApiKey ? "text-green-500" : "text-amber-500"}`} />
+              <span className="hidden md:inline text-[10px] font-black uppercase tracking-widest">Clé API</span>
             </button>
 
             <button
               onClick={toggleTheme}
-              className="p-2.5 text-neutral-500 hover:text-brand-600 dark:text-neutral-400 dark:hover:text-brand-400 transition-all rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm"
-              title={theme === 'light' ? 'Passer en mode sombre' : 'Passer en mode clair'}
+              className="p-1.5 sm:p-2 text-neutral-500 hover:text-brand-600 dark:text-neutral-400 dark:hover:text-brand-400 transition-all rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm"
             >
-              {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+              {theme === 'light' ? <Moon size={16} className="sm:w-[18px] sm:h-[18px]" /> : <Sun size={16} className="sm:w-[18px] sm:h-[18px]" />}
             </button>
 
             {user ? (
-              <div className="flex items-center gap-3 ml-2 pl-4 border-l border-neutral-200 dark:border-neutral-800">
-                <div className="flex items-center gap-2 bg-white dark:bg-neutral-900 px-3 py-1.5 rounded-xl border border-neutral-200 dark:border-neutral-700 shadow-sm">
-                  {user.photoURL ? (
-                    <img src={user.photoURL} alt={user.displayName || ''} className="w-6 h-6 rounded-full" />
-                  ) : (
-                    <UserIcon size={16} className="text-neutral-500 dark:text-neutral-400" />
-                  )}
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300 hidden md:inline">
-                    {user.displayName?.split(' ')[0]}
-                  </span>
-                </div>
+              <div className="flex items-center gap-2 sm:gap-3 ml-0.5 sm:ml-2 pl-1.5 sm:pl-4 border-l border-neutral-200 dark:border-neutral-800">
                 <button 
                   onClick={handleLogout}
-                  className="p-2 text-neutral-500 hover:text-red-600 dark:text-neutral-400 dark:hover:text-red-400 transition-all"
+                  className="p-1.5 sm:p-2 text-neutral-500 hover:text-red-600 dark:text-neutral-400 dark:hover:text-red-400 transition-all"
                   title="Déconnexion"
                 >
-                  <LogOut size={20} />
+                  <LogOut size={16} className="sm:w-[18px] sm:h-[18px]" />
                 </button>
               </div>
             ) : (
               <button 
                 onClick={handleLogin}
-                className="flex items-center gap-2 bg-brand-600 text-white px-5 py-2.5 rounded-xl font-bold hover:bg-brand-700 transition-all shadow-lg shadow-brand-500/20 active:scale-95"
+                className="flex items-center gap-2 bg-brand-600 text-white p-1.5 sm:px-5 sm:py-2.5 rounded-xl font-bold hover:bg-brand-700 transition-all shadow-lg shadow-brand-500/20 active:scale-95"
               >
-                <LogIn size={18} />
+                <LogIn size={16} className="sm:w-[18px] sm:h-[18px]" />
                 <span className="hidden sm:inline">Connexion</span>
               </button>
             )}
@@ -607,6 +655,97 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Modal Historique */}
+        <AnimatePresence>
+          {showHistory && (
+            <div className="fixed inset-0 z-[60] flex items-start justify-center pt-20 px-4">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setShowHistory(false)}
+                className="absolute inset-0 bg-neutral-950/40 backdrop-blur-sm"
+              />
+              <motion.div
+                initial={{ opacity: 0, y: -20, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                className="relative w-full max-w-2xl bg-white dark:bg-neutral-900 rounded-3xl shadow-2xl border border-neutral-200 dark:border-neutral-800 overflow-hidden flex flex-col max-h-[70vh]"
+              >
+                <div className="p-6 border-b border-neutral-100 dark:border-neutral-800 flex items-center justify-between bg-neutral-50/50 dark:bg-neutral-950/50">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-brand-100 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 rounded-xl">
+                      <History size={20} />
+                    </div>
+                    <div>
+                      <h2 className="text-lg font-bold text-neutral-900 dark:text-white">Historique</h2>
+                      <p className="text-xs text-neutral-500">Vos 30 dernières générations</p>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={() => setShowHistory(false)}
+                    className="p-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-full transition-colors"
+                  >
+                    <AlertCircle size={20} className="rotate-45" />
+                  </button>
+                </div>
+
+                <div className="flex-1 overflow-y-auto p-4 space-y-2">
+                  {history.length === 0 ? (
+                    <div className="py-20 text-center">
+                      <div className="w-16 h-16 bg-neutral-100 dark:bg-neutral-800 rounded-full flex items-center justify-center mx-auto mb-4 opacity-50">
+                        <History size={32} className="text-neutral-400" />
+                      </div>
+                      <p className="text-neutral-500 font-medium">Aucun document dans l'historique</p>
+                      <p className="text-xs text-neutral-400 mt-1">Générez votre premier document pour le voir ici</p>
+                    </div>
+                  ) : (
+                    history.map((item) => (
+                      <div
+                        key={item.id}
+                        onClick={() => loadHistoryItem(item)}
+                        className="group flex items-center justify-between p-4 rounded-2xl border border-neutral-100 dark:border-neutral-800 hover:border-brand-200 dark:hover:border-brand-800 hover:bg-brand-50/30 dark:hover:bg-brand-900/10 transition-all cursor-pointer"
+                      >
+                        <div className="flex items-center gap-4 min-w-0">
+                          <div className={`p-2 rounded-lg shrink-0 ${
+                            item.phase === 'completion' 
+                              ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' 
+                              : 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400'
+                          }`}>
+                            {item.phase === 'completion' ? <CheckCircle2 size={18} /> : <Sparkles size={18} />}
+                          </div>
+                          <div className="min-w-0">
+                            <h3 className="font-bold text-neutral-900 dark:text-white truncate">
+                              {item.formData.projectName || "Projet sans nom"}
+                            </h3>
+                            <div className="flex items-center gap-2 text-[10px] text-neutral-500 font-medium uppercase tracking-wider">
+                              <span>{new Date(item.timestamp).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}</span>
+                              <span className="w-1 h-1 bg-neutral-300 dark:bg-neutral-700 rounded-full" />
+                              <span className={item.phase === 'completion' ? 'text-blue-600' : 'text-purple-600'}>
+                                {item.phase === 'completion' ? 'Livraison' : 'Idéation'}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={(e) => deleteHistoryItem(e, item.id)}
+                            className="p-2 text-neutral-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all opacity-0 group-hover:opacity-100"
+                            title="Supprimer"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                          <ChevronRight size={20} className="text-neutral-300 group-hover:text-brand-500 transition-colors" />
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
+
         {/* Fenêtre modale des paramètres */}
         <AnimatePresence>
           {showSettings && (
@@ -762,10 +901,10 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
               )}
 
               <div className="space-y-6">
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-xs font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
-                      <UserIcon size={14} className="text-brand-500" />
+                    <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                      <UserIcon size={12} className="text-brand-500" />
                       {projectPhase === 'completion' ? 'Développeur' : 'Porteur du Projet'}
                     </label>
                     <input
@@ -779,8 +918,8 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-xs font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
-                      <Briefcase size={14} className="text-brand-500" />
+                    <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                      <Briefcase size={12} className="text-brand-500" />
                       {projectPhase === 'completion' ? 'Statut' : 'Rôle visé'}
                     </label>
                     <input
@@ -800,12 +939,10 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
                       <option value="Consultant" />
                     </datalist>
                   </div>
-                </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5">
-                      <UserIcon size={14} className="text-neutral-400 dark:text-neutral-500"/> {projectPhase === 'completion' ? 'Nom du Client' : 'Cible / Client visé'}
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                      <UserIcon size={12} className="text-brand-500"/> {projectPhase === 'completion' ? 'Nom du Client' : 'Cible / Client visé'}
                     </label>
                     <input
                       required
@@ -813,13 +950,13 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
                       name="clientName"
                       value={formData.clientName}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white"
+                      className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
                       placeholder={projectPhase === 'completion' ? "Marie Martin" : "ex: Freelances, PME..."}
                     />
                   </div>
-                  <div className="space-y-1.5">
-                    <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5">
-                      <Building2 size={14} className="text-neutral-400 dark:text-neutral-500"/> {projectPhase === 'completion' ? 'Entreprise' : 'Nom du SaaS / Entité'}
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                      <Building2 size={12} className="text-brand-500"/> {projectPhase === 'completion' ? 'Entreprise' : 'Nom du SaaS / Entité'}
                     </label>
                     <input
                       required
@@ -827,45 +964,41 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
                       name="companyName"
                       value={formData.companyName}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white"
+                      className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
                       placeholder="Acme Corp"
                     />
                   </div>
-                </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5">
-                      <Clock size={14} className="text-neutral-400 dark:text-neutral-500"/> Heure / Date
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                      <Clock size={12} className="text-brand-500"/> Heure / Date
                     </label>
                     <input
                       type="text"
                       name="manualTime"
                       value={formData.manualTime}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white"
+                      className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
                       placeholder="ex: 02 Avril 2026"
                     />
                   </div>
-                  <div className="space-y-1.5">
-                    <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5">
-                      <Building2 size={14} className="text-neutral-400 dark:text-neutral-500"/> Lieu
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                      <MapPin size={12} className="text-brand-500"/> Lieu
                     </label>
                     <input
                       type="text"
                       name="manualLocation"
                       value={formData.manualLocation}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white"
+                      className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
                       placeholder="ex: Paris, France"
                     />
                   </div>
-                </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5">
-                      <Clock size={14} className="text-neutral-400 dark:text-neutral-500"/> Durée
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                      <Clock size={12} className="text-brand-500"/> Durée
                     </label>
                     <input
                       required
@@ -873,20 +1006,20 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
                       name="duration"
                       value={formData.duration}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white"
+                      className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
                       placeholder="ex: 3 mois"
                     />
                   </div>
-                  <div className="space-y-1.5">
-                    <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5">
-                      <Laptop size={14} className="text-neutral-400 dark:text-neutral-500"/> Type du Projet
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                      <Laptop size={12} className="text-brand-500"/> Type du Projet
                     </label>
                     <input
                       list="project-types"
                       name="projectType"
                       value={formData.projectType}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white"
+                      className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
                       placeholder="ex: SaaS B2B"
                     />
                     <datalist id="project-types">
@@ -900,9 +1033,9 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
                   </div>
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5">
-                    <Laptop size={14} className="text-neutral-400 dark:text-neutral-500"/> Nom du Projet
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                    <Laptop size={12} className="text-brand-500" /> Nom du Projet
                   </label>
                   <input
                     required
@@ -910,28 +1043,28 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
                     name="projectName"
                     value={formData.projectName}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white"
+                    className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
                     placeholder="Projet Alpha"
                   />
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5">
-                    <Code size={14} className="text-neutral-400 dark:text-neutral-500"/> Lien GitHub du dépôt (Optionnel)
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                    <Code size={12} className="text-brand-500" /> Lien GitHub (Optionnel)
                   </label>
                   <input
                     type="url"
                     name="githubLink"
                     value={formData.githubLink}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white"
-                    placeholder="https://github.com/votre-pseudo/votre-projet"
+                    className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
+                    placeholder="https://github.com/..."
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-xs font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
-                    <FileText size={14} className="text-brand-500" />
+                  <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                    <FileText size={12} className="text-brand-500" />
                     {projectPhase === 'completion' ? 'Description' : 'Vision du Projet'}
                   </label>
                   <textarea
@@ -946,8 +1079,8 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-xs font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
-                    <Laptop size={14} className="text-brand-500" />
+                  <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                    <Laptop size={12} className="text-brand-500" />
                     {projectPhase === 'completion' ? 'Technologies Utilisées' : 'Technologies Envisagées'}
                   </label>
                   <input
@@ -1130,20 +1263,50 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
                 </div>
               </div>
             ) : (
-              <div className="h-full min-h-[600px] bg-neutral-50/50 dark:bg-neutral-900/50 rounded-2xl border border-neutral-200 dark:border-neutral-800 border-dashed flex flex-col items-center justify-center text-center p-8">
-                <div className="w-16 h-16 bg-white dark:bg-neutral-800 rounded-2xl shadow-sm border border-neutral-100 dark:border-neutral-700 flex items-center justify-center mb-4">
-                  <FileText size={32} className="text-neutral-300 dark:text-neutral-600" />
+              <div className="h-full min-h-[400px] sm:min-h-[600px] bg-white dark:bg-neutral-900 rounded-2xl sm:rounded-3xl border border-neutral-200 dark:border-neutral-800 flex flex-col items-center justify-center text-center p-6 sm:p-12 shadow-soft">
+                <div className="relative mb-6 sm:mb-8">
+                  <div className="w-16 h-16 sm:w-24 sm:h-24 bg-brand-50 dark:bg-brand-900/20 rounded-2xl sm:rounded-3xl flex items-center justify-center animate-pulse">
+                    <FileText size={32} className="text-brand-200 dark:text-brand-800 sm:hidden" />
+                    <FileText size={48} className="text-brand-200 dark:text-brand-800 hidden sm:block" />
+                  </div>
+                  <div className="absolute -bottom-1 -right-1 sm:-bottom-2 sm:-right-2 w-8 h-8 sm:w-10 sm:h-10 bg-white dark:bg-neutral-800 rounded-lg sm:rounded-xl shadow-lg flex items-center justify-center border border-neutral-100 dark:border-neutral-700">
+                    <Sparkles size={16} className="text-brand-500 sm:hidden" />
+                    <Sparkles size={20} className="text-brand-500 hidden sm:block" />
+                  </div>
                 </div>
-                <h3 className="text-lg font-medium text-neutral-900 dark:text-white mb-2">Aucun document généré pour le moment</h3>
-                <p className="text-neutral-500 dark:text-neutral-400 max-w-md">
-                  Remplissez le formulaire des détails du projet et cliquez sur générer pour créer des attestations professionnelles, des résumés techniques, des entrées de CV et des publications LinkedIn.
+                <h3 className="text-xl sm:text-2xl font-black text-neutral-900 dark:text-white mb-3 sm:mb-4 tracking-tight">Prêt à générer ?</h3>
+                <p className="text-sm sm:text-base text-neutral-500 dark:text-neutral-400 max-w-sm leading-relaxed font-medium">
+                  Remplissez les détails de votre projet à gauche et laissez l'IA créer votre documentation professionnelle en quelques secondes.
                 </p>
+                <div className="mt-8 sm:mt-10 flex flex-wrap justify-center gap-2 sm:gap-3">
+                  {['Attestations', 'Roadmaps', 'CV Technique', 'Posts LinkedIn'].map((tag) => (
+                    <span key={tag} className="px-3 py-1.5 sm:px-4 sm:py-2 bg-neutral-50 dark:bg-neutral-950 text-neutral-400 dark:text-neutral-600 text-[9px] sm:text-[10px] font-black uppercase tracking-widest rounded-full border border-neutral-100 dark:border-neutral-800">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
             )}
           </div>
 
         </div>
       </main>
+
+      <footer className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-neutral-200 dark:border-neutral-800 mt-auto h-[340px] flex flex-col justify-center w-full">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+          <div className="space-y-1">
+            <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400">
+              © 2026 DocuGen Pro. All rights reserved by Aurion Labs-G.
+            </p>
+            <p className="text-xs text-neutral-500 dark:text-neutral-500 italic">
+              DocuGen Pro is a product of Aurion Labs-G.
+            </p>
+          </div>
+          <div className="flex items-center gap-6 text-xs font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-500">
+            <span>Powered by Aurion Labs-G</span>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

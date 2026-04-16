@@ -30,7 +30,7 @@ export default function LandingPage({ onStart, theme, toggleTheme }: LandingPage
             </button>
             <button 
               onClick={onStart}
-              className="hidden sm:block text-sm font-black uppercase tracking-widest text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors"
+              className="text-sm font-black uppercase tracking-widest text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors"
             >
               Accéder
             </button>
@@ -52,9 +52,10 @@ export default function LandingPage({ onStart, theme, toggleTheme }: LandingPage
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
+              className="px-4"
             >
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter text-neutral-900 dark:text-white mb-8 leading-[0.9]">
-                Votre documentation<br className="hidden md:block" />
+              <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter text-neutral-900 dark:text-white mb-8 leading-[1.1] md:leading-[0.9] break-words">
+                Votre documentation<br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-400">
                   propulsée par l'IA.
                 </span>
@@ -113,7 +114,7 @@ export default function LandingPage({ onStart, theme, toggleTheme }: LandingPage
       </main>
 
       {/* Pied de page (Footer) */}
-      <footer className="bg-neutral-950 text-neutral-400 py-20 text-center relative z-10 border-t border-neutral-900">
+      <footer className="bg-neutral-950 text-neutral-400 py-20 text-center relative z-10 border-t border-neutral-900 h-[340px] flex flex-col justify-center">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-center gap-3 mb-8 group cursor-default">
             <div className="bg-brand-600 text-white p-2 rounded-xl shadow-lg shadow-brand-500/20 group-hover:scale-110 transition-transform">
@@ -121,9 +122,10 @@ export default function LandingPage({ onStart, theme, toggleTheme }: LandingPage
             </div>
             <span className="text-2xl font-black text-white tracking-tighter">DocuGen Pro</span>
           </div>
-          <p className="text-sm font-medium opacity-60">© 2026 DocuGen Pro. Conçu pour les freelances et créateurs visionnaires.</p>
+          <p className="text-sm font-medium opacity-60">© 2026 DocuGen Pro. All rights reserved by Aurion Labs-G.</p>
+          <p className="text-xs mt-2 opacity-40 italic">DocuGen Pro is a product of Aurion Labs-G.</p>
           <div className="mt-10 pt-10 border-t border-neutral-900/50">
-            <p className="text-xs font-black tracking-[0.3em] text-neutral-500 uppercase">Created by Horacio Chinkoun</p>
+            <p className="text-xs font-black tracking-[0.3em] text-neutral-500 uppercase">Powered by Aurion Labs-G</p>
           </div>
         </div>
       </footer>

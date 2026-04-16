@@ -29,6 +29,21 @@
 - **Justification de chaque décision :** Voir le fichier `decisions_log.md` pour plus de détails.
 
 ## Historique des modifications
+- **16 Avril 2026**
+  - **Description :** Mise en place de la configuration PWA (Progressive Web App). Création du fichier `manifest.json` et d'une icône vectorielle (`icon.svg`) reproduisant fidèlement le logo de DocuGen Pro (carré bleu arrondi avec icône de document blanche). Implémentation d'un système d'historique local permettant de sauvegarder les 30 dernières générations de documents directement dans le navigateur (`localStorage`). Ajout d'une interface de consultation dédiée permettant de recharger instantanément un ancien projet ou de le supprimer.
+  - **Impact :** Permet aux utilisateurs d'ajouter l'application à leur écran d'accueil sur mobile et de retrouver facilement leurs travaux précédents sans avoir besoin d'un compte cloud, améliorant considérablement la productivité et l'expérience utilisateur hors-ligne.
+- **15 Avril 2026**
+  - **Description :** Correction d'un problème d'affichage sur mobile où le bouton "Exemple" (permettant de charger des données de test) était masqué. Le bouton est désormais visible en permanence, avec son texte, et son design a été ajusté pour s'intégrer parfaitement dans l'en-tête compact sur smartphone. Correction également du titre principal de la page d'accueil ("Votre documentation propulsée par l'IA") qui débordait de l'écran sur mobile. Application des styles CSS de base (typographie, espacements, listes) aux documents générés lors de la phase d'idéation (Roadmap, Architecture, Backlog, Pitch) qui s'affichaient auparavant sans mise en forme. Harmonisation des couleurs de ces documents avec le thème principal de l'application (bleu "brand") en supprimant les couleurs spécifiques (émeraude, ambre, rose, indigo) pour plus de cohérence visuelle.
+  - **Impact :** Amélioration de l'accessibilité de la fonctionnalité de démonstration, de la lisibilité de la page d'accueil pour les utilisateurs mobiles, et de la présentation professionnelle et cohérente des documents d'idéation.
+- **12 Avril 2026**
+  - **Description :** Correction d'un bug critique (`ReferenceError: MapPin is not defined`) introduit lors de l'optimisation des formulaires. Ajout de l'import manquant dans `App.tsx`.
+  - **Impact :** Restauration de la stabilité de l'application.
+- **12 Avril 2026**
+  - **Description :** Amélioration majeure de l'expérience utilisateur et de la réactivité mobile. Refonte de l'en-tête de l'application, optimisation des formulaires avec une grille responsive, et création d'un état vide (Empty State) visuellement riche pour guider les nouveaux utilisateurs. Raffinement du design "Classic" pour un aspect plus professionnel.
+  - **Impact :** Expérience utilisateur fluide sur tous les supports (mobile, tablette, desktop) et réduction de la friction pour les nouveaux utilisateurs.
+- **12 Avril 2026**
+  - **Description :** Harmonisation complète du branding et de la documentation juridique. DocuGen Pro est désormais officiellement identifié comme un produit de **Aurion Labs-G**. Mise à jour des métadonnées SEO, des footers, et création des fichiers `LICENSE`, `LEGAL_MENTIONS.md` et `TERMS_OF_SERVICE.md`.
+  - **Impact :** Professionnalisation de l'image de marque et sécurisation juridique du produit sous l'égide de l'entreprise mère.
 - **10 Avril 2026**
   - **Description :** Création du document `structure_projet.md` détaillant l'arborescence, les responsabilités de chaque fichier/dossier, le flux de données et les concepts architecturaux clés. Traduction en français des commentaires principaux dans le code source (`App.tsx`, `LandingPage.tsx`, `server.ts`).
   - **Impact :** Amélioration significative de la maintenabilité, de la lisibilité du code pour les développeurs francophones et pérennisation de la connaissance du projet.

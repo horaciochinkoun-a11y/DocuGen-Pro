@@ -91,6 +91,15 @@
 
 ---
 
+## Titre de la décision : Harmonisation du Branding sous Aurion Labs-G
+- **Date :** 12 Avril 2026
+- **Contexte :** Besoin de professionnaliser l'image de marque et de clarifier la propriété intellectuelle du produit.
+- **Décision :** Identifier systématiquement DocuGen Pro comme un produit de **Aurion Labs-G**. Mettre à jour tous les supports (code, métadonnées, documents légaux) pour refléter cette appartenance.
+- **Alternatives envisagées :** Garder une identité freelance individuelle (rejeté pour des raisons de scalabilité et de crédibilité entreprise).
+- **Conséquences :** Meilleure protection juridique et image de marque institutionnelle renforcée.
+
+---
+
 ## Titre de la décision : Restauration du Design "Classic" par défaut
 - **Date :** 09 Avril 2026
 - **Contexte :** Suite aux retours utilisateur, le design "Premium SaaS" a été jugé trop éloigné de l'interface initiale ("brute").
@@ -115,3 +124,15 @@
 - **Décision :** Implémenter une rotation aléatoire des clés API par défaut. Le service `geminiService` accepte désormais une liste de clés séparées par des virgules dans les variables d'environnement.
 - **Alternatives envisagées :** Utiliser un proxy backend avec gestion de file d'attente (plus complexe).
 - **Conséquences :** Augmente la résilience de l'application face aux limites de quota.
+
+---
+
+## Titre de la décision : Raffinement de l'Expérience Mobile et de l'État Vide
+- **Date :** 12 Avril 2026
+- **Contexte :** L'interface sur mobile présentait des problèmes de lisibilité (troncature du logo) et d'ergonomie (boutons trop larges, formulaires peu denses). De plus, les nouveaux utilisateurs se retrouvaient face à une zone de prévisualisation vide et peu engageante.
+- **Décision :** 
+  1. Refondre le Header pour être plus compact sur mobile (icônes plus petites, texte tronqué intelligemment).
+  2. Utiliser une grille responsive pour les formulaires (1 colonne sur mobile, 2 sur desktop) pour maximiser l'espace vertical.
+  3. Créer un "Empty State" visuel avec des icônes animées et des exemples de documents pour guider l'utilisateur.
+- **Alternatives envisagées :** Créer une version mobile simplifiée séparée (rejeté pour maintenir une base de code unique).
+- **Conséquences :** Amélioration immédiate de la perception de qualité sur smartphone et meilleure rétention des nouveaux utilisateurs grâce à un guidage visuel.

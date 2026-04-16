@@ -33,6 +33,11 @@
 - [x] Implémentation du commutateur de Système de Design (Premium vs Classic).
 - [x] Restauration du design "Classic" (Brut) par défaut.
 - [x] Mise en place de la rotation de clés API Gemini par défaut.
+- [x] Amélioration de la réactivité mobile (Header, Landing Page, Formulaires).
+- [x] Refonte de l'en-tête de l'application pour une meilleure ergonomie mobile.
+- [x] Harmonisation des champs de formulaire et amélioration de la lisibilité.
+- [x] Création d'un état vide (Empty State) informatif et visuel pour la prévisualisation.
+- [x] Raffinement du design "Classic" pour un rendu plus professionnel.
 
 ## Bogues corrigés
 - [x] Échec du déploiement Cloud Run (Port binding 0.0.0.0:3000).
@@ -44,8 +49,17 @@
 - [x] Résolution de l'erreur 403 Gemini en passant par le SDK Frontend.
 - [x] Correction de l'erreur `Sparkles is not defined` dans `App.tsx`.
 - [x] Correction de l'erreur `ReferenceError: designSystem is not defined` (remontée d'état).
+- [x] Correction de l'erreur `ReferenceError: MapPin is not defined` (import manquant).
+- [x] Rendre le bouton "Exemple" visible et proéminent sur mobile.
+- [x] Correction du débordement de texte ("propulsée par l'IA") sur la page d'accueil mobile.
+- [x] Correction du rendu Markdown (styles manquants) pour les documents de la phase d'idéation.
+- [x] Harmonisation des couleurs de la phase d'idéation avec le thème principal (suppression des couleurs spécifiques).
+- [x] Configuration de l'icône d'application (PWA) avec le logo officiel pour l'ajout à l'écran d'accueil.
+- [x] Implémentation de l'historique des documents générés avec sauvegarde dans le localStorage (jusqu'à 30 éléments).
+- [x] Interface de consultation et de suppression de l'historique.
 
 ## Tâches en cours
 - [ ] Maintenance et mise à jour continue de la documentation du projet.
 - [x] Création du document `structure_projet.md` pour détailler l'architecture.
+- [x] Harmonisation du branding et de la documentation juridique (Aurion Labs-G).
 - [ ] Surveillance de la stabilité du déploiement suite aux dernières corrections.

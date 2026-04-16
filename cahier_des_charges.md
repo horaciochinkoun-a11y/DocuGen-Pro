@@ -18,7 +18,7 @@ L'invite initiale demandait la création d'une application permettant de génér
 - **Performances :** L'application doit être réactive. La génération IA doit gérer les erreurs 503 (surcharge) avec un mécanisme de nouvelle tentative (retry).
 - **Sécurité :** La clé API de l'utilisateur est stockée localement.
 - **Évolutivité :** L'architecture Frontend-First doit permettre une utilisation autonome et exportable.
-- **Interface :** Design professionnel, épuré, responsive (Tailwind CSS) avec mention de l'auteur dans le footer.
+- **Interface :** Design professionnel, épuré, responsive (Tailwind CSS). DocuGen Pro est un produit de Aurion Labs-G.
 
 ## Contraintes
 - **Hébergement :** L'application doit être déployable sur Google Cloud Run.
