@@ -57,6 +57,7 @@
 - [x] Configuration de l'icône d'application (PWA) avec le logo officiel pour l'ajout à l'écran d'accueil.
 - [x] Implémentation de l'historique des documents générés avec sauvegarde dans le localStorage (jusqu'à 30 éléments).
 - [x] Interface de consultation et de suppression de l'historique.
+- [x] Création et formalisation de la Fiche Portfolio Technique de l'application.
 
 ## Tâches en cours
 - [ ] Maintenance et mise à jour continue de la documentation du projet.

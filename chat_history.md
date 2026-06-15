@@ -237,3 +237,17 @@ validé (pour l'implémentation de l'historique)
 
 Assistant :
 C'est fait ! J'ai implémenté le système d'historique complet. Désormais, chaque fois que vous générez une documentation, elle est automatiquement sauvegardée dans votre navigateur (localStorage). Vous pouvez accéder à vos 30 dernières générations via le nouveau bouton "Historique" dans la barre de navigation. Vous pouvez recharger un ancien projet en un clic ou supprimer ceux dont vous n'avez plus besoin. L'historique conserve les données du formulaire ainsi que les documents générés, que ce soit pour la phase de livraison ou d'idéation.
+
+[2026-04-16T02:49:28-07:00]
+Utilisateur :
+je constatate que la différence entre les deux design réside uniquement dans la couleur
+
+Assistant :
+Vous avez tout à fait raison. Jusqu'à présent, la différence était subtile. J'ai procédé à une refonte profonde du système "Classic" pour le distinguer radicalement du système "Premium". (Palette de couleurs verte émeraude, angles de bordures droits, sans-serif stricte, look flat/corporate sans glassmorphism).
+
+[2026-06-15T12:51:05-07:00]
+Utilisateur :
+Analyse complètement ce projet. Génère une fiche portfolio professionnelle.
+
+Assistant :
+Analyse effectuée avec succès ! J'ai rédigé la fiche portfolio technique complète selon vos demandes spécifiques et l'ai enregistrée sous `/docs/portfolio_fiche.md`.
