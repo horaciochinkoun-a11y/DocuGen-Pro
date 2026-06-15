@@ -84,19 +84,37 @@
   .markdown-attestation hr {
     @apply my-12 border-t-2 border-neutral-100 dark:border-neutral-800;
   }
+  .markdown-attestation h3 {
+    @apply text-base font-extrabold text-neutral-900 dark:text-white mt-8 mb-3 uppercase tracking-wider text-center sm:text-left;
+  }
+  .markdown-attestation img[alt="QR Code d'authentification"] {
+    @apply mx-auto sm:mx-0 my-4 border-2 border-neutral-100 dark:border-neutral-800/80 p-2.5 bg-white rounded-xl shadow-sm max-w-[140px] block transition-all duration-300 hover:shadow-md hover:border-brand-500/40;
+  }
 
-  /* CV Style (Modern, Accent Colors) */
+  /* CV Style (Modern, Accent Colors - High Fidelity) */
   .markdown-cvVersion {
-    @apply font-sans bg-white dark:bg-neutral-900 p-10 sm:p-14 border-t-8 border-brand-600 dark:border-brand-500 shadow-2xl rounded-xl max-w-3xl mx-auto text-neutral-800 dark:text-neutral-200;
+    @apply font-sans bg-white dark:bg-neutral-900 p-8 sm:p-10 border-t-4 border-brand-500/80 dark:border-brand-500/60 shadow-lg rounded-lg max-w-3xl mx-auto text-neutral-600 dark:text-neutral-400;
   }
   .markdown-cvVersion h1 {
-    @apply text-4xl sm:text-5xl font-black text-neutral-900 dark:text-white mb-4 tracking-tighter leading-none;
+    @apply text-2xl sm:text-3xl font-bold text-neutral-800 dark:text-neutral-100 mb-1.5 tracking-tight leading-tight;
   }
   .markdown-cvVersion h2 {
-    @apply text-sm font-black text-brand-600 dark:text-brand-400 mt-10 mb-6 uppercase tracking-[0.15em] flex items-center gap-3 after:content-[''] after:h-px after:flex-1 after:bg-neutral-200 dark:after:bg-neutral-800;
+    @apply text-[11px] font-medium text-neutral-500 dark:text-neutral-400 mt-6 mb-3 uppercase tracking-[0.15em] flex items-center gap-2.5 after:content-[''] after:h-px after:flex-1 after:bg-neutral-100 dark:after:bg-neutral-800/40;
+  }
+  .markdown-cvVersion h3 {
+    @apply text-sm font-medium text-neutral-800 dark:text-neutral-200 mt-4 mb-1.5;
+  }
+  .markdown-cvVersion p {
+    @apply text-[13px] text-neutral-500 dark:text-neutral-400 leading-relaxed mb-2.5;
   }
   .markdown-cvVersion ul {
-    @apply list-none pl-0 mb-8 space-y-3;
+    @apply list-none pl-0 mb-5 space-y-2;
+  }
+  .markdown-cvVersion li {
+    @apply text-[13px] text-neutral-500 dark:text-neutral-400 relative pl-4 before:content-['•'] before:absolute before:left-0 before:top-0 before:text-neutral-300 dark:before:text-neutral-700 before:text-sm;
+  }
+  .markdown-cvVersion strong {
+    @apply font-medium text-neutral-800 dark:text-neutral-100;
   }
   /* Classic Design System Overrides (Minimalist, Corporate, Sharp) */
   .classic-design {

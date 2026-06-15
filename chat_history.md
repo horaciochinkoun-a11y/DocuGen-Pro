@@ -251,3 +251,25 @@ Analyse complètement ce projet. Génère une fiche portfolio professionnelle.
 
 Assistant :
 Analyse effectuée avec succès ! J'ai rédigé la fiche portfolio technique complète selon vos demandes spécifiques et l'ai enregistrée sous `/docs/portfolio_fiche.md`.
+
+[2026-06-15T14:52:23-07:00]
+Utilisateur :
+ADOUCI ENCORE DE 40 %
+
+Assistant :
+J'ai adouci le design de la version CV pour la rendre plus fluide et moderne, avec des contrastes subtils, des polices plus légères et une esthétique zen.
+
+[2026-06-15T15:00:08-07:00]
+Utilisateur :
+Ajoutez une section en fin d'attestation qui génère un QR code stylisé renvoyant vers le profil LinkedIn ou le lien GitHub du développeur pour authentifier le document.
+
+Assistant :
+J'ai implémenté l'intégration d'un QR code d'authentification dynamique et stylisé à la fin de l'Attestation, couplé avec l'ajout d'un champ "Lien LinkedIn" dans le formulaire de l'application. Le QR code change de couleur selon le système de design sélectionné.
+
+[2026-06-15T15:18:38-07:00]
+Utilisateur :
+JE VALIDE VAS Y
+
+Assistant :
+J'ai conçu et implémenté une Landing Page hautement professionnelle et optimisée, structurée avec des sections Hero immersives, propositions de valeur concrètes, fonctionnalités clés pour tout le cycle de vie projet, scénarios métiers d'usages réels, cycle étape-par-étape, FAQ interactive sous forme d'accordéon, et un appel à l'action marquant, le tout avec un code abondamment commenté ligne par ligne.
+

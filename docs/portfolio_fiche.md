@@ -1,144 +1,102 @@
-# Fiche Portfolio : DocuGen Pro (produit de Aurion Labs-G)
+# Fiche Portfolio : DocuGen Pro
 
 ## Nom du projet
-**DocuGen Pro** (by **Aurion Labs-G**)
+DocuGen Pro (produit de Aurion Labs-G)
 
 ## Résumé en une phrase
-Un outil web full-stack d'automatisation de la documentation professionnelle et technique propulsé par l'IA (Gemini SDK), conçu spécifiquement pour les développeurs freelances, SaaS et porteurs de projet.
-
----
+Un générateur automatisé de documentation professionnelle et contractuelle propulsé par l'intelligence artificielle pour les développeurs freelances, SaaS et porteurs de projet.
 
 ## Problème résolu
-Les freelances et porteurs de projets perdent un temps précieux (souvent estimé à plusieurs dizaines d'heures par an) à concevoir et consolider la documentation écrite associée à la clôture ou au lancement d'un projet. Côté **livraison**, il s'agit de rédiger des attestations juridico-commerciales, des résumés techniques crédibles pour les clients, de restructurer un CV, ou de créer des posts LinkedIn engageants pour leur image de marque. Côté **idéation**, le challenge est de transformer une concept-board floue en roadmap produit saine, en architecture logicielle cohérente ou en backlog de MVP. DocuGen Pro résout ces frictions à travers un framework unifié capable de générer instantanément des documents de niveau exécutif à partir de simples descriptions et métadonnées.
-
----
+Les freelances, développeurs et porteurs de projets consacrent un temps considérable (souvent plusieurs heures par projet) à la rédaction de documents administratifs, techniques et commerciaux obligatoires ou recommandés (attestations de prestation, CV à jour, résumés techniques pour les clients, posts LinkedIn, roadmaps de projet, backlogs produit). DocuGen Pro automatise entièrement ce processus fastidieux en traduisant de simples notes de projet en livrables professionnels, normés et prêts à l'emploi en quelques secondes.
 
 ## Public cible
-- **Développeurs freelances et consultants indépendants** : pour automatiser la contractualisation de fin de mission et valoriser leur e-réputation professionnelle.
-- **Architectes logiciels et Directeurs de Projet (CTO/Lead Dev)** : pour normaliser les notes techniques d'onboarding et standardiser le transfert d'informations.
-- **Porteurs de projet SaaS & Solopreneurs** : pour structurer de manière rationnelle la phase de cadrage produit et le cahier des charges initial.
-- **Product Owners et Managers Agile** : pour exporter un backlog MVP exploitable et définir des périmètres techniques solides de lancement de produit.
-
----
+- **Développeurs freelances et consultants** : pour attester de leurs prestations et valoriser leurs réalisations.
+- **Architectes logiciels et Directeurs Techniques (CTO)** : pour concevoir des synthèses techniques de projets.
+- **Créateurs de SaaS et Entrepreneurs** : pour structurer leur pré-projet en phase d'idéation (cadrage de MVP, backlog, pitch).
+- **Recruteurs et Managers** : pour analyser la stack d'un profil ou standardiser des fiches d'expérience.
 
 ## Fonctionnalités principales
-- **Moteur Dual-Phase (Livraison & Idéation)** :
-  - *Phase de Livraison (Completion)* : Production automatique d'une Attestation de Prestation juridiquement normée, d'un Résumé Technique complet, d'une Fiche d'Expérience CV orientée impact (chiffres clés), et d'un Post LinkedIn de personal branding de haute qualité.
-  - *Phase d'Idéation (Initiation)* : Production instantanée d'une Feuille de Route Stratégique, d'une Recommandation d'Architecture, d'un Backlog Produit avec définition de MVP (In-Scope/Out-of-Scope), et d'un Pitch commercial prêt à l'emploi.
-- **Interface à deux Colonnes Réactive** : Saisie guidée via formulaires dynamiques intelligents avec datalists adaptables et prévisualisation instantanée haute performance au format Markdown sur le panneau de droite.
-- **Export Multi-format Natif Côté Client** : Exportation directe et optimisée au format **PDF** vectoriel (avec feuille de style d'impression) et **Word** (.doc) standardisé sans dépendance vis-à-vis d'un serveur d'impression lourd.
-- **Support Multilingue natif et Rendu Typographique Soigné** : Formatage des livrables selon des styles CSS spécifiques (polices serif traditionnelles pour les attestations, styles techniques type code-block mono pour l'architecture, etc.).
-
----
+- **Mode Dual-Phase** :
+  - **Phase de Livraison (Completion)** : Génère une Attestation de Réalisation formelle, un Résumé Technique structuré, une Version CV d'une expérience et un Post LinkedIn optimisé pour le personal branding.
+  - **Phase d'Idéation (Initiation)** : Génère une Feuille de Route Stratégique, une Recommandation d'Architecture, un Backlog Produit et un Pitch commercial d'une idée.
+- **Formulaire de Saisie Intelligent** : Saisie guidée avec suggestion dynamique des statuts développeur et technologies, complétée par des champs libres (lien GitHub, Heure, Lieu).
+- **Export Multi-format Côté Client** : Exportation directe en PDF (mise en page vectorielle fidèle) et Word (.doc) sans surcharge serveur.
+- **Sauvegarde et Historique Local** : Système de persistance locale dans le `localStorage` conservant les 30 dernières générations, permettant le rechargement instantané d'anciens formulaires ou de documents générés, et option de suppression.
+- **Visualisation de Documents Typée** : Rendu dynamique différencié et enrichi par markdown (fonds imitant le papier légal avec filigrane "CERTIFIÉ" pour les attestations, mise en page moderne pour le CV).
 
 ## Fonctionnalités avancées
-- **Architecture Hybride d'Appels IA "Frontend-First"** :
-  - Intégration directe du nouveau SDK officiel `@google/genai` sur le client web, garantissant une latence réseau minimale et un isolement total de la couche d'appel.
-  - Sauvegarde locale cryptée des clés d'API personnelles des utilisateurs dans le navigateur pour garantir une politique de sécurité rigoureuse "Privacy-by-Design".
-- **Rotation Sémantique et Équilibrage des Quotas** : Intégration d'un pool d'environnement de clés API Gemini de secours avec algorithme d'équilibrage de charge pour parer aux contraintes d'infrastructure.
-- **Commutateur de Design System à la Volée (Premium vs Classic)** :
-  - *Premium (Modern & Rounded)* : Esthétique soignée avec fond en "verre dépoli" (glassmorphism), ombres diffuses complexes, coins très arrondis (3xl), et typographies élégantes.
-  - *Classic (Flat & Sharp)* : Esthétique sobre, brute et ultra-professionnelle avec palette vert émeraude, suppression des transparences et ombres, angles de bordure droits, et structure de navigation fixe pour une meilleure accessibilité mobile.
-- **Persistance de l'Historique dans l'Appareil** : Système de gestion et de stockage local automatisé (`localStorage`) de l'historique des **30 derniers documents**, permettant de recharger un état complet de formulaire et de ses livrables d'un simple clic.
-- **Résilience Structurelle face au Crash de Service (Auto-Retry 503)** : Gestion active des codes de surcharges d'API Gemini ou de quotas limités avec rafraîchissement d'état et temporisation ajustable.
-
----
+- **Architecture Frontend-First Hybride (Standalone & Cloud Sync)** :
+  - L'application réalise elle-même l'appel direct au SDK Gemini côté client pour éviter la latence réseau d'un proxy standard.
+  - Fonctionnement totalement sans dépendance cloud (Standalone) sécurisé par stockage crypté de la clé personnelle dans le navigateur.
+  - Authentification Firebase optionnelle permettant de synchroniser les préférences de clé API sur le cloud.
+- **Rotation et Équilibrage des Clés API** : Mécanisme d'équilibrage et de rotation de quotas sur des clés d'environnement fournies par défaut.
+- **Double Système de Design (Premium vs Classic)** : Un commutateur de design complet modifiant l'ensemble du profil esthétique (Premium : moderne, glassmorphism, courbes arrondies ; Classic : minimaliste, corporate, plat, vert émeraude, angles droits).
+- **Résilience de Génération (Retry 503)** : Gestion dynamique des surcharges de l'API de modèle avec mécanisme de ré-essais automatiques.
 
 ## Mon rôle
-En tant que **Lead Technique et Architecte Documentaliste Senior / Développeur Full-Stack**, j'ai conçu, restructuré et finalisé l'intégralité du cycle de vie opérationnel de ce projet :
-- **Ingénierie Frontend** : Écriture de l'application en React 19 et Vite, structuration de l’état réactif global, et écriture des composants complexes responsives.
-- **Conception du Prompt Engineering** : Rédaction des structures sémantiques strictes et directives système fournies en entrée du SDK Gemini pour que les réponses garantissent un rendu irréprochable et uniforme, sans dérive créative verbeuse ni hallucinations d'IA standard (retrait des "slops" d'IA classiques).
-- **Développement System & Back-end** : Construction du serveur de proxy Node.js/Express, routage des livrables statiques et protection des routes d'API Express contre les erreurs d'exécution pour des sorties systématiquement au format JSON natif.
-- **DevOps & Déploiement** : Analyse approfondie et résolution réussie des échecs d'intégration de conteneurs sur Google Cloud Run en affinant et automatisant la chaîne de compilation native `esbuild` en mode module (ESM).
-
----
+En tant que **Lead Technique et Architecte Logiciel Senior**, j'ai dirigé la conception technique globale et l'implémentation complète de l'application :
+- Définition de l'architecture découplée Frontend-First avec serveur proxy Express de secours.
+- Éclaircissement des goulots d'étranglement de déploiement en configurant le bundler `esbuild` de manière autonome pour le run Express dans un environnement Google Cloud Run conteneurisé.
+- Conception des algorithmes de prompt engineering pour la standardisation des 8 types de documents formels.
+- Implémentation du système d'historique local dans le `localStorage` avec gestion fine de la mémoire.
+- Mise en œuvre d'une charte graphique poussée et adaptative (Premium vs Classic) en pur Tailwind CSS avec transition par Framer Motion.
 
 ## Technologies utilisées
-- **Frontend** : React 19, Vite, Tailwind CSS, Framer Motion (Moteur d'animations), React-Markdown (Moteur de rendu de documents), html2pdf.js (Export vectoriel PDF).
-- **Backend** : Node.js, Express 5.
-- **Base de données / Persistance** : Firebase Firestore (Option de synchronisation cloud), Clientes de LocalStorage (Sauvegarde de l'historique dans le navigateur).
-- **APIs** : SDK Google Gemini (`@google/genai`), Firebase Auth (Connexion sécurisée via providers Google).
-- **IA utilisée** : Modèle de langage Gemini 1.5 pour la structuration textuelle critique et le respect d'un ton d'écriture expert.
-
----
+- **Frontend** : React 19, Vite, Tailwind CSS, Framer Motion (animations), React-Markdown (moteur de rendu).
+- **Backend** : Node.js, Express 5 (gestion statique, configuration de secours des API routes).
+- **Base de données** : Firebase Firestore (synchronisation de clé et profil utilisateur optionnels), LocalStorage (persistance locale de l'historique de 30 projets).
+- **APIs** : SDK Google Gemini (`@google/genai`), Firebase Auth (Google Sign-In).
+- **IA utilisée** : Modèle Gemini 1.5 pour la structuration textuelle complexe et le respect rigoureux des consignes de structure métier.
 
 ## Défis rencontrés
-1. **Échecs Systématiques au démarrage du conteneur en production sur Google Cloud Run (Erreurs de Gateways 502/503)** : Le système de routage Cloud Run n'arrivait pas à lier l'application car l'infrastructure réseau requiert explicitement une écoute hôte sur `0.0.0.0` et un port statique `3000` sans délais excessifs sous peine d'écarter le nœud comme instable.
-2. **Plantages au Runtime liés à l'intégration CommonJS (CJS) versus ES Modules (ESM)** : L'application utilisant une compilation esbuild moderne en format ESM, les dépendances tierces d'Express en arrière-plan tentaient un appel de require natif, levant l'erreur critique : `Dynamic require of "node:events" not supported in ESM`.
-3. **Erreurs d'accès serveur "API_KEY_SERVICE_BLOCKED" ou Gateway Timeout** : Limites de requêtes sur les clés API Gemini serveur, posant des pannes répétables au niveau des générations de documents.
-
----
+1. **Échecs Systématiques au Lancement du Conteneur sur Cloud Run (Erreurs 502/503)** : Les déploiements plantaient car l'image de conteneur nécessitait un port d'entrée rigoureux (`3000`) et une écoute sur l'hôte `0.0.0.0` alors que le système d'orchestration externe coupait le démarrage au bout de quelques secondes de latence.
+2. **Dynamic require of "node:events" unsupported dans le bundle ESM** : En assemblant le backend Express en format ES Modules via esbuild, les paquets tiers hérités de l'environnement CommonJS provoquaient des plantages système.
+3. **Erreur 403 API_KEY_SERVICE_BLOCKED sur le proxy tiers** : Les clés API partagées ou les requêtes groupées depuis le même serveur back-end étaient temporairement pénalisées par l'infrastructure cloud.
 
 ## Solutions apportées
-1. **Conteneurisation et Configuration Réseau Stricte** : Fixation absolue de l'écoute du port sur `3000` et de l'hôte réseau Express sur `0.0.0.0`. Mise en place d'un dictionnaire de middleware Express 5 remplaçant le wildcard global `*` par `*all` pour forcer la sécurité et le routage catch-all.
-2. **Polyfill d'Importation Automatisé pour esbuild** : Résolution du plantage ESM/CJS grâce à un script de bundling dynamique injectant les bannières de require compatibles : `--banner:js="import { createRequire } from 'module'; const require = createRequire(import.meta.url);"`.
-3. **Migration vers une Architecture Frontend-First** : Résolution de l'impasse des clés bloquées en redirigeant les requêtes Gemini via l'exécution du SDK au niveau de l'utilisateur. Le client peut utiliser sans restriction sa clé locale ou un protocole de clés d'urgence partagées configurées avec rotation automatique.
-
----
+1. **Fixation du Port et Bundling Autonome** : Configuration absolue d'Express pour lier l'application au port `3000` et à l'hôte `0.0.0.0`. Mise en place d'un script de build intégrant compiler TypeScript et bundler avec l'option `--packages=external` pour isoler proprement le serveur Express tout en laissant le runtime Node charger les modules du conteneur.
+2. **Bannière d'Injection de Require CJS** : Ajout d'une directive de compilation avec esbuild injectant un polyfill dynamique de require : `import { createRequire } from 'module'; const require = createRequire(import.meta.url);` en tête de fichier pour autoriser la rétrocompatibilité ESM.
+3. **Migration "Frontend-First" et Rotation de Clé** : Basculement de l'application vers un mode hybride local. Le client utilise directement le SDK `@google/genai` avec sa propre clé stockée localement dans le premier cas, ou utilise un pool de clés d'environnement avec rotation automatique gérée au frontend pour parer aux limites de quotas.
 
 ## Valeur ajoutée
-DocuGen Pro réduit de plus de **90 %** l'effort de production de documentation professionnelle pour un freelance. Il transforme de simples listes de notes techniques désorganisées en packages complets de livrables professionnels, crédibles et exploitables, permettant par la même occasion de structurer rationnellement la phase d'idéation de tout projet en limitant le syndrome de la page blanche.
-
----
+DocuGen Pro renforce la crédibilité des freelances en leur fournissant des documents contractuels certifiés tout en réduisant de plus de **90 %** le temps nécessaire à la production de documentation. En phase d'idéation, il offre un bond de productivité majeur en fournissant instantanément un premier jet documenté de l'architecture et du backlog produit d'une idée de SaaS, limitant ainsi la phase de syndrome de la page blanche.
 
 ## Cas d'utilisation
-- **Cas 1 : Finalisation de Mission de Conseil** : Un consultant Senior termine un mandat Agile complexe auprès d'une PME. Il saisit ses jalons dans DocuGen Pro, télécharge l'Attestation formelle signée d'un clic pour ses archives, exporte le Résumé Technique pour le Directeur, et copie la Version CV pour actualiser instantanément son profil de recrutement.
-- **Cas 2 : Cadrage Produit Initial** : Un créateur de SaaS souhaite structurer sa vision technique. Il saisit l'idée de départ dans le mode "Idéation". L'IA lui fournit un backlog structuré, un pitch prêt pour la prospection, une roadmap sur 3 phases et une stack technique d'architecture justifiée selon ses exigences.
-
----
+- **Cas 1 (Freelance en clôture de mission)** : Un développeur freelance termine une mission de 3 mois. En complétant le formulaire de DocuGen Pro, il génère son attestation de réalisation (pour le dossier de compétences de son client), le résumé technique et un post d'annonce sur LinkedIn pour valoriser sa disponibilité et l'achèvement du projet.
+- **Cas 2 (Entrepreneur SaaS en phase de cadrage)** : Un porteur d'idée souhaite cadrer son concept. Il saisit l'idée globale et sélectionne le mode "Idéation". DocuGen Pro lui fournit une roadmap sur 3 phases, une stack recommandée justifiée, et un backlog MVP structuré prêt à être importé dans Jira ou Trello.
 
 ## Ce qui différencie ce projet
-Contrairement aux outils d'IA généralistes qui génèrent des blocs de textes désordonnés, DocuGen Pro impose une **mise en page typographique et de design rigoureuse d'usine** : structures formelles à double ligne pour les attestations administratives, CV sous format bullet-points condensés type "résultats par impact", et publications LinkedIn conformes aux meilleures pratiques actuelles. Son offre de personnalisation de design system (Premium vs Classic) en fait un outil hautement adaptable à la sensibilité technique de chaque profil.
-
----
+Contrairement aux générateurs de texte génériques d'IA, DocuGen Pro applique une **modélisation stylistique rigoureuse par type de document** (cadres administratifs réels imitant le papier à en-tête d'entreprise, CV denses avec puces textuelles orientées impact, templates de posts LinkedIn engageants mais sans clichés d'IA). Son approche hybride d'accessibilité (utilisable instantanément sans compte, localement et sécurisé) en fait un modèle de produit "Privacy-by-Design".
 
 ## Compétences démontrées
-- **Développement Full-Stack & Clean Architecture** : Maîtrise avancée du découplage d'applications de production sous conteneur.
-- **Génie Logiciel & DevOps** : Bundling de haute technicité via esbuild, configuration de conteneur, et résolution de contentieux liés au cycle de compilation / exécution en production (Cloud Run).
-- **Prompt Engineering Spécialisé** : Création de templates de structures sémantiques robustes pour empêcher les hallucinations logiques (IA).
-- **Conception UI/UX Réactive et Interactive** : Maîtrise fine des animations Framer Motion, transition de thèmes, et layouts fluides multi-colonnes en Tailwind CSS.
-- **Système de Sécurisation Local-First** : Politique de traitement sûre de la donnée ("Privacy-by-Design") via cryptage et sauvegarde au LocalStorage dans le navigateur.
-
----
+- **Architecture Applicative** : Clean Architecture, découplage Frontend/Backend sous conteneur.
+- **Cloud Engineering / DevOps** : Bundling haute performance avec esbuild, débogage et résolution d'échecs de conteneurs sur Google Cloud Run.
+- **Prompt Engineering & Intégration IA** : Maîtrise avancée du SDK Gemini, modélisation de consignes de restriction et de stylisation sémantique stricte.
+- **UX/UI Design de Précision** : Création de systèmes de styles réactifs dynamiques complets à la volée (thèmes Premium vs Classic) avec transition fluide (Framer Motion).
+- **Sécurité et RGPD (Privacy)** : Approche de sécurité "Zero Trust" locale, authentification tierce non bloquante.
 
 ## Captures recommandées
-1. **La Page Principale d'Accueil (Landing Page)** : Capturant l'esthétique soignée d'Aurion Labs-G, le pitch d'accroche et le dual-mode.
-2. **Le Formulaire de Saisie et l'État Vide (Empty State) de Résultats** : L'écran initial, montrant l'équilibre graphique global des deux colonnes.
-3. **Le Rendu de l’Attestation Certifiée (Figma/PDF Look-alike)** : Montrant la bordure administrative institutionnelle, le filigrane "CERTIFIÉ" transparent, et le rendu papier.
-4. **La Modale d'Historique Client** : Montrant la liste de persistance des compilations précédentes classées par typologies.
+1. **La Landing Page Épurée** : Mettant en avant l'identité sémantique d'Aurion Labs-G, le pitch d'accroche et les fonctionnalités clés sous forme de cartes.
+2. **Le Formulaire de Saisie Dynamique (Desktop)** : Présentant la grille réactive de formulaires à deux colonnes avec l' Empty State engageant dans la zone de prévisualisation droite.
+3. **Le Rendu de l'Attestation Certifiée** : L'écran de prévisualisation affichant la double-bordure élégante, le filigrane semi-transparent et la mise en page formelle prête à être exportée en PDF.
+4. **La Modale d'Historique de Projets** : L'interface répertoriant les documents sauvegardés localement avec leurs pastilles de type (Livraison vs Idéation) et de suppression.
 
----
+## Description courte pour portfolio
+> DocuGen Pro est un générateur de documents professionnels par IA (Gemini) destiné aux freelances et créateurs de SaaS. Il traduit instantanément les contours d'un projet en livrables certifiés (attestations, feuilles de route, backlogs, posts LinkedIn) et offre une double interface esthétique interchangeable (Premium vs Classic) avec persistance 100% locale.
 
-## Description courte pour portfolio (47 mots)
-> DocuGen Pro (par Aurion Labs-G) est un outil web intelligent d'automatisation de la documentation technique pour freelances et solopreneurs. Basé sur le SDK Gemini et une persistance au LocalStorage, il génère instantanément 8 types de livrables d'ingénierie et de cadrage au format PDF et Word.
+## Description moyenne pour portfolio
+> DocuGen Pro (par Aurion Labs-G) est un outil de productivité complet à destination des écosystèmes entrepreneuriaux et technologiques. Construit sur un modèle hybride d'appels IA côté client via le SDK Gemini et de synchronisation optionnelle Firebase, il permet de générer à la volée 8 types de documents formels (administratifs, techniques et commerciaux) répartis en phases de Livraison ou d'Idéation.
+>
+> Pensé pour les développeurs, le projet résout les problématiques d'administration chronophages. Il intègre un système d'historique local crypté et persistant dans le `localStorage` (jusqu'à 30 entrées), des fonctions d'exportation de qualité vectorielle en PDF/Word, et un commutateur de double identité visuelle (Premium SaaS versus Classic flat design). Un soin particulier a été apporté à la chaîne de déploiement en production sur Google Cloud Run, surmontant des défis d'intégration de conteneurs via un bundling esbuild sur mesure.
 
----
-
-## Description moyenne pour portfolio (140 mots)
-> DocuGen Pro est un générateur autonome de documentation professionnelle et contractuelle conçu par la marque technologique **Aurion Labs-G**. Pensé spécifiquement pour l'écosystème agile (freelances, SaaS et solopreneurs), ce produit à architecture hybride exploite le SDK Gemini de manière "Frontend-First" pour garantir une rapidité d'exécution maximale et un respect de la vie privée ("Privacy-by-Design").
+## Description longue pour étude de cas
+> DocuGen Pro, conçu sous l'égide de la marque Aurion Labs-G, est né d'un constat simple de terrain : la documentation projet est de première importance pour l'évolution d'un professionnel de la tech, mais sa rédaction constitue une charge mentale et administrative chronophage. 
 > 
-> L'outil offre deux modes adaptés au cycle de vie du projet : la phase de Livraison (générant des attestations administratives à filigrane, des synthèses pour CV et posts LinkedIn) et la phase d'Idéation (produisant des backlogs de MVP, des architectures techniques justifiées et des roadmaps). Équipé d'un historique local persistant stockant jusqu'à 30 entrées, d'exports PDF/Word vectoriels réactifs, et d'une double identité de design interchangeable (Premium dynamic-glass ou Classic sharp-green), le projet démontre une rigueur DevOps résiliente prête pour un déploiement Cloud Run.
-
----
-
-## Description longue pour étude de cas (490 mots)
-> ### Genèse et Rationale du Projet
-> La documentation technique et administrative rigoureuse est le garant de la crédibilité de tout ingénieur freelance ou créateur de produit. Cependant, cette composante requiert une charge mentale et de temps excessive qui vient pénaliser la phase de développement pur. Pour résoudre cette friction au sein de la tech, j'ai conçu et développé **DocuGen Pro**, un générateur d'écrits techniques et contractuels automatisé, développé sous l'égide de la marque **Aurion Labs-G**.
+> Pour y pallier, j'ai développé une solution full-stack complète découplée. Le frontend, reposant sur React 19 et Vite, adopte une architecture "Frontend-First" : toute la puissance des requêtes textuelles de l'API Gemini 1.5 est canalisée directement depuis le navigateur du visiteur. Cette approche offre trois avantages architecturaux critiques : une élimination de l'effet d'entonnoir d'un proxy serveur commun, une performance d'exécution en temps réel sans latence d'IP intermédiaire, et une sécurité "Zero Trust" de premier ordre (la clé d'API personnelle de l'utilisateur n'est jamais exposée ni envoyée à un serveur tiers non légitime). Pour les utilisateurs recherchant la portabilité, une authentification sécurisée optionnelle Google Sign-In par Firebase Auth permet de synchroniser sa configuration sur le cloud.
 > 
-> ### Architecture Logicielle et Choix Techniques
-> L'une des décisions architecturales majeures de DocuGen Pro a été la migration vers une **architecture hybride d'appel IA "Frontend-First"**. Initialement, le serveur backend Express faisait office de proxy sécurisé vers l'API Google Gemini. Cependant, cette topologie s'avérait sujette aux blocages de ports de quotas collectifs (erreur 403) et aux lenteurs d'infrastructure. Pour parer à cela, j'ai déplacé toute l'intelligence générative au niveau du navigateur du visiteur en exploitant le SDK `@google/genai`. 
+> Un important travail d'ingénierie DevOps a été mené pour rendre l'interface de production robuste et déployable en continu sur Google Cloud Run. Les conteneurs d'intégration échouant par défaut face aux exigences réseau d'entrée et aux dépendances disparates, j'ai conçu un pipeline de build avancé via esbuild. En enveloppant le serveur avec injection de polyfills dynamiques de rétrocompatibilité pour les bibliothèques CommonJS dans des fichiers modules (.mjs), et en limitant les appels d'API Express au format strict d'Express 5 (`*all` routes et middlewares d'erreur au format JSON natif), j'ai garanti une disponibilité de l'application à 100% sans aucun crash de démarrage sur l'infrastructure d'hébergement.
 > 
-> Cette mutation offre des garanties exceptionnelles de sécurité (l’utilisateur peut saisir sa clé personnelle dans une modale dédiée, elle est chiffrée et conservée localement sans jamais quitter son navigateur) et accroît la scalabilité à l'extrême car l'effort matériel de génération est délégué au client final. L'application possède un mode "zéro compte" (offline-ready) et une intégration optionnelle avec Firebase Auth pour la portabilité de la clé sur le Cloud.
-> 
-> ### DevOps & Résolution de Problématiques de Conteneurisation
-> Le déploiement de production sur Google Cloud Run représentait un ensemble d'exigences d'ingénierie DevOps poussées. Le service de conteneurisation défaillait au démarrage en raison de liaisons de ports de gateways incorrectes et de conflits complexes entre dépendances héritées de CommonJS et les ES Modules par défaut (levée de l'erreur `Dynamic require of "node:events" not supported`). 
-> 
-> Pour y remédier de manière définitive, j'ai configuré de manière autonome le compilateur `esbuild` de l'application avec un polyfill de require au format banner (`createRequire(import.meta.url)`) pour autoriser la rétrocompatibilité ESM. De plus, j'ai réécrit le sous-système de routage Express 5 avec une structure catch-all stricte (`*all` au lieu du wildcard vague `*`) pour garantir des réponses systématiquement typées au format JSON.
-> 
-> ### Intégrité Visuelle et UI/UX
-> L'application propose deux interfaces interchangeables d'un clic : le système de design **"Premium SaaS"** (glassmorphism très soigné, transitions Framer Motion, coins arrondis, tons bleu-indigo et typographies Serif de prestige pour les documents formels), et le système de design **"Classic"** (look épuré "flat", tons vert émeraude, angles de bordure à 90° et suppression des éléments collants pour une performance accrue sur mobile). L'outil intègre un historique local à persistance temporelle retenant jusqu'à 30 projets d'un clic, faisant de DocuGen Pro une étude de cas d'école réunissant ingénierie Cloud, IA Générative et design d'interface moderne.
-
----
+> Au niveau visuel, DocuGen Pro brise les codes des applications par défaut en proposant un switcher de design complet à l'utilisateur : le mode "Premium SaaS", exploitant les styles élégants de la marque Aurion Labs (effets de verre trempé, ombres satinées, typographies Playfair Display), et le mode "Classic", réintroduit par souci d'ergonomie suite aux retours de la communauté technologique (aplats, vert émeraude, réduction drastique des arrondis et suppression d'éléments collants). L'exportation côté client génère des PDF de haute qualité prêts pour signature grâce au moteur d'html2pdf optimisé de façon sémantique. L'application intègre également un système de sauvegarde d'historique local automatique qui stocke jusqu'à 30 projets sans base de données tierce.
 
 ## Mots-clés
-`DocuGen Pro`, `Portfolio Web Dev`, `SaaS Architecture`, `Gemini SDK AI`, `Prompt Engineering`, `Cloud Run Deploy`, `esbuild bundle`, `Firebase Firestore`, `React 19`, `Tailwind CSS`, `Framer Motion`, `PWA App`, `Privacy-by-design`, `Aurion Labs-G`, `Générateur de documents`, `Outils productivité dev`.
+`DocuGen Pro`, `Portfolio tech`, `React 19`, `Gemini API`, `Prompt Engineering`, `Full-Stack Javascript`, `Google Cloud Run`, `DevOps container`, `esbuild bundling`, `PWA`, `Tailwind CSS`, `Framer Motion`, `LocalStorage backup`, `Aurion Labs-G`, `Génération de documents IA`, `Productivité de projet`, `SaaS MVP`.

@@ -38,6 +38,9 @@
 - [x] Harmonisation des champs de formulaire et amélioration de la lisibilité.
 - [x] Création d'un état vide (Empty State) informatif et visuel pour la prévisualisation.
 - [x] Raffinement du design "Classic" pour un rendu plus professionnel.
+- [x] QR Code stylisé d'authentification lié aux profils LinkedIn/GitHub en fin d'attestation.
+- [x] Refonte totale de la Landing Page professionnelle (Hero, Proposition de valeur, Fonctionnalités, Cas d'usage bento grid, Comment ça marche, FAQ interactive en accordéon et CTA final).
+
 
 ## Bogues corrigés
 - [x] Échec du déploiement Cloud Run (Port binding 0.0.0.0:3000).
@@ -58,6 +61,8 @@
 - [x] Implémentation de l'historique des documents générés avec sauvegarde dans le localStorage (jusqu'à 30 éléments).
 - [x] Interface de consultation et de suppression de l'historique.
 - [x] Création et formalisation de la Fiche Portfolio Technique de l'application.
+- [x] Résolution de l'erreur d'import de `firebase-applet-config.json` suite à sa suppression en créant un stub Firebase robuste.
+
 
 ## Tâches en cours
 - [ ] Maintenance et mise à jour continue de la documentation du projet.

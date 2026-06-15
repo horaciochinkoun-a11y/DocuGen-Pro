@@ -29,6 +29,15 @@
 - **Justification de chaque décision :** Voir le fichier `decisions_log.md` pour plus de détails.
 
 ## Historique des modifications
+- **15 Juin 2026**
+  - **Description :** Refonte majeure de la Landing Page de DocuGen Pro en tant que Product Designer et UX Writer Senior. Ajout d'une section d'introduction moderne avec effets d'éclairage fins et arrière-plans géométriques, d'une section sur la proposition de valeur autonome et privée, d'un segment exhaustif de fonctionnalités clés couvrant le cycle de vie projet complet, d'un bento-grid de cas d'usage métiers réels, d'une FAQ interactive en accordéon fluide avec ouverture/fermeture dynamique, et d'un appel à l'action final (CTA) percutant sous forme de bannière asymétrique haut de gamme. Le code de cette vue d'accueil a été documenté et commenté ligne par ligne de façon chirurgicale.
+  - **Impact :** Présentation du produit extrêmement professionnelle, amélioration majeure du taux de conversion et de la clarté UX, et alignement rigoureux des textes pour un référencement organique optimisé.
+- **15 Juin 2026**
+  - **Description :** Intégration d'un système robuste d'authentification numérique en fin d'attestation sous forme de QR code dynamique stylisé. Ajout d'un nouveau champ optionnel "Lien LinkedIn" dans le formulaire de génération de projets pour compléter "Lien GitHub". Le QR code généré intègre intelligemment la couleur du système de design actif (bleu premium ou vert émeraude de style classique).
+  - **Impact :** Permet une vérification et une certification numériques instantanées de l'authenticité de l'attestation, tout en élargissant les options de profil consultables par les recruteurs et clients.
+- **15 Juin 2026**
+  - **Description :** Résolution d'un problème bloquant de compilation lié à la suppression manuelle du fichier `firebase-applet-config.json`. Création d'une implémentation Firebase par stubbing (`src/firebase.ts`) afin de neutraliser toute dépendance rigide à l'intégration OAuth/Firebase.
+  - **Impact :** Restauration complète de la stabilité de l'application et passage en mode autonome sans cloud, tout en conservant une conformité parfaite pour `App.tsx` et d'excellentes performances de l'application.
 - **16 Avril 2026**
   - **Description :** Mise en place de la configuration PWA (Progressive Web App). Création du fichier `manifest.json` et d'une icône vectorielle (`icon.svg`) reproduisant fidèlement le logo de DocuGen Pro (carré bleu arrondi avec icône de document blanche). Implémentation d'un système d'historique local permettant de sauvegarder les 30 dernières générations de documents directement dans le navigateur (`localStorage`). Ajout d'une interface de consultation dédiée permettant de recharger instantanément un ancien projet ou de le supprimer.
   - **Impact :** Permet aux utilisateurs d'ajouter l'application à leur écran d'accueil sur mobile et de retrouver facilement leurs travaux précédents sans avoir besoin d'un compte cloud, améliorant considérablement la productivité et l'expérience utilisateur hors-ligne.

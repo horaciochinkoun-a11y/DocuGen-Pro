@@ -135,6 +135,7 @@ interface ProjectData {
   manualTime: string;
   manualLocation: string;
   githubLink: string;
+  linkedinLink: string;
 }
 
 const initialFormData: ProjectData = {
@@ -153,6 +154,7 @@ const initialFormData: ProjectData = {
   manualTime: '',
   manualLocation: '',
   githubLink: '',
+  linkedinLink: '',
 };
 
 // History Item Interface
@@ -302,6 +304,7 @@ DONNÉES D'ENTRÉE :
 - Durée du projet : ${formData.duration}
 - Contact client : ${formData.clientContact}
 - Lien GitHub : ${formData.githubLink || 'Non spécifié'}
+- Lien LinkedIn : ${formData.linkedinLink || 'Non spécifié'}
 - Heure manuelle : ${formData.manualTime || 'Non spécifiée'}
 - Lieu manuel : ${formData.manualLocation || 'Non spécifié'}
 
@@ -317,6 +320,13 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
 - Inclure un bloc de signature clair à la fin (ex: Fait à ${formData.manualLocation || '[Ville]'}, le ${formData.manualTime || '[Date]'} \n\n **[Nom du Client]**).
 - Mentionne explicitement le statut du développeur (${formData.developerStatus}).
 - Si un lien GitHub est fourni (${formData.githubLink}), l'inclure dans une section "Ressources" ou "Lien du dépôt".
+- À la toute fin du document (après la signature et séparé par un \`---\`), ajoute une section d'authentification structurée comme suit :
+  \`\`\`markdown
+  ### Validation & Authenticité numérique
+  Ce document officiel est certifié numériquement. Pour vérifier l'authenticité de cette attestation de prestation et consulter les travaux ou le profil professionnel associé, veuillez scanner le code QR ci-dessous :
+
+  ![QR Code d'authentification](QR_CODE_AUTHENTICATION_URL_PLACEHOLDER)
+  \`\`\`
 
 2. RÉSUMÉ TECHNIQUE DU PROJET (technicalSummary)
 - Utilise \`# RÉSUMÉ TECHNIQUE : [Nom du Projet]\`.
@@ -476,6 +486,7 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
         manualTime: '02 Avril 2026',
         manualLocation: 'Paris, France',
         githubLink: 'https://github.com/alexmercer/route-optima',
+        linkedinLink: 'https://linkedin.com/in/alexmercer',
       },
       {
         developerName: 'Emma Dubois',
@@ -493,6 +504,7 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
         manualTime: '15 Mars 2026',
         manualLocation: 'Lyon, France',
         githubLink: 'https://github.com/emmadubois/payflow',
+        linkedinLink: 'https://linkedin.com/in/emmadubois',
       }
     ];
 
@@ -513,6 +525,7 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
         manualTime: '',
         manualLocation: 'Berlin, Allemagne',
         githubLink: '',
+        linkedinLink: '',
       },
       {
         developerName: 'Julie Morel',
@@ -530,6 +543,7 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
         manualTime: '',
         manualLocation: 'Nantes, France',
         githubLink: '',
+        linkedinLink: '',
       }
     ];
 
@@ -1048,18 +1062,34 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
-                    <Code size={12} className="text-brand-500" /> Lien GitHub (Optionnel)
-                  </label>
-                  <input
-                    type="url"
-                    name="githubLink"
-                    value={formData.githubLink}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
-                    placeholder="https://github.com/..."
-                  />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                      <Code size={12} className="text-brand-500" /> Lien GitHub (Optionnel)
+                    </label>
+                    <input
+                      type="url"
+                      name="githubLink"
+                      value={formData.githubLink}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
+                      placeholder="https://github.com/..."
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                      <Linkedin size={12} className="text-brand-500" /> Lien LinkedIn (Optionnel)
+                    </label>
+                    <input
+                      type="url"
+                      name="linkedinLink"
+                      value={formData.linkedinLink}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
+                      placeholder="https://linkedin.com/in/..."
+                    />
+                  </div>
                 </div>
 
                 <div className="space-y-2">
@@ -1255,7 +1285,16 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
                           </div>
                         )}
                         <div className="relative z-10">
-                          <Markdown>{generatedDocs[activeTab]}</Markdown>
+                          {(() => {
+                            let docContent = generatedDocs[activeTab] || '';
+                            if (activeTab === 'attestation') {
+                              const verificationLink = formData.linkedinLink || formData.githubLink || 'https://github.com';
+                              const qrColor = designSystem === 'classic' ? '22-163-74' : '0-116-202';
+                              const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&color=${qrColor}&data=${encodeURIComponent(verificationLink)}`;
+                              docContent = docContent.replace(/QR_CODE_AUTHENTICATION_URL_PLACEHOLDER/g, qrCodeUrl);
+                            }
+                            return <Markdown>{docContent}</Markdown>;
+                          })()}
                         </div>
                       </div>
                     </motion.div>

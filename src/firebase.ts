@@ -1,15 +1,74 @@
-import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, User } from 'firebase/auth';
-import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot, getDocFromServer } from 'firebase/firestore';
-import firebaseConfig from '../firebase-applet-config.json';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
-// Initialize Firebase SDK
-const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
-export const auth = getAuth(app);
-export const googleProvider = new GoogleAuthProvider();
+// Fichier Firebase Stub - Permet le fonctionnement 100% autonome et local en cas d'absence de configuration Firebase.
+// Ce fichier a été mis en place suite à la suppression d'authentification centralisée pour éliminer les erreurs de compilation.
 
-// Operation types for error handling
+
+export interface User {
+  uid: string;
+  email: string | null;
+  displayName: string | null;
+  photoURL: string | null;
+  emailVerified: boolean;
+  isAnonymous: boolean;
+  tenantId: string | null;
+  providerData: any[];
+}
+
+export const auth = null;
+export const db = null;
+export const googleProvider = {};
+
+/**
+ * Simule la connexion Google (désactivée en mode local autonome)
+ */
+export async function signInWithPopup() {
+  console.warn("L'authentification Firebase est désactivée. DocuGen Pro fonctionne à 100% en mode autonome local.");
+  return null;
+}
+
+/**
+ * Simule la déconnexion
+ */
+export async function signOut() {
+  console.warn("L'authentification Firebase est désactivée.");
+}
+
+/**
+ * Observateur simulé qui renvoie toujours un utilisateur non connecté (visiteur local)
+ */
+export function onAuthStateChanged(authInstance: any, callback: (user: User | null) => void) {
+  // L'utilisateur reste anonyme/visiteur en local
+  setTimeout(() => callback(null), 0);
+  return () => {};
+}
+
+// Stubs d'opérations Firestore pour éviter de casser les imports de App.tsx
+export function doc(...args: any[]) {
+  return {};
+}
+
+export async function getDoc() {
+  return { 
+    exists: () => false, 
+    data: () => null 
+  };
+}
+
+export async function setDoc() {
+  return {};
+}
+
+export async function updateDoc() {
+  return {};
+}
+
+export function onSnapshot(ref: any, onNext: (snapshot: any) => void, onError?: (err: any) => void) {
+  return () => {};
+}
+
+// Opérations de diagnostic
 export enum OperationType {
   CREATE = 'create',
   UPDATE = 'update',
@@ -19,66 +78,7 @@ export enum OperationType {
   WRITE = 'write',
 }
 
-interface FirestoreErrorInfo {
-  error: string;
-  operationType: OperationType;
-  path: string | null;
-  authInfo: {
-    userId: string | undefined;
-    email: string | null | undefined;
-    emailVerified: boolean | undefined;
-    isAnonymous: boolean | undefined;
-    tenantId: string | null | undefined;
-    providerInfo: {
-      providerId: string;
-      displayName: string | null;
-      email: string | null;
-      photoUrl: string | null;
-    }[];
-  }
+export function handleFirestoreError(error: any, operationType: OperationType, path: string | null) {
+  console.warn(`[Firestore Bypass] Erreur d'opération de type ${operationType} sur ${path}:`, error);
+  throw new Error(String(error));
 }
-
-/**
- * Handles Firestore errors by logging and throwing a specific JSON error object.
- */
-export function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
-  const errInfo: FirestoreErrorInfo = {
-    error: error instanceof Error ? error.message : String(error),
-    authInfo: {
-      userId: auth.currentUser?.uid,
-      email: auth.currentUser?.email,
-      emailVerified: auth.currentUser?.emailVerified,
-      isAnonymous: auth.currentUser?.isAnonymous,
-      tenantId: auth.currentUser?.tenantId,
-      providerInfo: auth.currentUser?.providerData.map(provider => ({
-        providerId: provider.providerId,
-        displayName: provider.displayName,
-        email: provider.email,
-        photoUrl: provider.photoURL
-      })) || []
-    },
-    operationType,
-    path
-  }
-  console.error('Firestore Error: ', JSON.stringify(errInfo));
-  throw new Error(JSON.stringify(errInfo));
-}
-
-/**
- * Validates connection to Firestore.
- */
-async function testConnection() {
-  try {
-    await getDocFromServer(doc(db, 'test', 'connection'));
-  } catch (error) {
-    if(error instanceof Error && error.message.includes('the client is offline')) {
-      console.error("Please check your Firebase configuration. ");
-    }
-    // Skip logging for other errors, as this is simply a connection test.
-  }
-}
-
-testConnection();
-
-export { signInWithPopup, signOut, onAuthStateChanged, doc, getDoc, setDoc, updateDoc, onSnapshot };
-export type { User };
