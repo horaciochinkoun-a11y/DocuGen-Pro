@@ -273,3 +273,54 @@ JE VALIDE VAS Y
 Assistant :
 J'ai conçu et implémenté une Landing Page hautement professionnelle et optimisée, structurée avec des sections Hero immersives, propositions de valeur concrètes, fonctionnalités clés pour tout le cycle de vie projet, scénarios métiers d'usages réels, cycle étape-par-étape, FAQ interactive sous forme d'accordéon, et un appel à l'action marquant, le tout avec un code abondamment commenté ligne par ligne.
 
+[2026-06-16T17:56:46-07:00]
+Utilisateur :
+Fournir moi toutes ces informations  
+
+---
+
+**BLOC 1 — Identité visuelle exacte**
+
+- Couleur exacte du disque (code HEX, RGB ou HSL)
+- Couleur exacte du texte et des caractères sur le disque (blanc pur #FFFFFF ou autre ?)
+- Police utilisée pour "EcoSub AI" (nom exact de la font, graisse, style)
+- Le caractère utilisé est-il vraiment 文 ou un autre caractère CJK ?
+- Y a-t-il un contour, une ombre ou un effet sur les éléments ?
+
+---
+
+**BLOC 2 — Fichiers sources existants**
+
+- Y a-t-il un fichier SVG, AI, Figma, ou PSD du logo ?
+- Sinon, y a-t-il un PNG haute résolution (minimum 1024×1024) on transparent background ?
+- Qui a créé le logo ? (Designer, outil IA, Canva…)
+
+---
+
+**BLOC 3 — Contexte de l'application**
+
+- Nom officiel affiché dans le manifest : "EcoSub AI" ou autre ?
+- Couleur de fond du `theme_color` (barre navigateur Android)
+- Couleur du `background_color` (splash screen)
+- L'app est-elle déjà en production ? Si oui, URL ?
+
+Assistant :
+Réalité brute : Je ne connais pas "EcoSub AI". Notre projet actuel est **DocuGen Pro**. L'identité visuelle que vous décrivez (disque avec le caractère "文") n'existe pas dans ce dépôt. Voici l'audit factuel de notre projet réel.
+
+[2026-06-17T03:28:00+0000]
+Utilisateur :
+nous avons des problème de mis en forme et en page de nos document word et au niveau de la visualisation directe dans l'application au cours de la phase d'idéation
+
+Assistant :
+J'ai identifié et corrigé deux problèmes critiques pour l'image professionnelle de l'application :
+
+1.  **Optimisation de l'Export Word** : L'exportation .doc ne transmettait pas les styles CSS, produisant des documents "bruts". J'ai refondu la fonction d'exportation pour injecter un bloc de styles CSS complet et compatible Word directement dans l'en-tête du fichier, garantissant ainsi que la mise en forme (titres, bordures, espacements) soit préservée à l'ouverture du document.
+2.  **Rendu Visuel de la Phase d'Idéation** : La prévisualisation des documents d'idéation était monotone. J'ai créé des styles visuels distinctifs pour chaque type :
+    *   **Roadmap** : Style "Timeline" avec ligne de vie et marqueurs d'étapes.
+    *   **Architecture** : Style technique épuré avec typographie monospacée pour les éléments de structure.
+    *   **Backlog** : Style "Checklist" plus intuitif pour la gestion de tâches.
+    *   **Pitch** : Style impactant et centré pour maximiser l'effet de présentation.
+3.  **Correction des Conflits de Styles** : J'ai supprimé l'utilisation automatique de la classe `prose` de Tailwind Typography qui surchargeait et brouillait les styles personnalisés, permettant ainsi un rendu 100% fidèle aux designs prévus.
+
+L'application est désormais plus professionnelle tant dans son interface que dans ses exports.
+

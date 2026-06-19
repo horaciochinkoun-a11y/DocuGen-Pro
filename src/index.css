@@ -39,27 +39,107 @@
     box-shadow: 0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   }
   
-  /* Base standard styles for Technical Summary, LinkedIn, and Ideation docs */
-  .markdown-technicalSummary, .markdown-linkedinVersion, .markdown-roadmap, .markdown-architecture, .markdown-backlog, .markdown-pitch {
+  /* Base standard styles for Technical Summary and LinkedIn */
+  .markdown-technicalSummary, .markdown-linkedinVersion {
     @apply font-sans text-neutral-800 dark:text-neutral-200;
   }
-  .markdown-technicalSummary h1, .markdown-linkedinVersion h1, .markdown-roadmap h1, .markdown-architecture h1, .markdown-backlog h1, .markdown-pitch h1 {
+  .markdown-technicalSummary h1, .markdown-linkedinVersion h1 {
     @apply text-3xl font-extrabold mb-6 mt-8 text-neutral-900 dark:text-white tracking-tight leading-tight;
   }
-  .markdown-technicalSummary h2, .markdown-linkedinVersion h2, .markdown-roadmap h2, .markdown-architecture h2, .markdown-backlog h2, .markdown-pitch h2 {
+  .markdown-technicalSummary h2, .markdown-linkedinVersion h2 {
     @apply text-xl font-bold mb-4 mt-8 text-neutral-800 dark:text-neutral-100 border-l-4 border-brand-500 pl-4 py-1 bg-brand-50/30 dark:bg-brand-900/10 rounded-r;
   }
-  .markdown-technicalSummary h3, .markdown-linkedinVersion h3, .markdown-roadmap h3, .markdown-architecture h3, .markdown-backlog h3, .markdown-pitch h3 {
+  .markdown-technicalSummary h3, .markdown-linkedinVersion h3 {
     @apply text-lg font-semibold mb-3 mt-6 text-neutral-800 dark:text-neutral-200;
   }
-  .markdown-technicalSummary p, .markdown-linkedinVersion p, .markdown-roadmap p, .markdown-architecture p, .markdown-backlog p, .markdown-pitch p {
+  .markdown-technicalSummary p, .markdown-linkedinVersion p {
     @apply mb-4 leading-relaxed text-[15px] sm:text-base;
   }
-  .markdown-technicalSummary ul, .markdown-linkedinVersion ul, .markdown-roadmap ul, .markdown-architecture ul, .markdown-backlog ul, .markdown-pitch ul {
+  .markdown-technicalSummary ul, .markdown-linkedinVersion ul {
     @apply list-none pl-0 mb-6 space-y-3;
   }
-  .markdown-technicalSummary li, .markdown-linkedinVersion li, .markdown-roadmap li, .markdown-architecture li, .markdown-backlog li, .markdown-pitch li {
+  .markdown-technicalSummary li, .markdown-linkedinVersion li {
     @apply relative pl-6 text-neutral-700 dark:text-neutral-300 before:content-[''] before:absolute before:left-0 before:top-[0.6em] before:w-1.5 before:h-1.5 before:bg-brand-500 before:rounded-full;
+  }
+
+  /* Roadmap Style (Timeline layout) */
+  .markdown-roadmap {
+    @apply font-sans;
+  }
+  .markdown-roadmap h1 {
+    @apply text-4xl font-extrabold mb-10 text-brand-600 dark:text-brand-400 text-center border-b-2 border-neutral-100 dark:border-neutral-800 pb-6;
+  }
+  .markdown-roadmap h2 {
+    @apply text-2xl font-black mb-6 mt-12 flex items-center gap-3 text-neutral-900 dark:text-white before:content-['•'] before:text-brand-500;
+  }
+  .markdown-roadmap h3 {
+    @apply text-lg font-bold mb-4 mt-6 text-neutral-800 dark:text-neutral-200 bg-neutral-100 dark:bg-neutral-800 px-4 py-2 rounded-lg inline-block;
+  }
+  .markdown-roadmap p {
+    @apply mb-4 text-neutral-600 dark:text-neutral-400 leading-relaxed;
+  }
+  .markdown-roadmap ul {
+    @apply space-y-4 mb-8 border-l-2 border-brand-200 dark:border-brand-800 ml-2 pl-6;
+  }
+  .markdown-roadmap li {
+    @apply relative text-neutral-700 dark:text-neutral-300 before:content-[''] before:absolute before:left-[-1.9rem] before:top-[0.5rem] before:w-4 before:h-4 before:bg-white dark:before:bg-neutral-900 before:border-2 before:border-brand-500 before:rounded-full;
+  }
+
+  /* Architecture Style (Clean & Technical) */
+  .markdown-architecture {
+    @apply font-mono text-[14px];
+  }
+  .markdown-architecture h1 {
+    @apply font-sans text-3xl font-black mb-8 text-neutral-900 dark:text-white border-l-8 border-brand-600 pl-6 py-2;
+  }
+  .markdown-architecture h2 {
+    @apply font-sans text-xl font-bold mb-4 mt-10 text-brand-500 bg-brand-50/50 dark:bg-brand-900/10 px-4 py-2 rounded uppercase tracking-widest;
+  }
+  .markdown-architecture h3 {
+    @apply font-sans text-lg font-bold mb-3 mt-6 text-neutral-900 dark:text-white;
+  }
+  .markdown-architecture p {
+    @apply mb-4 leading-relaxed font-sans text-neutral-700 dark:text-neutral-300;
+  }
+  .markdown-architecture code {
+    @apply bg-neutral-100 dark:bg-neutral-800 text-brand-600 dark:text-brand-400 px-1.5 py-0.5 rounded font-mono text-[13px] border border-neutral-200 dark:border-neutral-700;
+  }
+
+  /* Backlog Style (Checklist-like) */
+  .markdown-backlog {
+    @apply font-sans;
+  }
+  .markdown-backlog h1 {
+    @apply text-3xl font-black mb-8 text-neutral-900 dark:text-white text-center sm:text-left;
+  }
+  .markdown-backlog h2 {
+    @apply text-xl font-bold mb-5 mt-10 text-neutral-800 dark:text-neutral-100 border-b border-neutral-200 dark:border-neutral-800 pb-2;
+  }
+  .markdown-backlog ul {
+    @apply space-y-2 mb-6;
+  }
+  .markdown-backlog li {
+    @apply flex items-start gap-3 p-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-neutral-700 dark:text-neutral-300 before:content-['☐'] before:text-neutral-400 dark:before:text-neutral-600 before:font-serif before:text-lg before:leading-none before:mt-0.5;
+  }
+
+  /* Pitch Style (Impact-focused) */
+  .markdown-pitch {
+    @apply font-sans text-center;
+  }
+  .markdown-pitch h1 {
+    @apply text-4xl sm:text-5xl font-black mb-12 text-neutral-900 dark:text-white leading-[1.1] tracking-tighter;
+  }
+  .markdown-pitch h2 {
+    @apply text-2xl font-bold mb-6 mt-16 text-brand-600 dark:text-brand-400 uppercase tracking-[0.2em];
+  }
+  .markdown-pitch h3 {
+    @apply text-xl font-bold mb-4 mt-10 text-neutral-800 dark:text-neutral-100;
+  }
+  .markdown-pitch p {
+    @apply text-lg sm:text-xl text-neutral-600 dark:text-neutral-400 leading-relaxed mb-8 max-w-2xl mx-auto;
+  }
+  .markdown-pitch blockquote {
+    @apply text-2xl sm:text-3xl font-serif italic text-neutral-900 dark:text-white border-none py-10 px-6 bg-neutral-50 dark:bg-neutral-950 rounded-3xl my-16 shadow-inner;
   }
   .markdown-technicalSummary strong, .markdown-linkedinVersion strong, .markdown-roadmap strong, .markdown-architecture strong, .markdown-backlog strong, .markdown-pitch strong {
     @apply font-bold text-neutral-900 dark:text-white;

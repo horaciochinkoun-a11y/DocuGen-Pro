@@ -25,12 +25,16 @@ import {
   MapPin,
   History,
   Trash2,
-  ChevronRight
+  ChevronRight,
+  Zap
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Markdown from 'react-markdown';
 import { generateProfessionalDocs, GeneratedDocs } from './services/geminiService';
 import LandingPage from './components/LandingPage';
+import ReloadPrompt from './components/ReloadPrompt';
+import InstallPWA from './components/InstallPWA';
+import ReleaseNotes from './components/ReleaseNotes';
 import { 
   auth, 
   db, 
@@ -171,13 +175,25 @@ function DocumentationGenerator({
   theme, 
   toggleTheme,
   designSystem,
-  setDesignSystem
+  setDesignSystem,
+  showSettings,
+  setShowSettings,
+  showHistory,
+  setShowHistory,
+  showReleaseNotes,
+  setShowReleaseNotes
 }: { 
   onNavigateHome: () => void;
   theme: 'light' | 'dark';
   toggleTheme: () => void;
   designSystem: 'premium' | 'classic';
   setDesignSystem: (ds: 'premium' | 'classic') => void;
+  showSettings: boolean;
+  setShowSettings: (val: boolean) => void;
+  showHistory: boolean;
+  setShowHistory: (val: boolean) => void;
+  showReleaseNotes: boolean;
+  setShowReleaseNotes: (val: boolean) => void;
 }) {
   const [formData, setFormData] = useState<ProjectData>(initialFormData);
   const [projectPhase, setProjectPhase] = useState<'completion' | 'initiation'>('completion');
@@ -189,8 +205,6 @@ function DocumentationGenerator({
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<keyof GeneratedDocs>('attestation');
   const [copiedTab, setCopiedTab] = useState<string | null>(null);
-  const [showSettings, setShowSettings] = useState(false);
-  const [showHistory, setShowHistory] = useState(false);
   const [history, setHistory] = useState<HistoryItem[]>(() => {
     const saved = localStorage.getItem('docugen_history');
     return saved ? JSON.parse(saved) : [];
@@ -450,7 +464,31 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
     const element = document.getElementById('markdown-content');
     if (!element) return;
 
-    const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export</title></head><body>";
+    // Custom CSS for Word export that mimics our app's styles
+    const wordStyles = `
+      <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; color: #1e293b; line-height: 1.6; }
+        h1 { color: #0f172a; font-size: 24pt; margin-top: 24pt; margin-bottom: 12pt; font-weight: bold; }
+        h2 { color: #1e293b; font-size: 18pt; margin-top: 20pt; margin-bottom: 10pt; font-weight: bold; border-bottom: 1px solid #e2e8f0; padding-bottom: 4pt; }
+        h3 { color: #334155; font-size: 14pt; margin-top: 16pt; margin-bottom: 8pt; font-weight: bold; }
+        p { margin-bottom: 10pt; text-align: justify; }
+        ul, ol { margin-bottom: 10pt; }
+        li { margin-bottom: 5pt; }
+        blockquote { border-left: 4px solid #3b82f6; padding-left: 15pt; color: #475569; font-style: italic; margin: 15pt 0; background: #f8fafc; padding-top: 10pt; padding-bottom: 10pt; }
+        hr { border: none; border-top: 1px solid #e2e8f0; margin: 20pt 0; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 15pt; }
+        th, td { border: 1px solid #e2e8f0; padding: 8pt; text-align: left; }
+        th { background-color: #f8fafc; font-weight: bold; }
+        .certifie { color: #94a3b8; font-size: 40pt; text-align: center; transform: rotate(-45deg); opacity: 0.1; }
+        img { max-width: 150px; height: auto; }
+        
+        /* Specific for Attestation */
+        .attestation-mode h1 { text-align: center; text-transform: uppercase; letter-spacing: 2pt; color: #000; }
+        .attestation-mode { padding: 40pt; border: 1pt solid #cbd5e1; }
+      </style>
+    `;
+
+    const header = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>${activeTab}</title>${wordStyles}</head><body class="${activeTab}-mode">`;
     const footer = "</body></html>";
     const html = header + element.innerHTML + footer;
 
@@ -645,6 +683,16 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
               {theme === 'light' ? <Moon size={16} className="sm:w-[18px] sm:h-[18px]" /> : <Sun size={16} className="sm:w-[18px] sm:h-[18px]" />}
             </button>
 
+            <InstallPWA />
+
+            <button
+               onClick={() => setShowReleaseNotes(true)}
+               className="p-1.5 sm:p-2 text-neutral-500 hover:text-brand-600 dark:text-neutral-400 dark:hover:text-brand-400 transition-all rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm"
+               title="Notes de version"
+            >
+              <Zap size={16} className="sm:w-[18px] sm:h-[18px]" />
+            </button>
+
             {user ? (
               <div className="flex items-center gap-2 sm:gap-3 ml-0.5 sm:ml-2 pl-1.5 sm:pl-4 border-l border-neutral-200 dark:border-neutral-800">
                 <button 
@@ -671,6 +719,7 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Modal Historique */}
         <AnimatePresence>
+          {showReleaseNotes && <ReleaseNotes onClose={() => setShowReleaseNotes(false)} />}
           {showHistory && (
             <div className="fixed inset-0 z-[60] flex items-start justify-center pt-20 px-4">
               <motion.div
@@ -1232,7 +1281,7 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.2 }}
-                      className="prose prose-sm sm:prose-base prose-neutral dark:prose-invert max-w-none"
+                      className="max-w-none"
                     >
                       <div className="flex justify-end mb-6 sticky top-0 z-10 gap-3">
                         <button
@@ -1369,6 +1418,93 @@ export default function App() {
     return 'classic';
   });
 
+  // Global lifted states for deep mobile/back-button modal synchronization
+  const [showSettings, setShowSettings] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [showReleaseNotes, setShowReleaseNotes] = useState(false);
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
+
+  // Sync state changes with history stack to ensure physical Android Back button closes the correct overlay
+  const handleSetShowSettings = (val: boolean) => {
+    if (val) {
+      window.history.pushState({ view: 'app', modal: 'settings' }, '');
+      setShowSettings(true);
+    } else {
+      if (window.history.state?.modal === 'settings') {
+        window.history.back();
+      } else {
+        setShowSettings(false);
+      }
+    }
+  };
+
+  const handleSetShowHistory = (val: boolean) => {
+    if (val) {
+      window.history.pushState({ view: 'app', modal: 'history' }, '');
+      setShowHistory(true);
+    } else {
+      if (window.history.state?.modal === 'history') {
+        window.history.back();
+      } else {
+        setShowHistory(false);
+      }
+    }
+  };
+
+  const handleSetShowReleaseNotes = (val: boolean) => {
+    if (val) {
+      window.history.pushState({ view: 'app', modal: 'release' }, '');
+      setShowReleaseNotes(true);
+    } else {
+      if (window.history.state?.modal === 'release') {
+        window.history.back();
+      } else {
+        setShowReleaseNotes(false);
+      }
+    }
+  };
+
+  // Seed the browser history stack on initial mount and configure general popstate interceptions
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    // Seed the active session history paths
+    window.history.replaceState({ view: 'home_root' }, '');
+    window.history.pushState({ view: 'home' }, '');
+
+    const handlePopState = (e: PopStateEvent) => {
+      const state = e.state;
+      if (!state) {
+        setCurrentView('home');
+        setShowSettings(false);
+        setShowHistory(false);
+        setShowReleaseNotes(false);
+        return;
+      }
+
+      if (state.view === 'home_root') {
+        // Double-tap or double back-navigation protection: push back the home view cushion and show the visual exit confirmation modal
+        window.history.pushState({ view: 'home' }, '');
+        setShowExitConfirm(true);
+      } else if (state.view === 'home') {
+        setCurrentView('home');
+        setShowSettings(false);
+        setShowHistory(false);
+        setShowReleaseNotes(false);
+        setShowExitConfirm(false);
+      } else if (state.view === 'app') {
+        setCurrentView('app');
+        setShowExitConfirm(false);
+        setShowSettings(state.modal === 'settings');
+        setShowHistory(state.modal === 'history');
+        setShowReleaseNotes(state.modal === 'release');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
   useEffect(() => {
     localStorage.setItem('designSystem', designSystem);
   }, [designSystem]);
@@ -1391,16 +1527,78 @@ export default function App() {
     <ErrorBoundary>
       <div className={designSystem === 'classic' ? 'classic-design' : ''}>
         {currentView === 'home' ? (
-          <LandingPage onStart={() => setCurrentView('app')} theme={theme} toggleTheme={toggleTheme} />
+          <LandingPage 
+            onStart={() => {
+              window.history.pushState({ view: 'app' }, '');
+              setCurrentView('app');
+            }} 
+            theme={theme} 
+            toggleTheme={toggleTheme} 
+          />
         ) : (
           <DocumentationGenerator 
-            onNavigateHome={() => setCurrentView('home')} 
+            onNavigateHome={() => {
+              if (window.history.state?.view === 'app') {
+                window.history.back();
+              } else {
+                window.history.pushState({ view: 'home' }, '');
+                setCurrentView('home');
+              }
+            }} 
             theme={theme} 
             toggleTheme={toggleTheme}
             designSystem={designSystem}
             setDesignSystem={setDesignSystem}
+            showSettings={showSettings}
+            setShowSettings={handleSetShowSettings}
+            showHistory={showHistory}
+            setShowHistory={handleSetShowHistory}
+            showReleaseNotes={showReleaseNotes}
+            setShowReleaseNotes={handleSetShowReleaseNotes}
           />
         )}
+        <ReloadPrompt />
+
+        {/* Elegant exit confirmation dialog styled professionally to match DocuGen Pro */}
+        <AnimatePresence>
+          {showExitConfirm && (
+            <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-neutral-950/60 backdrop-blur-sm">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 15 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 15 }}
+                className="bg-white dark:bg-neutral-900 rounded-3xl p-6 max-w-sm w-full border border-neutral-200 dark:border-neutral-800 shadow-2xl text-center"
+              >
+                <div className="w-12 h-12 rounded-2xl bg-brand-100 dark:bg-brand-900/10 text-brand-600 dark:text-brand-400 flex items-center justify-center mx-auto mb-4 border border-brand-200/50 dark:border-brand-800/10 shadow-lg shadow-brand-500/5">
+                  <AlertCircle size={22} />
+                </div>
+                <h3 className="text-base font-black text-neutral-900 dark:text-white mb-2">Voulez-vous quitter ?</h3>
+                <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-6 leading-relaxed">
+                  Êtes-vous sûr de vouloir quitter DocuGen Pro ? Vos modifications et données courantes resteront conservées dans le stockage local de votre appareil.
+                </p>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setShowExitConfirm(false)}
+                    className="flex-1 py-3 px-4 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-bold rounded-2xl text-[11px] hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-all active:scale-95 border border-neutral-200/50 dark:border-neutral-700/50"
+                  >
+                    Rester
+                  </button>
+                  <button
+                    onClick={() => {
+                      // Attempt a native browser tab closure
+                      window.close();
+                      // Graceful fallback redirect that unloads app state container
+                      window.location.href = "about:blank";
+                    }}
+                    className="flex-1 py-3 px-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl text-[11px] transition-all active:scale-95 shadow-lg shadow-brand-500/10"
+                  >
+                    Quitter
+                  </button>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
       </div>
     </ErrorBoundary>
   );

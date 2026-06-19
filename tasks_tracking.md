@@ -40,6 +40,12 @@
 - [x] Raffinement du design "Classic" pour un rendu plus professionnel.
 - [x] QR Code stylisé d'authentification lié aux profils LinkedIn/GitHub en fin d'attestation.
 - [x] Refonte totale de la Landing Page professionnelle (Hero, Proposition de valeur, Fonctionnalités, Cas d'usage bento grid, Comment ça marche, FAQ interactive en accordéon et CTA final).
+- [x] Optimisation de l'export Word (.doc) avec styles CSS embarqués pour une mise en forme préservée.
+- [x] Différenciation visuelle thématique pour les documents d'idéation (Roadmap, Architecture, Backlog, Pitch).
+- [x] Correction des conflits de styles prose/custom dans la prévisualisation directe.
+- [x] Audit technique approfondi PWA, SEO et Partage Social.
+- [x] Mise à jour complète des métadonnées de versionnement (v2.5.0) et gestion des release notes.
+- [x] Migration et consolidation des ressources PWA (icônes, manifest.webmanifest).
 
 
 ## Bogues corrigés
@@ -68,4 +74,5 @@
 - [ ] Maintenance et mise à jour continue de la documentation du projet.
 - [x] Création du document `structure_projet.md` pour détailler l'architecture.
 - [x] Harmonisation du branding et de la documentation juridique (Aurion Labs-G).
+- [x] Audit et correction des problèmes de mise en forme Word et prévisualisation ideation.
 - [ ] Surveillance de la stabilité du déploiement suite aux dernières corrections.

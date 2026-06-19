@@ -127,6 +127,18 @@
 
 ---
 
+## Titre de la décision : Optimisation de l'Export Word et Rendu Visuel Thématique
+- **Date :** 17 Juin 2026
+- **Contexte :** Les utilisateurs rapportaient des problèmes de mise en forme lors de l'ouverture des documents exportés en .doc (absence de styles, bordures, typographies). Par ailleurs, la visualisation directe dans l'application manquait de distinction entre les différents types de documents de la phase d'idéation.
+- **Décision :** 
+  1. Refondre la fonction `exportToWord` pour injecter un bloc de styles CSS complet et compatible Word dans l'en-tête du fichier blob HTML.
+  2. Créer des styles CSS hautement spécifiques dans `index.css` pour chaque type de document (Roadmap, Architecture, Backlog, Pitch) afin de renforcer leur identité visuelle.
+  3. Supprimer l'utilisation globale de la classe `prose` (Tailwind Typography) dans la prévisualisation pour éviter les conflits de spécificité avec les styles personnalisés.
+- **Alternatives envisagées :** Utiliser la bibliothèque `docx` (rejeté pour éviter d'alourdir le bundle client et car l'export HTML stylé suffit pour les besoins actuels).
+- **Conséquences :** Documents exportés vers Word beaucoup plus proches du rendu visuel de l'application. Expérience de prévisualisation plus riche et professionnelle, facilitant la relecture et la validation pendant la phase d'idéation.
+
+---
+
 ## Titre de la décision : Raffinement de l'Expérience Mobile et de l'État Vide
 - **Date :** 12 Avril 2026
 - **Contexte :** L'interface sur mobile présentait des problèmes de lisibilité (troncature du logo) et d'ergonomie (boutons trop larges, formulaires peu denses). De plus, les nouveaux utilisateurs se retrouvaient face à une zone de prévisualisation vide et peu engageante.

@@ -17,6 +17,8 @@ import {
 } from 'lucide-react';
 // Importation de Framer Motion (re-branché sur motion/react pour la compatibilité du projet)
 import { motion } from 'motion/react';
+import InstallPWA from './InstallPWA';
+import { APP_VERSION } from '../version';
 
 // Définition de l'interface des propriétés reçues par notre composant
 interface LandingPageProps {
@@ -137,6 +139,8 @@ export default function LandingPage({ onStart, theme, toggleTheme }: LandingPage
 
           {/* Actions rapides à droite de la barre de navigation */}
           <div className="flex items-center gap-4">
+            <InstallPWA />
+            
             {/* Bouton de bascule de thèmes d'éclairage (Jour/Nuit) avec ombres subtiles */}
             <button
               onClick={toggleTheme}
@@ -191,7 +195,7 @@ export default function LandingPage({ onStart, theme, toggleTheme }: LandingPage
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-neutral-100 dark:bg-neutral-900 border border-neutral-200/60 dark:border-neutral-800/80 rounded-full mb-8">
                 <span className="flex h-2 w-2 rounded-full bg-brand-500 animate-pulse" />
                 <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-600 dark:text-neutral-400">
-                  Version 2.3 • Certification & Storytelling
+                  Version {APP_VERSION} • PWA & Certification
                 </span>
               </div>
 

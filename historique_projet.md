@@ -38,7 +38,10 @@
 - **15 Juin 2026**
   - **Description :** Résolution d'un problème bloquant de compilation lié à la suppression manuelle du fichier `firebase-applet-config.json`. Création d'une implémentation Firebase par stubbing (`src/firebase.ts`) afin de neutraliser toute dépendance rigide à l'intégration OAuth/Firebase.
   - **Impact :** Restauration complète de la stabilité de l'application et passage en mode autonome sans cloud, tout en conservant une conformité parfaite pour `App.tsx` et d'excellentes performances de l'application.
-- **16 Avril 2026**
+- **17 Juin 2026**
+  - **Description :** Optimisation majeure de l'exportation vers Word et du rendu visuel des documents. Correction des problèmes de mise en forme lors de l'exportation .doc en intégrant un bloc de styles CSS complet et compatible dans l'en-tête du fichier généré. Refonte esthétique des documents de la phase d'idéation (Roadmap, Architecture, Backlog, Pitch) avec des styles spécifiques pour chaque type (Timeline pour la Roadmap, style technique mono pour l'Architecture, liste de contrôle pour le Backlog, et style impactant centré pour le Pitch). Suppression des classes `prose` conflictuelles pour garantir l'application fidèle des styles personnalisés définis dans `index.css`.
+  - **Impact :** Documents exportés vers Word désormais exploitables avec une mise en forme professionnelle préservée. Amélioration significative de la clarté et de la crédibilité visuelle lors de la phase de prévisualisation directe dans l'application.
+- **16 Juin 2026**
   - **Description :** Mise en place de la configuration PWA (Progressive Web App). Création du fichier `manifest.json` et d'une icône vectorielle (`icon.svg`) reproduisant fidèlement le logo de DocuGen Pro (carré bleu arrondi avec icône de document blanche). Implémentation d'un système d'historique local permettant de sauvegarder les 30 dernières générations de documents directement dans le navigateur (`localStorage`). Ajout d'une interface de consultation dédiée permettant de recharger instantanément un ancien projet ou de le supprimer.
   - **Impact :** Permet aux utilisateurs d'ajouter l'application à leur écran d'accueil sur mobile et de retrouver facilement leurs travaux précédents sans avoir besoin d'un compte cloud, améliorant considérablement la productivité et l'expérience utilisateur hors-ligne.
 - **15 Avril 2026**
