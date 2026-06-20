@@ -71,9 +71,14 @@ if (existsSync(clientPath)) {
   console.log(`WARNING: clientPath does not exist: ${clientPath}`);
 }
 
-app.listen(ACTUAL_PORT, '0.0.0.0', () => {
-  console.log(`Server listening on 0.0.0.0:${ACTUAL_PORT}`);
-  if (process.env.NODE_ENV === 'production') {
-    console.log('Production mode: serving static files enabled.');
-  }
-});
+// Seulement écouter sur le port si nous ne sommes pas dans un environnement Serverless comme Vercel
+if (!process.env.VERCEL) {
+  app.listen(ACTUAL_PORT, '0.0.0.0', () => {
+    console.log(`Server listening on 0.0.0.0:${ACTUAL_PORT}`);
+    if (process.env.NODE_ENV === 'production') {
+      console.log('Production mode: serving static files enabled.');
+    }
+  });
+}
+
+export default app;
