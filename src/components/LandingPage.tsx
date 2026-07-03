@@ -485,14 +485,14 @@ export default function LandingPage({ onStart, theme, toggleTheme }: LandingPage
               <button onClick={onStart} className="hover:text-white transition-colors duration-200">Générateur</button>
               <a href="#features" className="hover:text-white transition-colors duration-200">Fonctionnalités</a>
               <span className="text-neutral-800 pointer-events-none">|</span>
-              <span className="cursor-default text-neutral-600 select-none">Aurion Labs G. © 2026</span>
+              <span className="cursor-default text-neutral-600 select-none">Horacio Chinkoun © 2026</span>
             </div>
           </div>
 
           {/* Mentions Légales mineures de pied de page */}
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-neutral-600">
             <p>Conçu pour les ingénieurs, freelances et créateurs technologiques.</p>
-            <p className="italic">DocuGen Pro est une marque déposée par Aurion Labs-G.</p>
+            <p className="italic">DocuGen Pro est la propriété personnelle exclusive de Horacio Chinkoun.</p>
           </div>
         </div>
       </footer>

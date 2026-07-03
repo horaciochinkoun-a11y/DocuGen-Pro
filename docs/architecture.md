@@ -1,6 +1,6 @@
-# Architecture et Structure du Projet DocuGen Pro (Aurion Labs-G)
+# Architecture et Structure du Projet DocuGen Pro (Horacio Chinkoun)
 
-Ce document détaille l'organisation du code source de DocuGen Pro, un produit de **Aurion Labs-G**. Il sert de guide de référence pour tout développeur intervenant sur l'application.
+Ce document détaille l'organisation du code source de DocuGen Pro, propriété personnelle de **Horacio Chinkoun**. Il sert de guide de référence pour tout développeur intervenant sur l'application.
 
 ## 📂 Arborescence Globale
 

@@ -17,7 +17,7 @@
 - Automatisation documentation technique
 - Certification travaux freelance
 - Rapport de projet intelligent
-- Aurion Labs-G
+- Horacio Chinkoun
 
 ## 🏗️ Structure de l'Indexation
 - **Landing Page** : Focus sur la proposition de valeur et les bénéfices.

@@ -1,7 +1,7 @@
 # Fiche Portfolio : DocuGen Pro
 
 ## Nom du projet
-DocuGen Pro (produit de Aurion Labs-G)
+DocuGen Pro (propriété personnelle de Horacio Chinkoun)
 
 ## Résumé en une phrase
 Un générateur automatisé de documentation professionnelle et contractuelle propulsé par l'intelligence artificielle pour les développeurs freelances, SaaS et porteurs de projet.
@@ -76,7 +76,7 @@ Contrairement aux générateurs de texte génériques d'IA, DocuGen Pro applique
 - **Sécurité et RGPD (Privacy)** : Approche de sécurité "Zero Trust" locale, authentification tierce non bloquante.
 
 ## Captures recommandées
-1. **La Landing Page Épurée** : Mettant en avant l'identité sémantique d'Aurion Labs-G, le pitch d'accroche et les fonctionnalités clés sous forme de cartes.
+1. **La Landing Page Épurée** : Mettant en avant l'identité sémantique personnelle de Horacio Chinkoun, le pitch d'accroche et les fonctionnalités clés sous forme de cartes.
 2. **Le Formulaire de Saisie Dynamique (Desktop)** : Présentant la grille réactive de formulaires à deux colonnes avec l' Empty State engageant dans la zone de prévisualisation droite.
 3. **Le Rendu de l'Attestation Certifiée** : L'écran de prévisualisation affichant la double-bordure élégante, le filigrane semi-transparent et la mise en page formelle prête à être exportée en PDF.
 4. **La Modale d'Historique de Projets** : L'interface répertoriant les documents sauvegardés localement avec leurs pastilles de type (Livraison vs Idéation) et de suppression.
@@ -85,18 +85,18 @@ Contrairement aux générateurs de texte génériques d'IA, DocuGen Pro applique
 > DocuGen Pro est un générateur de documents professionnels par IA (Gemini) destiné aux freelances et créateurs de SaaS. Il traduit instantanément les contours d'un projet en livrables certifiés (attestations, feuilles de route, backlogs, posts LinkedIn) et offre une double interface esthétique interchangeable (Premium vs Classic) avec persistance 100% locale.
 
 ## Description moyenne pour portfolio
-> DocuGen Pro (par Aurion Labs-G) est un outil de productivité complet à destination des écosystèmes entrepreneuriaux et technologiques. Construit sur un modèle hybride d'appels IA côté client via le SDK Gemini et de synchronisation optionnelle Firebase, il permet de générer à la volée 8 types de documents formels (administratifs, techniques et commerciaux) répartis en phases de Livraison ou d'Idéation.
+> DocuGen Pro (par Horacio Chinkoun) est un outil de productivité complet à destination des écosystèmes entrepreneuriaux et technologiques. Construit sur un modèle hybride d'appels IA côté client via le SDK Gemini et de synchronisation optionnelle Firebase, il permet de générer à la volée 8 types de documents formels (administratifs, techniques et commerciaux) répartis en phases de Livraison ou d'Idéation.
 >
 > Pensé pour les développeurs, le projet résout les problématiques d'administration chronophages. Il intègre un système d'historique local crypté et persistant dans le `localStorage` (jusqu'à 30 entrées), des fonctions d'exportation de qualité vectorielle en PDF/Word, et un commutateur de double identité visuelle (Premium SaaS versus Classic flat design). Un soin particulier a été apporté à la chaîne de déploiement en production sur Google Cloud Run, surmontant des défis d'intégration de conteneurs via un bundling esbuild sur mesure.
 
 ## Description longue pour étude de cas
-> DocuGen Pro, conçu sous l'égide de la marque Aurion Labs-G, est né d'un constat simple de terrain : la documentation projet est de première importance pour l'évolution d'un professionnel de la tech, mais sa rédaction constitue une charge mentale et administrative chronophage. 
+> DocuGen Pro, conçu par Horacio Chinkoun, est né d'un constat simple de terrain : la documentation projet est de première importance pour l'évolution d'un professionnel de la tech, mais sa rédaction constitue une charge mentale et administrative chronophage. 
 > 
 > Pour y pallier, j'ai développé une solution full-stack complète découplée. Le frontend, reposant sur React 19 et Vite, adopte une architecture "Frontend-First" : toute la puissance des requêtes textuelles de l'API Gemini 1.5 est canalisée directement depuis le navigateur du visiteur. Cette approche offre trois avantages architecturaux critiques : une élimination de l'effet d'entonnoir d'un proxy serveur commun, une performance d'exécution en temps réel sans latence d'IP intermédiaire, et une sécurité "Zero Trust" de premier ordre (la clé d'API personnelle de l'utilisateur n'est jamais exposée ni envoyée à un serveur tiers non légitime). Pour les utilisateurs recherchant la portabilité, une authentification sécurisée optionnelle Google Sign-In par Firebase Auth permet de synchroniser sa configuration sur le cloud.
 > 
 > Un important travail d'ingénierie DevOps a été mené pour rendre l'interface de production robuste et déployable en continu sur Google Cloud Run. Les conteneurs d'intégration échouant par défaut face aux exigences réseau d'entrée et aux dépendances disparates, j'ai conçu un pipeline de build avancé via esbuild. En enveloppant le serveur avec injection de polyfills dynamiques de rétrocompatibilité pour les bibliothèques CommonJS dans des fichiers modules (.mjs), et en limitant les appels d'API Express au format strict d'Express 5 (`*all` routes et middlewares d'erreur au format JSON natif), j'ai garanti une disponibilité de l'application à 100% sans aucun crash de démarrage sur l'infrastructure d'hébergement.
 > 
-> Au niveau visuel, DocuGen Pro brise les codes des applications par défaut en proposant un switcher de design complet à l'utilisateur : le mode "Premium SaaS", exploitant les styles élégants de la marque Aurion Labs (effets de verre trempé, ombres satinées, typographies Playfair Display), et le mode "Classic", réintroduit par souci d'ergonomie suite aux retours de la communauté technologique (aplats, vert émeraude, réduction drastique des arrondis et suppression d'éléments collants). L'exportation côté client génère des PDF de haute qualité prêts pour signature grâce au moteur d'html2pdf optimisé de façon sémantique. L'application intègre également un système de sauvegarde d'historique local automatique qui stocke jusqu'à 30 projets sans base de données tierce.
+> Au niveau visuel, DocuGen Pro brise les codes des applications par défaut en proposant un switcher de design complet à l'utilisateur : le mode "Premium SaaS", exploitant les styles élégants de la marque personnelle de Horacio Chinkoun (effets de verre trempé, ombres satinées, typographies Playfair Display), et le mode "Classic", réintroduit par souci d'ergonomie suite aux retours de la communauté technologique (aplats, vert émeraude, réduction drastique des arrondis et suppression d'éléments collants). L'exportation côté client génère des PDF de haute qualité prêts pour signature grâce au moteur d'html2pdf optimisé de façon sémantique. L'application intègre également un système de sauvegarde d'historique local automatique qui stocke jusqu'à 30 projets sans base de données tierce.
 
 ## Mots-clés
-`DocuGen Pro`, `Portfolio tech`, `React 19`, `Gemini API`, `Prompt Engineering`, `Full-Stack Javascript`, `Google Cloud Run`, `DevOps container`, `esbuild bundling`, `PWA`, `Tailwind CSS`, `Framer Motion`, `LocalStorage backup`, `Aurion Labs-G`, `Génération de documents IA`, `Productivité de projet`, `SaaS MVP`.
+`DocuGen Pro`, `Portfolio tech`, `React 19`, `Gemini API`, `Prompt Engineering`, `Full-Stack Javascript`, `Google Cloud Run`, `DevOps container`, `esbuild bundling`, `PWA`, `Tailwind CSS`, `Framer Motion`, `LocalStorage backup`, `Horacio Chinkoun`, `Génération de documents IA`, `Productivité de projet`, `SaaS MVP`.

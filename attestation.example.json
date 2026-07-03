@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "documentType": "attestation",
+    "theme": "premium-light"
+  },
+  "formData": {
+    "developerName": "Alex Mercer",
+    "developerStatus": "Architecte Logiciel",
+    "clientName": "Sarah Jenkins",
+    "companyName": "Nexus Logistique",
+    "projectName": "RouteOptima",
+    "projectType": "Application SaaS",
+    "technologies": "React, Next.js, Node.js, PostgreSQL, API Google Maps, Redis",
+    "keyFeatures": "Suivi des chauffeurs en temps réel, calcul automatisé des itinéraires, tableau de bord de répartition par glisser-déposer, notifications SMS aux clients",
+    "results": "Réduction des coûts de carburant de 18%, amélioration du taux de livraison de 82% à 96%, intégration de 50 chauffeurs le premier mois",
+    "duration": "6 mois",
+    "clientContact": "s.jenkins@nexus-logistique.fr",
+    "manualTime": "02 Avril 2026",
+    "manualLocation": "Paris, France",
+    "githubLink": "https://github.com/alexmercer/routeoptima",
+    "linkedinLink": "https://linkedin.com/in/alexmercer"
+  },
+  "content": {
+    "attestationMarkdown": "# ATTESTATION DE RÉALISATION DE PRESTATION\n\n---\n\nJe soussignée, **Sarah Jenkins**, agissant en qualité de représentante légale de la société **Nexus Logistique**, certifie par la présente que M. **Alex Mercer**, intervenant en qualité d'**Architecte Logiciel**, a réalisé avec succès la prestation d'ingénierie informatique relative au projet SaaS dénommé **RouteOptima**.\n\nLa prestation s'est déroulée sur une durée de **6 mois** et a impliqué le déploiement des technologies suivantes : React, Next.js, Node.js, PostgreSQL, API Google Maps, Redis.\n\n## Périmètre et Fonctionnalités Livrées\n\n- Suivi des chauffeurs en temps réel\n- Calcul automatisé des itinéraires optimaux\n- Tableau de bord de répartition par glisser-déposer\n- Notifications SMS automatisées aux clients\n\n## Résultats Constatés\n\nLes travaux livrés ont permis une réduction des coûts de carburant moyens de **18 %**, une amélioration du taux de livraison à temps de **82 % à 96 %**, ainsi que l'intégration de **50 chauffeurs** le premier mois d'exploitation.\n\n## Ressources du Projet\n\nDépôt de code source : https://github.com/alexmercer/routeoptima\n\nCette attestation est délivrée pour valoir ce que de droit.\n\n---\n\nFait à Paris, France, le 02 Avril 2026\n\n**Sarah Jenkins**\nNexus Logistique\n\n---\n\n### Validation & Authenticité numérique\nCe document officiel est certifié numériquement. Pour vérifier l'authenticité de cette attestation de prestation et consulter les travaux ou le profil professionnel associé, veuillez scanner le code QR ci-dessous :\n\n![QR Code d'authentification](QR_CODE_AUTHENTICATION_URL_PLACEHOLDER)"
+  }
+}

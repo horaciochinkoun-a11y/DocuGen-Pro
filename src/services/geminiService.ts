@@ -1,18 +1,5 @@
 import { GoogleGenAI, Type } from '@google/genai';
-
-export interface GeneratedDocs {
-  // Mode Completion (Default)
-  attestation?: string;
-  technicalSummary?: string;
-  cvVersion?: string;
-  linkedinVersion?: string;
-  
-  // Mode Initiation
-  roadmap?: string;
-  architecture?: string;
-  backlog?: string;
-  pitch?: string;
-}
+import { GeneratedDocs } from '../types';
 
 /**
  * Service pour gérer les appels à l'API Gemini.

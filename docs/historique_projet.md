@@ -29,6 +29,18 @@
 - **Justification de chaque décision :** Voir le fichier `decisions_log.md` pour plus de détails.
 
 ## Historique des modifications
+- **03 Juillet 2026**
+  - **Description :** Résolution d'un crash bloquant lors de l'exportation PDF via html2pdf.js causé par l'incompatibilité de l'analyseur interne de html2canvas avec les fonctions de couleur modernes CSS (oklch et oklab) introduites par Tailwind CSS v4. Implémentation d'un intercepteur dynamique `onclone` pour nettoyer et remplacer les fonctions de couleur modernes par des valeurs rgb compatibles dans les feuilles de style clonées avant le rendu.
+  - **Impact :** Restauration totale et pérenne de la fonctionnalité d'export PDF en haute définition, sans aucune erreur d'analyseur de couleur dans la console ni interruption du traitement client.
+
+- **03 Juillet 2026**
+  - **Description :** Intégration complète et transition vers le nouveau moteur de rendu unifié de DocuGen-Pro. Migration de l'ensemble des générateurs (Attestation, Résumé technique, CV, LinkedIn, Roadmap, Architecture, Backlog, Pitch) sous TypeScript, couplage avec le validateur JSON Schema Ajv et raccordement au bouton d'export Word dans `App.tsx`. Mise à jour correspondante de la charte graphique avec une section exhaustive sur l'intégration visuelle de l'office automation OpenXML. Déplacement de l'ensemble des fichiers `.docx` d'exemples depuis la racine vers `/docgen/templates/` pour purifier la racine du projet.
+  - **Impact :** Documents Word générés désormais 100% natifs, parfaitement stylisés et certifiés avec des codes QR d'authenticité, augmentant drastiquement la qualité et la conformité des exports professionnels, avec un espace de travail parfaitement ordonné.
+
+- **03 Juillet 2026**
+  - **Description :** Transfert officiel de la propriété intellectuelle et de l'édition du projet à **Horacio Chinkoun** à titre de propriété personnelle. Mise à jour complète de l'ensemble du code source, des métadonnées sémantiques, des pieds de page (LandingPage et App), du document de licence (`LICENSE`), des mentions légales (`LEGAL_MENTIONS.md`), des conditions générales d'utilisation (`TERMS_OF_SERVICE.md`) et de la documentation d'architecture technique.
+  - **Impact :** Alignement réglementaire et juridique parfait sous nom propre. Propriété exclusive sécurisée à titre individuel.
+
 - **01 Juillet 2026**
   - **Description :** Correction d'un bug d'état React ("A component is changing a controlled input to be uncontrolled") en sécurisant toutes les liaisons de valeur des éléments `<input>` et `<textarea>` avec des valeurs de repli par défaut (`|| ''`). Résolution de l'avertissement de console récurrent lié à l'analyseur de couleur d'html2canvas pour le format moderne CSS de Tailwind CSS v4 ("Attempting to parse an unsupported color function 'oklab'") en intégrant un intercepteur global de `console.error` filtrant spécifiquement cette alerte inoffensive d'html2canvas.
   - **Impact :** Élimination totale des erreurs d'état réactif et des avertissements de rendu PDF dans la console, garantissant des journaux d'exécution propres et une stabilité applicative maximale.

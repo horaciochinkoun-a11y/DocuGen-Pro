@@ -1,0 +1,17 @@
+{
+  "name": "docugen-pro-render",
+  "version": "1.0.0",
+  "description": "Moteur de génération DOCX pour DocuGen-Pro — 8 types × 4 variantes",
+  "main": "src/render.js",
+  "scripts": {
+    "generate:samples": "node scripts/generate-all-variants.js",
+    "test:validate": "node scripts/validate-all.js"
+  },
+  "dependencies": {
+    "docx": "^9.6.1",
+    "marked": "^18.0.0",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1"
+  },
+  "engines": { "node": ">=18.0.0" }
+}

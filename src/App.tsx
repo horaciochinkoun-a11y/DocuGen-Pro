@@ -30,7 +30,9 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Markdown from 'react-markdown';
-import { generateProfessionalDocs, GeneratedDocs } from './services/geminiService';
+import { generateProfessionalDocs } from './services/geminiService';
+import { ProjectData, UserProfile, GeneratedDocs, HistoryItem } from './types';
+import { renderDocument, validateFormFields } from './docgen';
 import LandingPage from './components/LandingPage';
 import ReloadPrompt from './components/ReloadPrompt';
 import InstallPWA from './components/InstallPWA';
@@ -112,36 +114,6 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   }
 }
 
-// User Profile Interface
-interface UserProfile {
-  uid: string;
-  email: string;
-  useCustomApiKey: boolean;
-  userApiKey?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
-
-// Define the form data structure
-interface ProjectData {
-  developerName: string;
-  developerStatus: string;
-  clientName: string;
-  companyName: string;
-  projectName: string;
-  projectType: string;
-  description: string;
-  technologies: string;
-  keyFeatures: string;
-  results: string;
-  duration: string;
-  clientContact: string;
-  manualTime: string;
-  manualLocation: string;
-  githubLink: string;
-  linkedinLink: string;
-}
-
 const initialFormData: ProjectData = {
   developerName: '',
   developerStatus: 'Senior',
@@ -160,15 +132,6 @@ const initialFormData: ProjectData = {
   githubLink: '',
   linkedinLink: '',
 };
-
-// History Item Interface
-interface HistoryItem {
-  id: string;
-  timestamp: number;
-  formData: ProjectData;
-  generatedDocs: GeneratedDocs;
-  phase: 'completion' | 'initiation';
-}
 
 function DocumentationGenerator({ 
   onNavigateHome, 
@@ -296,8 +259,16 @@ function DocumentationGenerator({
 
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsGenerating(true);
     setError(null);
+
+    // Validation des données via le schéma AJV du module docgen
+    const validation = validateFormFields(formData);
+    if (!validation.isValid) {
+      setError(`Erreur de validation des champs :\n${validation.errors?.join('\n')}`);
+      return;
+    }
+
+    setIsGenerating(true);
 
     try {
       const prompt = projectPhase === 'completion' ? `
@@ -325,6 +296,13 @@ DONNÉES D'ENTRÉE :
 TÂCHE :
 Génère les 4 documents suivants en te basant sur les données d'entrée.
 IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS EN MARKDOWN.
+
+RÈGLES DE FORMATAGE STRICTES :
+- Utilise uniquement des titres ## et ### (jamais # dans le corps de l'attestation, le titre principal doit être le seul titre principal en #)
+- Les listes à puces commencent par "- " (tiret espace)
+- Les tableaux utilisent le format Markdown standard | col | col |
+- NE PAS utiliser de HTML, de classes CSS, ni de balises <div>
+- NE PAS écrire "QR_CODE_AUTHENTICATION_URL_PLACEHOLDER" — c'est injecté automatiquement
 
 1. ATTESTATION PROFESSIONNELLE (attestation)
 - Utilise un titre principal \`# ATTESTATION DE RÉALISATION DE PRESTATION\`.
@@ -381,6 +359,12 @@ DONNÉES D'ENTRÉE :
 TÂCHE :
 Génère les 4 documents stratégiques suivants.
 IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS EN MARKDOWN.
+
+RÈGLES DE FORMATAGE STRICTES :
+- Utilise uniquement des titres ## et ### (jamais # dans le corps, le titre principal peut utiliser # si requis)
+- Les listes à puces commencent par "- " (tiret espace)
+- Les tableaux utilisent le format Markdown standard | col | col |
+- NE PAS utiliser de HTML, de classes CSS, ni de balises <div>
 
 1. FEUILLE DE ROUTE & JALONS (roadmap)
 - Titre : \`# FEUILLE DE ROUTE STRATÉGIQUE : [Nom du Projet]\`.
@@ -449,7 +433,25 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
         margin: 15,
         filename: `${activeTab}.pdf`,
         image: { type: 'jpeg' as const, quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
+        html2canvas: { 
+          scale: 2, 
+          useCORS: true, 
+          logging: false,
+          onclone: (clonedDoc: Document) => {
+            const styles = clonedDoc.querySelectorAll('style');
+            styles.forEach(style => {
+              if (style.textContent) {
+                style.textContent = style.textContent.replace(/okl(ch|ab)\((?:[^)(]+|\([^)(]*\))*\)/g, 'rgb(115, 115, 115)');
+              }
+            });
+            clonedDoc.querySelectorAll('[style]').forEach(el => {
+              const styleAttr = el.getAttribute('style');
+              if (styleAttr && (styleAttr.includes('oklch') || styleAttr.includes('oklab'))) {
+                el.setAttribute('style', styleAttr.replace(/okl(ch|ab)\((?:[^)(]+|\([^)(]*\))*\)/g, 'rgb(115, 115, 115)'));
+              }
+            });
+          }
+        },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' as const }
       };
       // @ts-expect-error html2pdf is not typed
@@ -459,51 +461,36 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
     }
   };
 
-  const exportToWord = () => {
-    if (!generatedDocs) return;
-    const element = document.getElementById('markdown-content');
-    if (!element) return;
+  const exportToWord = async () => {
+    if (!generatedDocs || !generatedDocs[activeTab]) return;
 
-    // Custom CSS for Word export that mimics our app's styles
-    const wordStyles = `
-      <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; color: #1e293b; line-height: 1.6; }
-        h1 { color: #0f172a; font-size: 24pt; margin-top: 24pt; margin-bottom: 12pt; font-weight: bold; }
-        h2 { color: #1e293b; font-size: 18pt; margin-top: 20pt; margin-bottom: 10pt; font-weight: bold; border-bottom: 1px solid #e2e8f0; padding-bottom: 4pt; }
-        h3 { color: #334155; font-size: 14pt; margin-top: 16pt; margin-bottom: 8pt; font-weight: bold; }
-        p { margin-bottom: 10pt; text-align: justify; }
-        ul, ol { margin-bottom: 10pt; }
-        li { margin-bottom: 5pt; }
-        blockquote { border-left: 4px solid #3b82f6; padding-left: 15pt; color: #475569; font-style: italic; margin: 15pt 0; background: #f8fafc; padding-top: 10pt; padding-bottom: 10pt; }
-        hr { border: none; border-top: 1px solid #e2e8f0; margin: 20pt 0; }
-        table { border-collapse: collapse; width: 100%; margin-bottom: 15pt; }
-        th, td { border: 1px solid #e2e8f0; padding: 8pt; text-align: left; }
-        th { background-color: #f8fafc; font-weight: bold; }
-        .certifie { color: #94a3b8; font-size: 40pt; text-align: center; transform: rotate(-45deg); opacity: 0.1; }
-        img { max-width: 150px; height: auto; }
-        
-        /* Specific for Attestation */
-        .attestation-mode h1 { text-align: center; text-transform: uppercase; letter-spacing: 2pt; color: #000; }
-        .attestation-mode { padding: 40pt; border: 1pt solid #cbd5e1; }
-      </style>
-    `;
+    try {
+      const docxData = {
+        meta: {
+          documentType: activeTab,
+          theme: `${designSystem}-${theme}`,
+        },
+        formData: formData,
+        content: {
+          [`${activeTab}Markdown`]: generatedDocs[activeTab]!,
+        },
+      };
 
-    const header = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>${activeTab}</title>${wordStyles}</head><body class="${activeTab}-mode">`;
-    const footer = "</body></html>";
-    const html = header + element.innerHTML + footer;
-
-    const blob = new Blob(['\ufeff', html], {
-      type: 'application/msword'
-    });
-
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `${activeTab}.doc`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+      const { buffer, filename } = await renderDocument(docxData, { skipQr: false });
+      const blob = new Blob([buffer], {
+        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Erreur lors de l\'export Word (.docx) :', err);
+    }
   };
 
   const fillSampleData = () => {
@@ -1384,14 +1371,14 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
           <div className="space-y-1">
             <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400">
-              © 2026 DocuGen Pro. All rights reserved by Aurion Labs-G.
+              © 2026 DocuGen Pro. All rights reserved by Horacio Chinkoun.
             </p>
             <p className="text-xs text-neutral-500 dark:text-neutral-500 italic">
-              DocuGen Pro is a product of Aurion Labs-G.
+              DocuGen Pro est la propriété personnelle de Horacio Chinkoun.
             </p>
           </div>
           <div className="flex items-center gap-6 text-xs font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-500">
-            <span>Powered by Aurion Labs-G</span>
+            <span>Powered by Horacio Chinkoun</span>
           </div>
         </div>
       </footer>

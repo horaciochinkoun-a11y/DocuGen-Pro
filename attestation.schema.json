@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://docugen-pro/schemas/attestation.schema.json",
+  "title": "Attestation professionnelle",
+  "description": "Schéma pour le type 'attestation' généré par le mode Completion de DocuGen-Pro. L'IA génère le contenu textuel en Markdown structuré. Les données de QR, de date et de lieu viennent du formulaire ProjectData.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["meta", "formData", "content"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["documentId", "documentType", "theme", "generatedAt"],
+      "properties": {
+        "documentId":   { "type": "string", "description": "UUID généré côté serveur/client" },
+        "documentType": { "type": "string", "const": "attestation" },
+        "theme":        { "type": "string", "enum": ["premium-light", "premium-dark", "classic-light", "classic-dark"] },
+        "generatedAt":  { "type": "string", "format": "date-time" }
+      }
+    },
+    "formData": {
+      "type": "object",
+      "description": "Champs du formulaire ProjectData tels que saisis par l'utilisateur dans l'app",
+      "additionalProperties": false,
+      "required": ["developerName", "developerStatus", "clientName", "companyName", "projectName"],
+      "properties": {
+        "developerName":   { "type": "string", "maxLength": 100 },
+        "developerStatus": { "type": "string", "maxLength": 100, "description": "ex: Architecte Logiciel, Senior Developer" },
+        "clientName":      { "type": "string", "maxLength": 100 },
+        "companyName":     { "type": "string", "maxLength": 120 },
+        "projectName":     { "type": "string", "maxLength": 120 },
+        "projectType":     { "type": "string", "maxLength": 80 },
+        "technologies":    { "type": "string", "maxLength": 500 },
+        "keyFeatures":     { "type": "string", "maxLength": 1000 },
+        "results":         { "type": "string", "maxLength": 500 },
+        "duration":        { "type": "string", "maxLength": 60 },
+        "clientContact":   { "type": "string", "maxLength": 150 },
+        "manualTime":      { "type": "string", "maxLength": 60, "description": "ex: 02 Avril 2026" },
+        "manualLocation":  { "type": "string", "maxLength": 80, "description": "ex: Paris, France" },
+        "githubLink":      { "type": "string", "maxLength": 300 },
+        "linkedinLink":    { "type": "string", "maxLength": 300 }
+      }
+    },
+    "content": {
+      "type": "object",
+      "description": "Contenu généré par l'IA",
+      "additionalProperties": false,
+      "required": ["attestationMarkdown"],
+      "properties": {
+        "attestationMarkdown": {
+          "type": "string",
+          "description": "Markdown complet généré par l'IA pour l'attestation. DOIT inclure le placeholder QR_CODE_AUTHENTICATION_URL_PLACEHOLDER en fin de document. Le moteur de rendu le remplace par l'image réelle avant génération DOCX."
+        }
+      }
+    },
+    "computed": {
+      "type": "object",
+      "description": "Champs calculés/enrichis côté serveur (jamais par l'IA)",
+      "additionalProperties": false,
+      "properties": {
+        "qrCodeUrl": {
+          "type": "string",
+          "description": "URL complète vers l'API qrserver, construite côté serveur à partir de linkedinLink||githubLink et du thème. Ex: https://api.qrserver.com/v1/create-qr-code/?size=150x150&color=0-116-202&data=..."
+        }
+      }
+    }
+  }
+}

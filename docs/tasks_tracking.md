@@ -46,6 +46,10 @@
 - [x] Audit technique approfondi PWA, SEO et Partage Social.
 - [x] Mise à jour complète des métadonnées de versionnement (v2.5.0) et gestion des release notes.
 - [x] Migration et consolidation des ressources PWA (icônes, manifest.webmanifest).
+- [x] Intégration du moteur de rendu unifié DocuGen-Pro unifié (vrai `.docx` OpenXML ISO, QR codes d'authenticité natifs).
+- [x] Traduction et portage TypeScript de tous les générateurs de documents et validation JSON Schema via Ajv.
+- [x] Mise à jour complète de `charte_graphique.md` avec directives de conception d'office automation.
+- [x] Déplacement et organisation des fichiers exemples `.docx` dans le dossier dédié `/docgen/templates/`.
 
 
 ## Bogues corrigés
@@ -68,6 +72,9 @@
 - [x] Interface de consultation et de suppression de l'historique.
 - [x] Création et formalisation de la Fiche Portfolio Technique de l'application.
 - [x] Résolution de l'erreur d'import de `firebase-applet-config.json` suite à sa suppression en créant un stub Firebase robuste.
+- [x] Résolution de l'erreur d'exportation PDF due à l'incompatibilité de html2canvas avec les fonctions de couleur modernes (oklch/oklab) de Tailwind v4.
+- [x] Élaboration et rédaction du dossier de pré-audit juridique complet pour consultation d'avocat et de Perplexity AI.
+
 
 
 ## Tâches en cours

@@ -148,3 +148,12 @@
   3. Créer un "Empty State" visuel avec des icônes animées et des exemples de documents pour guider l'utilisateur.
 - **Alternatives envisagées :** Créer une version mobile simplifiée séparée (rejeté pour maintenir une base de code unique).
 - **Conséquences :** Amélioration immédiate de la perception de qualité sur smartphone et meilleure rétention des nouveaux utilisateurs grâce à un guidage visuel.
+
+---
+
+## Titre de la décision : Transfert de propriété personnelle
+- **Date :** 03 Juillet 2026
+- **Contexte :** Le produit DocuGen Pro est transféré d'Aurion Labs-G à la propriété personnelle et au nom propre de Horacio Chinkoun.
+- **Décision :** Mettre à jour l'ensemble de la documentation, du code, des mentions légales, des CGU, de la licence et des métadonnées sémantiques pour refléter l'appartenance exclusive à Horacio Chinkoun.
+- **Alternatives envisagées :** Conserver la structure d'entreprise Aurion Labs-G (rejeté suite à la demande expresse d'appropriation personnelle).
+- **Conséquences :** Transition juridique, sémantique et d'image de marque complète sous nom propre. Propriété intellectuelle 100 % sécurisée à titre individuel.
