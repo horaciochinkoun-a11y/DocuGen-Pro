@@ -871,7 +871,7 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
                     </label>
                     <input
                       type="password"
-                      value={localApiKey}
+                      value={localApiKey || ''}
                       onChange={(e) => handleApiKeyChange(e.target.value)}
                       placeholder="AIza..."
                       className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm font-mono dark:text-white"
@@ -974,7 +974,7 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
                       required
                       type="text"
                       name="developerName"
-                      value={formData.developerName}
+                      value={formData.developerName || ''}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
                       placeholder={projectPhase === 'completion' ? "Jean Dupont" : "Votre nom"}
@@ -988,7 +988,7 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
                     <input
                       list="status-options"
                       name="developerStatus"
-                      value={formData.developerStatus}
+                      value={formData.developerStatus || ''}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
                       placeholder="ex: Architecte Senior"
@@ -1011,7 +1011,7 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
                       required
                       type="text"
                       name="clientName"
-                      value={formData.clientName}
+                      value={formData.clientName || ''}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
                       placeholder={projectPhase === 'completion' ? "Marie Martin" : "ex: Freelances, PME..."}
@@ -1025,7 +1025,7 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
                       required
                       type="text"
                       name="companyName"
-                      value={formData.companyName}
+                      value={formData.companyName || ''}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
                       placeholder="Acme Corp"
@@ -1039,7 +1039,7 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
                     <input
                       type="text"
                       name="manualTime"
-                      value={formData.manualTime}
+                      value={formData.manualTime || ''}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
                       placeholder="ex: 02 Avril 2026"
@@ -1052,7 +1052,7 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
                     <input
                       type="text"
                       name="manualLocation"
-                      value={formData.manualLocation}
+                      value={formData.manualLocation || ''}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
                       placeholder="ex: Paris, France"
@@ -1067,7 +1067,7 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
                       required
                       type="text"
                       name="duration"
-                      value={formData.duration}
+                      value={formData.duration || ''}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
                       placeholder="ex: 3 mois"
@@ -1080,7 +1080,7 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
                     <input
                       list="project-types"
                       name="projectType"
-                      value={formData.projectType}
+                      value={formData.projectType || ''}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
                       placeholder="ex: SaaS B2B"
@@ -1104,7 +1104,7 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
                     required
                     type="text"
                     name="projectName"
-                    value={formData.projectName}
+                    value={formData.projectName || ''}
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
                     placeholder="Projet Alpha"
@@ -1119,7 +1119,7 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
                     <input
                       type="url"
                       name="githubLink"
-                      value={formData.githubLink}
+                      value={formData.githubLink || ''}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
                       placeholder="https://github.com/..."
@@ -1133,7 +1133,7 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
                     <input
                       type="url"
                       name="linkedinLink"
-                      value={formData.linkedinLink}
+                      value={formData.linkedinLink || ''}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
                       placeholder="https://linkedin.com/in/..."
@@ -1149,7 +1149,7 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
                   <textarea
                     required
                     name="description"
-                    value={formData.description}
+                    value={formData.description || ''}
                     onChange={handleInputChange}
                     rows={3}
                     className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all resize-none dark:text-white"
@@ -1166,7 +1166,7 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
                     required
                     type="text"
                     name="technologies"
-                    value={formData.technologies}
+                    value={formData.technologies || ''}
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
                     placeholder="React, Node.js, PostgreSQL..."
@@ -1181,7 +1181,7 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
                   <textarea
                     required
                     name="keyFeatures"
-                    value={formData.keyFeatures}
+                    value={formData.keyFeatures || ''}
                     onChange={handleInputChange}
                     rows={3}
                     className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all resize-none dark:text-white"
@@ -1197,7 +1197,7 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
                   <textarea
                     required
                     name="results"
-                    value={formData.results}
+                    value={formData.results || ''}
                     onChange={handleInputChange}
                     rows={2}
                     className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all resize-none dark:text-white"
@@ -1210,7 +1210,7 @@ IMPORTANT : TOUS LES DOCUMENTS DOIVENT ÊTRE RÉDIGÉS EN FRANÇAIS ET FORMATÉS
                   <input
                     type="text"
                     name="clientContact"
-                    value={formData.clientContact}
+                    value={formData.clientContact || ''}
                     onChange={handleInputChange}
                     className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white"
                     placeholder="email@exemple.com ou numéro de téléphone"

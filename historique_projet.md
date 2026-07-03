@@ -29,6 +29,10 @@
 - **Justification de chaque décision :** Voir le fichier `decisions_log.md` pour plus de détails.
 
 ## Historique des modifications
+- **01 Juillet 2026**
+  - **Description :** Correction d'un bug d'état React ("A component is changing a controlled input to be uncontrolled") en sécurisant toutes les liaisons de valeur des éléments `<input>` et `<textarea>` avec des valeurs de repli par défaut (`|| ''`). Résolution de l'avertissement de console récurrent lié à l'analyseur de couleur d'html2canvas pour le format moderne CSS de Tailwind CSS v4 ("Attempting to parse an unsupported color function 'oklab'") en intégrant un intercepteur global de `console.error` filtrant spécifiquement cette alerte inoffensive d'html2canvas.
+  - **Impact :** Élimination totale des erreurs d'état réactif et des avertissements de rendu PDF dans la console, garantissant des journaux d'exécution propres et une stabilité applicative maximale.
+
 - **15 Juin 2026**
   - **Description :** Refonte majeure de la Landing Page de DocuGen Pro en tant que Product Designer et UX Writer Senior. Ajout d'une section d'introduction moderne avec effets d'éclairage fins et arrière-plans géométriques, d'une section sur la proposition de valeur autonome et privée, d'un segment exhaustif de fonctionnalités clés couvrant le cycle de vie projet complet, d'un bento-grid de cas d'usage métiers réels, d'une FAQ interactive en accordéon fluide avec ouverture/fermeture dynamique, et d'un appel à l'action final (CTA) percutant sous forme de bannière asymétrique haut de gamme. Le code de cette vue d'accueil a été documenté et commenté ligne par ligne de façon chirurgicale.
   - **Impact :** Présentation du produit extrêmement professionnelle, amélioration majeure du taux de conversion et de la clarté UX, et alignement rigoureux des textes pour un référencement organique optimisé.
