@@ -30,6 +30,10 @@
 
 ## Historique des modifications
 - **03 Juillet 2026**
+  - **Description :** Mise en conformité juridique complète suite à un audit (RGPD/APDP). Rédaction et intégration d'une Politique de Confidentialité détaillant l'architecture Client-Side exclusive (`localStorage`) et le transit via Google Gemini API. Refonte des Mentions Légales et renforcement des CGU avec une clause limitative de responsabilité face à l'IA. Intégration d'un bandeau UI informatif ("Stockage Local Uniquement") dès le lancement de l'application géré de façon révocable via le cache du navigateur.
+  - **Impact :** Protection juridique formelle de l'Éditeur, conformité totale en matière de transparence sur le traitement des données et renforcement de la confiance utilisateur grâce au design privacy-first.
+
+- **03 Juillet 2026**
   - **Description :** Résolution d'un crash bloquant lors de l'exportation PDF via html2pdf.js causé par l'incompatibilité de l'analyseur interne de html2canvas avec les fonctions de couleur modernes CSS (oklch et oklab) introduites par Tailwind CSS v4. Implémentation d'un intercepteur dynamique `onclone` pour nettoyer et remplacer les fonctions de couleur modernes par des valeurs rgb compatibles dans les feuilles de style clonées avant le rendu.
   - **Impact :** Restauration totale et pérenne de la fonctionnalité d'export PDF en haute définition, sans aucune erreur d'analyseur de couleur dans la console ni interruption du traitement client.
 
@@ -135,3 +139,12 @@
 - **03 Avril 2026**
   - **Description :** Création du système de documentation (historique, chat, cahier des charges, décisions, tâches).
   - **Impact :** Meilleure traçabilité et maintenabilité du projet.
+- **04 Juillet 2026**
+  - **Description :** Mise à jour des schémas JSON (attestation.schema.json, all-schemas.js et registry/schemas.ts) pour autoriser `additionalProperties: true` sur le champ `formData` et ajouter la description explicite.
+  - **Impact :** Évite les erreurs de validation strictes liées à l'injection du champ "description" dans les données du formulaire lors de la génération IA.
+- **04 Juillet 2026**
+  - **Description :** Correction du pipeline d'export Word.
+  - **Impact :** Les exports DOCX (Attestation, CV, etc.) fonctionnent à nouveau. La validation du schéma JSON s'exécute correctement *après* l'enrichissement des données, la version d'Ajv est mise à jour pour le support de Draft 2020-12, et l'API de numérotation de page (docx) a été adaptée.
+- **04 Juillet 2026**
+  - **Description :** Correction définitive de l'erreur d'export PDF liée aux fonctions de couleur `oklab` de Tailwind v4.
+  - **Impact :** La fonctionnalité d'export PDF refonctionne en production. Le code parse et sanitize dynamiquement toutes les règles CSS du document (`document.styleSheets`) pour éliminer `oklab` avant le rendu par `html2canvas`.

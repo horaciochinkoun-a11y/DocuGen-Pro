@@ -1,0 +1,1 @@
+sed -i 's/- \[x\] Intégration des liens vers les documents légaux dans les pieds de page (Landing Page - \[x\] Intégration des liens vers les documents légaux dans les pieds de page (Landing Page & Générateur). Générateur)./- [x] Intégration des liens vers les documents légaux dans les pieds de page (Landing Page & Générateur)./' docs/tasks_tracking.md

@@ -1,3 +1,5 @@
+# Update TERMS_OF_SERVICE.md
+cat << 'INNER_EOF' > TERMS_OF_SERVICE.md
 # Conditions Générales d'Utilisation (CGU) - DocuGen Pro
 
 **Date de dernière mise à jour :** 03 Juillet 2026
@@ -57,3 +59,4 @@ Les présentes CGU sont régies par la législation de la République du Bénin.
 
 ## 9. Contact
 Pour toute question relative aux présentes conditions, vous pouvez nous contacter à l'adresse suivante : horaciochinkoun@gmail.com.
+INNER_EOF

@@ -324,3 +324,284 @@ J'ai identifié et corrigé deux problèmes critiques pour l'image professionnel
 
 L'application est désormais plus professionnelle tant dans son interface que dans ses exports.
 
+[2026-07-03T05:49:04-07:00]
+Utilisateur :
+Les recherches juridiques externes ont été effectuées.
+
+[Synthèse et analyse juridique détaillées reçues de l'utilisateur]
+
+Assistant :
+(J'ai pris connaissance des résultats du pré-audit juridique et des recherches externes. Je procède à l'élaboration du plan de conformité demandé avant toute rédaction de documents juridiques.)
+
+[2026-07-03T06:00:28-07:00]
+Utilisateur :
+chat history n'est pas a jour
+
+[2026-07-03T06:06:51-07:00]
+Utilisateur (Action Manuelle) :
+Modification de /TERMS_OF_SERVICE.md (Chinkoun -> CHINKOUN)
+Suppression de /docs/PORTFOLIO_PROJECT.md et /docs/portfolio_fiche.md
+
+[2026-07-03T11:39:26-07:00]
+Utilisateur :
+je valide
+
+Assistant :
+Puisque vous validez la démarche, voici le plan détaillé de qualification documentaire basé sur le pré-audit et les retours de la recherche juridique.
+
+### 1. Documents réellement nécessaires (Priorité Haute)
+
+*   **Politique de Confidentialité (Privacy Policy)**
+    *   *Justification :* Exigée par le Code du numérique béninois (APDP), par le RGPD (pour les utilisateurs UE), et contractuellement par Google (pour configurer l'écran de consentement OAuth, même futur). Elle doit encadrer de manière transparente l'utilisation du `localStorage` (assimilé à un traitement), la journalisation des adresses IP via l'hébergement, et surtout le transfert de données (prompts) vers l'API Gemini.
+*   **Conditions Générales d'Utilisation (CGU)**
+    *   *Justification :* C'est votre bouclier contractuel. L'application générant des documents professionnels via IA, le risque de responsabilité civile en cas d'erreurs, d'hallucinations de l'IA ou de mauvais usage par l'utilisateur est réel. Les CGU doivent imposer une relecture obligatoire, limiter votre responsabilité, et encadrer la saisie sécurisée des clés API personnelles.
+*   **Mentions Légales**
+    *   *Justification :* Obligation légale universelle (Bénin, Europe, etc.) d'identification de l'éditeur d'un service de communication au public en ligne. Elles doivent identifier formellement Horacio CHINKOUN, ainsi que l'hébergeur de l'infrastructure.
+
+### 2. Documents recommandés (Priorité Moyenne)
+
+*   **Charte d'Utilisation de l'IA (ou annexe explicative aux CGU)**
+    *   *Justification :* Au vu de la sensibilité des données potentiellement envoyées dans les prompts, informer l'utilisateur sur la manière dont Gemini traite (ou ne conserve pas, selon le contrat Google) les données renforce la confiance et démontre une démarche proactive de conformité. Peut être fusionné avec les CGU pour simplifier.
+*   **Bandeau ou mention d'information (Interface Utilisateur)**
+    *   *Justification :* Avant même de collecter les données pour le `localStorage`, une notification UI (type "bandeau de consentement" ou "notice d'information") est recommandée au lancement de l'app pour expliquer que tout est sauvegardé en local et non sur vos serveurs.
+
+### 3. Documents inutiles (ou non pertinents à ce stade)
+
+*   **Conditions Générales de Vente (CGV)**
+    *   *Justification :* DocuGen Pro ne propose pas d'abonnement payant, de vente de services ou de e-commerce à l'heure actuelle.
+*   **Politique Cookies (stricte / traceurs publicitaires)**
+    *   *Justification :* L'application n'utilise pas de traceurs publicitaires, de pixels tiers ou d'outils de tracking non essentiels. Une simple mention du `localStorage` fonctionnel dans la Politique de Confidentialité est suffisante.
+*   **Accord de Traitement des Données (DPA public)**
+    *   *Justification :* Vous n'hébergez pas les données de vos utilisateurs sur vos bases de données pour leur compte (mode SaaS hébergé standard). Le traitement étant local et transitant vers Google, la relation de sous-traitance se situe entre l'utilisateur et Google via votre interface.
+
+Voulez-vous que je consigne ce plan formellement dans le registre des tâches (`tasks_tracking.md`) ou souhaitez-vous apporter des modifications à cette classification avant que nous passions à la suite des opérations ?
+
+[2026-07-03T11:41:14-07:00]
+Utilisateur :
+oui et je valide
+
+Assistant :
+J'ai consigné le plan de conformité documentaire dans le registre des tâches (`docs/tasks_tracking.md`). 
+
+Voici les prochaines étapes logiques :
+1. **Rédaction de la Politique de Confidentialité** (c'est le document le plus critique).
+2. **Mise à jour des CGU actuelles** (pour y intégrer la clause IA et les limitations de responsabilité claires).
+3. **Rédaction des Mentions Légales**.
+4. **Intégration d'un bandeau ou d'une notification UI** au lancement de l'application concernant le stockage local.
+
+Souhaitez-vous que je commence dès maintenant la rédaction du premier document (la Politique de Confidentialité) ?
+
+[2026-07-03T11:43:35-07:00]
+Utilisateur :
+commencer par la mise à jour des CGU
+
+Assistant :
+Les Conditions Générales d'Utilisation (CGU) ont été mises à jour dans le fichier `/TERMS_OF_SERVICE.md`. 
+Elles intègrent désormais explicitement :
+- L'identification claire de l'Éditeur.
+- La restriction d'accès aux personnes majeures capables.
+- La clause de limitation de responsabilité vis-à-vis de l'IA (hallucinations, relecture obligatoire).
+- La responsabilité de l'utilisateur sur le stockage local (`localStorage`) et sa propre clé API.
+- La compétence des juridictions béninoises en cas de litige.
+
+Souhaitez-vous que je poursuive avec la rédaction de la Politique de Confidentialité (Privacy Policy) ?
+
+[2026-07-03T11:48:40-07:00]
+Utilisateur :
+oui
+
+Assistant :
+J'ai achevé l'ensemble des tâches de conformité prévues dans notre plan. 
+Voici ce qui a été réalisé :
+1. **Création de la Politique de Confidentialité (`PRIVACY_POLICY.md`)** : Elle explicite le stockage local exclusif (`localStorage`), le transit des requêtes via Google Gemini API et l'hébergement sur Cloud Run, et précise que nous ne collectons aucune donnée en base centralisée.
+2. **Création des Mentions Légales (`LEGAL_MENTIONS.md`)** : Elles identifient formellement l'Éditeur (Horacio CHINKOUN), l'hébergeur (Google Cloud) et protègent la propriété intellectuelle.
+3. **Intégration du Bandeau d'Information UI** : Un bandeau de consentement informatif s'affiche désormais au lancement de l'application (dans `src/App.tsx`), précisant à l'utilisateur que ses données sont uniquement stockées localement. L'état de ce bandeau est géré via le `localStorage`.
+4. **Mise à jour des suivis** : Le registre des tâches (`tasks_tracking.md`) a été actualisé.
+
+L'ensemble des documents juridiques est prêt et l'UI est en conformité. 
+Y a-t-il d'autres modifications de documentation ou de code que vous souhaitez entreprendre à présent ?
+
+[2026-07-03T11:53:07-07:00]
+Utilisateur :
+les liens legaux sont absents du footer
+
+Assistant :
+J'ai intégré les liens vers les trois documents légaux (CGU, Politique de Confidentialité, Mentions Légales) directement dans les pieds de page (footer) de la Landing Page ainsi que de l'application principale. 
+
+Pour maintenir l'expérience fluide (Single Page Application), ces liens ouvrent désormais un modal dynamique affichant le contenu Markdown de chaque document juridique, synchronisé avec le bouton retour du navigateur (mobile-friendly). Le code a été compilé avec succès.
+
+[2026-07-03T11:59:41-07:00]
+Utilisateur :
+il manque les Documents suivant:
+AI_POLICY.md : Renforce la transparence éthique. Il indique à l'utilisateur que l'IA peut faire des erreurs ("hallucinations") et que la responsabilité finale du contenu appartient à l'utilisateur. Cela réduit considérablement le risque de contentieux.
+LOCAL_DATA_POLICY.md : Document spécifique, plus pédagogique, qui explique comment et pourquoi les données sont stockées en local et où trouver la fonction "supprimer tout" dans l'interface, conformément aux recommandations de protection des données (APDP/RGPD).
+REGISTRE_TRAITEMENTS.md : Indispensable pour un futur audit de l'APDP. Il documente de manière structurée les finalités, les catégories de données, les durées de conservation et les mesures de sécurité. C'est la preuve de votre bonne foi.
+
+Assistant :
+J'ai rédigé et ajouté ces trois documents essentiels à la racine du projet (`AI_POLICY.md`, `LOCAL_DATA_POLICY.md`, et `REGISTRE_TRAITEMENTS.md`). J'ai également pris soin d'intégrer les deux documents publics (la Charte IA et la Politique de Données Locales) directement dans l'interface de l'application afin qu'ils soient accessibles aux utilisateurs via les pieds de page (footer) et affichables dans le même système de modal interactif que les autres documents légaux. Le registre de traitements restera quant à lui un document de conformité interne (audit).
+
+
+
+[2026-07-03T12:03:44-07:00]
+Utilisateur :
+Tu es un UX Writer, Compliance Specialist et Front-end Developer senior.
+
+ÉTAPE 0 — Sauvegarde
+- Analyse l'intégralité du projet actuel.
+- Liste tous les fichiers qui seront modifiés.
+- Considère cet état comme VERSION_PRÉCÉDENTE.
+- Aucune fonctionnalité existante ne doit être supprimée.
+
+ÉTAPE 1 — Audit du projet
+Analyse :
+- les pages légales existantes (CGU, Politique de confidentialité, Mentions légales, Cookies, etc)
+- la juridiction applicable (France, UE, international)
+- les données collectées et leur traitement
+- la date de dernière mise à jour des documents
+
+Détermine :
+- les pages légales obligatoires selon la juridiction
+- les informations manquantes ou obsolètes
+- le format de présentation (lisibilité vs densité légale)
+- la nécessité d'une table des matières pour les longs documents
+
+ÉTAPE 2 — Conception
+Propose :
+1. La liste des pages légales nécessaires.
+2. La structure de chaque document (table des matières, sections).
+3. La mise en page pour maximiser la lisibilité (pas un bloc de texte brut).
+4. La date de mise à jour visible.
+5. Le lien de contact pour les questions légales.
+
+ÉTAPE 3 — Proposition
+Présente :
+- la liste des pages à créer ou mettre à jour
+- la structure de chaque document
+- les éléments manquants détectés
+
+Attends ma validation.
+
+Assistant :
+J'ai bien pris note de vos instructions. Voici mon rapport d'audit et ma proposition conceptuelle, conformément aux étapes 0 à 3, en attente de votre validation.
+
+[2026-07-03T12:09:18-07:00]
+Utilisateur :
+What would be the best option between the links opening in a modal window, or opening on a page dedicated to them, like the generation page?
+
+Assistant :
+En tant qu'UX Designer et développeur front-end, voici mon analyse des deux approches (Modal vs Page Dédiée) pour les documents légaux, ainsi que ma recommandation.
+
+[2026-07-03T12:12:21-07:00]
+Utilisateur :
+je suis d'accord
+
+Assistant :
+J'ai remplacé l'affichage en modal par une vue en page pleine (LegalPage) dédiée aux documents légaux. Cette approche garantit une excellente lisibilité, particulièrement sur mobile, et respecte toutes vos consignes :
+- Intégration d'une table des matières rendue cliquable grâce à un plugin de traitement des titres (`rehype-slug`).
+- Présence de la date de mise à jour et d'un point de contact clairs dans chaque document.
+- Remplacement du composant modal par une architecture de vue pleine (`currentView = 'legal'`) synchronisée avec l'historique du navigateur (pour un comportement fluide du bouton retour).
+- Uniformisation avec le reste de l'application : le footer reste présent et fonctionnel.
+
+Le projet a été compilé avec succès et la nouvelle structure de pages légales est pleinement opérationnelle.
+
+[2026-07-03T12:20:27-07:00]
+Utilisateur :
+lis l'intégralité de ces documents et dit moi les mis à jour a effectuer
+(Pièces jointes : Loi n° 2017-20 portant code du numérique en République du Bénin.pdf, Formulaire APDP.pdf)
+
+Assistant :
+J'ai terminé l'audit approfondi de la **Loi n° 2017-20 portant Code du Numérique en République du Bénin** (spécifiquement le Livre IV sur le commerce électronique et le Livre V sur la protection des données) ainsi que du **formulaire de l'APDP** que vous avez fourni.
+
+Voici les mises à jour requises pour mettre le projet en parfaite conformité avec ces textes :
+
+### 1. Mises à jour des Mentions Légales (`LEGAL_MENTIONS.md`)
+*Fondement : Livre IV, Article 328 (Obligation générale d'information)*
+**Lacunes actuelles :**
+- **Coordonnées incomplètes** : La loi exige une adresse géographique complète et un numéro de téléphone. L'e-mail seul est insuffisant.
+- **Identifiants légaux** : Il manque votre numéro de RCCM et votre IFU (Identifiant Fiscal Unique) si vous êtes enregistré. Si vous ne l'êtes pas, il faut préciser le statut légal exact.
+
+### 2. Mises à jour de la Politique de Confidentialité (`PRIVACY_POLICY.md`)
+*Fondement : Livre V, Articles 415 (Obligation d'information) et 437 à 443 (Droits des personnes)*
+**Lacunes actuelles :**
+- **Cadre réglementaire** : Le document doit citer explicitement la loi béninoise (Loi n° 2017-20).
+- **Droits spécifiques** : Il faut formuler explicitement les droits selon la terminologie du code béninois : droit d'accès (Art. 437), d'interrogation (Art. 439), d'opposition (Art. 440), de rectification/suppression (Art. 441) et le **droit à l'oubli numérique** (Art. 443).
+- **Recours APDP** : Il est obligatoire d'informer l'utilisateur de son droit d'introduire une réclamation auprès de l'APDP (Bénin).
+- L'adresse et le téléphone du responsable de traitement doivent également y figurer.
+
+### 3. Mises à jour du Registre des Traitements (`REGISTRE_TRAITEMENTS.md`)
+*Fondement : Livre V, Article 435 et sections du formulaire APDP*
+**Lacunes actuelles :**
+- **Cartographie de la sécurité** : Le registre interne doit être aligné sur le vocabulaire du formulaire APDP (Section IV), en détaillant la Sécurité Technique (chiffrement, TLS), la Sécurité Physique (architecture "zéro base de données" côté serveur) et la Sécurité Organisationnelle.
+- **Transfert hors CEDEAO** : Le transfert de requêtes vers Google Gemini (États-Unis) doit être formellement qualifié de "Transfert vers un État tiers" selon les Articles 391/392.
+
+### 4. Démarche administrative (Hors code)
+*Fondement : Livre V, Article 405*
+- DocuGen Pro étant basé sur le traitement de données et l'utilisation de l'IA, le projet est soumis à l'**obligation de déclaration préalable** à l'APDP. Vous devrez remplir et soumettre le formulaire physique que vous m'avez transmis.
+
+---
+
+**Proposition :**
+Pour procéder à la **Phase d'Implémentation (ÉTAPE 4)**, j'ai besoin de votre validation. 
+
+Afin que les documents soient définitifs, pouvez-vous me fournir :
+1. Votre adresse postale/géographique complète ?
+2. Votre numéro de téléphone professionnel ?
+3. Votre numéro RCCM et IFU (ou confirmer si je dois mettre la mention "En cours d'immatriculation" / "Dispensé") ?
+
+Si vous préférez, je peux générer les mises à jour immédiatement en intégrant des balises `[À COMPLÉTER]` que vous remplirez plus tard. Que préférez-vous ?
+
+[2026-07-03T12:25:46-07:00]
+Utilisateur :
+je vais remplir plus tard car je dois aller chercher ses documents
+
+Assistant :
+C'est parfaitement compris. J'ai mis à jour les documents légaux (`LEGAL_MENTIONS.md`, `PRIVACY_POLICY.md` et `REGISTRE_TRAITEMENTS.md`) en y intégrant les balises `[À COMPLÉTER : Adresse]`, `[À COMPLÉTER : Téléphone]`, `[À COMPLÉTER : Numéro RCCM/IFU]`. Vous pourrez ainsi les renseigner ultérieurement à votre convenance.
+
+Les documents sont désormais structurellement et sémantiquement alignés avec les exigences du **Code du Numérique (Loi n° 2017-20)** et de l'**APDP**.
+
+N'hésitez pas à me solliciter lorsque vous aurez réuni ces éléments ou si vous souhaitez que l'on passe à une autre étape du projet.
+
+[2026-07-03T12:31:28-07:00]
+Utilisateur :
+I click on the legal document links, but nothing happens.
+
+Assistant :
+J'ai identifié et corrigé un problème dans le paramétrage des liens (un souci de nommage de la fonction d'affichage entre les composants) dans le pied de page du générateur principal. Les liens vers la Politique de Confidentialité, les Mentions Légales, la Charte IA, etc., fonctionnent désormais correctement depuis toutes les pages de l'application !
+[2026-07-04T04:04:13-07:00]
+Utilisateur : Correction — schemas/attestation.schema.json (et tous les autres schémas)
+Dans le bloc formData, remplace :
+json"formData": {
+  "type": "object",
+  "additionalProperties": false,
+
+Par 
+
+json"formData": {
+  "type": "object",
+  "additionalProperties": true,
+
+Et ajoute description dans la liste des propriétés connues (pour la doc, pas pour la validation) :
+json"description": { "type": "string", "maxLength": 1000 }
+
+À faire dans les 7 schémas (attestation, all-schemas.js pour les 6 autres). Dans all-schemas.js, c'est le $ref vers formData — il hérite du même problème.
+Assistant : Mise à jour effectuée selon les instructions.
+[2026-07-04T04:14:10-07:00]
+Utilisateur : Fix the errors in the app
+[AIS_METADATA_SECTION_START]
+error 0: Erreur lors de l'export Word (.docx) :
+Validation JSON échouée
+[AIS_METADATA_SECTION_END]
+Assistant : Correction du problème de validation JSON : les métadonnées (documentId et generatedAt) requises par le schéma étaient injectées *après* la validation dans `render.ts`. L'ordre a été inversé. De plus, correction de l'import de Ajv pour supporter Draft 2020-12, et correction de l'erreur `PageNumber is not a constructor` en utilisant `PageNumber.CURRENT` avec la version récente de docx.
+[2026-07-04T04:14:10-07:00]
+Utilisateur : Fix the errors in the app
+[AIS_METADATA_SECTION_START]
+error 0: Erreur lors de l'export Word (.docx) :
+Validation JSON échouée
+[AIS_METADATA_SECTION_END]
+Assistant : Correction du problème de validation JSON : les métadonnées (documentId et generatedAt) requises par le schéma étaient injectées *après* la validation dans `render.ts`. L'ordre a été inversé. De plus, correction de l'import de Ajv pour supporter Draft 2020-12, et correction de l'erreur `PageNumber is not a constructor` en utilisant `PageNumber.CURRENT` avec la version récente de docx.
+[2026-07-04T04:21:37-07:00]
+Utilisateur : Fix the errors in the app
+[AIS_METADATA_SECTION_START]
+error 0: Attempting to parse an unsupported color function "oklab"
+[AIS_METADATA_SECTION_END]
+Assistant : L'erreur d'export PDF "Attempting to parse an unsupported color function oklab" a été corrigée. \`html2canvas\` échouait à parser les nouvelles fonctions de couleur oklab/oklch introduites par Tailwind CSS v4. Pour corriger cela, le code intercepte les feuilles de style globales du document lors du clonage pour l'export, lit l'ensemble des règles CSS existantes (qui proviennent des balises `<link>` en production), convertit intelligemment les couleurs \`okl(ab|ch)\` vers une version RGB de secours, remplace \`color-mix(in oklab, ...)\` par \`color-mix(in srgb, ...)\`, puis réinjecte tout cela sous forme de balise `<style>` classique en nettoyant l'arbre DOM cloné. Ainsi, \`html2canvas\` peut effectuer le rendu sans erreur de parsing.

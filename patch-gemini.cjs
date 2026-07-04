@@ -1,4 +1,7 @@
+const fs = require('fs');
+let code = fs.readFileSync('src/services/geminiService.ts', 'utf8');
 
+code = `
 import { GeneratedDocs } from '../types';
 
 /**
@@ -29,7 +32,7 @@ export const generateProfessionalDocs = async (
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+        throw new Error(errorData.error || \`HTTP error! status: \${response.status}\`);
       }
 
       return await response.json() as GeneratedDocs;
@@ -52,3 +55,6 @@ export const generateProfessionalDocs = async (
   
   throw new Error('Échec de la génération après plusieurs tentatives.');
 };
+`;
+
+fs.writeFileSync('src/services/geminiService.ts', code);

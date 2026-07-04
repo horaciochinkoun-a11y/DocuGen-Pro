@@ -21,7 +21,7 @@
     "formData": {
       "type": "object",
       "description": "Champs du formulaire ProjectData tels que saisis par l'utilisateur dans l'app",
-      "additionalProperties": false,
+      "additionalProperties": true,
       "required": ["developerName", "developerStatus", "clientName", "companyName", "projectName"],
       "properties": {
         "developerName":   { "type": "string", "maxLength": 100 },
@@ -30,6 +30,7 @@
         "companyName":     { "type": "string", "maxLength": 120 },
         "projectName":     { "type": "string", "maxLength": 120 },
         "projectType":     { "type": "string", "maxLength": 80 },
+        "description":     { "type": "string", "maxLength": 1000 },
         "technologies":    { "type": "string", "maxLength": 500 },
         "keyFeatures":     { "type": "string", "maxLength": 1000 },
         "results":         { "type": "string", "maxLength": 500 },

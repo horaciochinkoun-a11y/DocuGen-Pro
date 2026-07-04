@@ -2,7 +2,7 @@
 // src/docgen/src/render.ts
 // Orchestrateur central du nouveau pipeline de génération.
 
-import Ajv from "ajv";
+import Ajv from "ajv/dist/2020";
 import addFormats from "ajv-formats";
 import { getPalette } from "../themes/palette";
 import { getConfig } from "./registry/documentTypes.registry";
@@ -81,11 +81,11 @@ export async function renderDocument(rawData: any, opts: RenderOptions = {}): Pr
   const config  = getConfig(documentType);
   const palette = getPalette(theme);
 
-  // 1. Valider le JSON
-  validate(config.schema, rawData);
-
-  // 2. Enrichir les données
+  // 1. Enrichir les données
   const enriched = enrich(rawData, config, theme);
+
+  // 2. Valider le JSON
+  validate(config.schema, enriched);
 
   // 3. Générer le DOCX (avec options passées)
   const docxBuffer = await generateDocx(enriched, config, palette, { skipQr: opts.skipQr });

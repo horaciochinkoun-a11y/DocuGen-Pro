@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+<body>
+<div id="test" style="color: color-mix(in srgb, red 50%, blue);">Test</div>
+<script type="module">
+import html2canvas from "html2canvas";
+html2canvas(document.getElementById("test")).then(canvas => console.log("Success")).catch(e => console.error(e));
+</script>
+</body>
+</html>

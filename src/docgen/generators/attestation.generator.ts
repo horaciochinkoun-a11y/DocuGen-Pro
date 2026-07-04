@@ -108,7 +108,7 @@ export async function generateAttestationDocx(data: any, palette: ColorThemePale
         spacing: { before: 120 },
         children: [
           new TextRun({ text: `Attestation — ${formData?.projectName || "Projet"}`, color: palette.text.muted, size: 16 }),
-          new TextRun({ children: [new PageNumber()], color: palette.text.muted, size: 16 }),
+          new TextRun({ children: [PageNumber.CURRENT], color: palette.text.muted, size: 16 }),
         ],
       }),
     ],

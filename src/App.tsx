@@ -26,7 +26,8 @@ import {
   History,
   Trash2,
   ChevronRight,
-  Zap
+  Zap,
+  Database
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Markdown from 'react-markdown';
@@ -34,6 +35,7 @@ import { generateProfessionalDocs } from './services/geminiService';
 import { ProjectData, UserProfile, GeneratedDocs, HistoryItem } from './types';
 import { renderDocument, validateFormFields } from './docgen';
 import LandingPage from './components/LandingPage';
+import LegalPage from './components/LegalPage';
 import ReloadPrompt from './components/ReloadPrompt';
 import InstallPWA from './components/InstallPWA';
 import ReleaseNotes from './components/ReleaseNotes';
@@ -144,7 +146,8 @@ function DocumentationGenerator({
   showHistory,
   setShowHistory,
   showReleaseNotes,
-  setShowReleaseNotes
+  setShowReleaseNotes,
+  onShowLegalDoc
 }: { 
   onNavigateHome: () => void;
   theme: 'light' | 'dark';
@@ -157,6 +160,7 @@ function DocumentationGenerator({
   setShowHistory: (val: boolean) => void;
   showReleaseNotes: boolean;
   setShowReleaseNotes: (val: boolean) => void;
+  onShowLegalDoc: (doc: 'cgu' | 'privacy' | 'mentions' | 'ai' | 'local_data') => void;
 }) {
   const [formData, setFormData] = useState<ProjectData>(initialFormData);
   const [projectPhase, setProjectPhase] = useState<'completion' | 'initiation'>('completion');
@@ -438,16 +442,40 @@ RÈGLES DE FORMATAGE STRICTES :
           useCORS: true, 
           logging: false,
           onclone: (clonedDoc: Document) => {
-            const styles = clonedDoc.querySelectorAll('style');
-            styles.forEach(style => {
-              if (style.textContent) {
-                style.textContent = style.textContent.replace(/okl(ch|ab)\((?:[^)(]+|\([^)(]*\))*\)/g, 'rgb(115, 115, 115)');
+            // Remove existing stylesheets in the clone to replace them with sanitized CSS
+            clonedDoc.querySelectorAll('style, link[rel="stylesheet"]').forEach(el => el.remove());
+
+            // Extract all CSS from the original document
+            let combinedCSS = '';
+            for (let i = 0; i < document.styleSheets.length; i++) {
+              try {
+                const sheet = document.styleSheets[i];
+                for (let j = 0; j < sheet.cssRules.length; j++) {
+                  combinedCSS += sheet.cssRules[j].cssText + '\n';
+                }
+              } catch (e) {
+                // Ignore cross-origin stylesheets that cannot be read
               }
-            });
+            }
+
+            // Replace unsupported colors
+            combinedCSS = combinedCSS
+              .replace(/okl(ch|ab)\((?:[^)(]+|\([^)(]*\))*\)/g, 'rgb(115, 115, 115)')
+              .replace(/in okl(ch|ab)/g, 'in srgb');
+
+            // Inject the fixed CSS as a single style block
+            const style = clonedDoc.createElement('style');
+            style.textContent = combinedCSS;
+            clonedDoc.head.appendChild(style);
+
+            // Fix inline styles
             clonedDoc.querySelectorAll('[style]').forEach(el => {
               const styleAttr = el.getAttribute('style');
               if (styleAttr && (styleAttr.includes('oklch') || styleAttr.includes('oklab'))) {
-                el.setAttribute('style', styleAttr.replace(/okl(ch|ab)\((?:[^)(]+|\([^)(]*\))*\)/g, 'rgb(115, 115, 115)'));
+                el.setAttribute('style', styleAttr
+                  .replace(/okl(ch|ab)\((?:[^)(]+|\([^)(]*\))*\)/g, 'rgb(115, 115, 115)')
+                  .replace(/in okl(ch|ab)/g, 'in srgb')
+                );
               }
             });
           }
@@ -489,7 +517,7 @@ RÈGLES DE FORMATAGE STRICTES :
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
     } catch (err) {
-      console.error('Erreur lors de l\'export Word (.docx) :', err);
+      console.error('Erreur lors de l\'export Word (.docx) :', err, err.details || '');
     }
   };
 
@@ -1367,7 +1395,7 @@ RÈGLES DE FORMATAGE STRICTES :
         </div>
       </main>
 
-      <footer className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-neutral-200 dark:border-neutral-800 mt-auto h-[340px] flex flex-col justify-center w-full">
+      <footer className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-neutral-200 dark:border-neutral-800 mt-auto flex flex-col justify-center w-full">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
           <div className="space-y-1">
             <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400">
@@ -1377,7 +1405,15 @@ RÈGLES DE FORMATAGE STRICTES :
               DocuGen Pro est la propriété personnelle de Horacio Chinkoun.
             </p>
           </div>
-          <div className="flex items-center gap-6 text-xs font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-500">
+          <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-xs font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-500 flex-wrap justify-center">
+            <button type="button" onClick={() => onShowLegalDoc('cgu')} className="hover:text-neutral-900 dark:hover:text-white transition-colors duration-200">CGU</button>
+            <button type="button" onClick={() => onShowLegalDoc('privacy')} className="hover:text-neutral-900 dark:hover:text-white transition-colors duration-200">Confidentialité</button>
+            <button type="button" onClick={() => onShowLegalDoc('mentions')} className="hover:text-neutral-900 dark:hover:text-white transition-colors duration-200">Mentions Légales</button>
+            <button type="button" onClick={() => onShowLegalDoc('ai')} className="hover:text-neutral-900 dark:hover:text-white transition-colors duration-200">Charte IA</button>
+            <button type="button" onClick={() => onShowLegalDoc('local_data')} className="hover:text-neutral-900 dark:hover:text-white transition-colors duration-200">Données Locales</button>
+            
+            <span className="hidden sm:inline">|</span>
+            
             <span>Powered by Horacio Chinkoun</span>
           </div>
         </div>
@@ -1387,7 +1423,7 @@ RÈGLES DE FORMATAGE STRICTES :
 }
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<'home' | 'app'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'app' | 'legal'>('home');
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('theme');
@@ -1410,6 +1446,19 @@ export default function App() {
   const [showHistory, setShowHistory] = useState(false);
   const [showReleaseNotes, setShowReleaseNotes] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
+  const [showLegalDoc, setShowLegalDoc] = useState<'cgu' | 'privacy' | 'mentions' | 'ai' | 'local_data' | null>(null);
+
+  const [showPrivacyBanner, setShowPrivacyBanner] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('privacyBannerDismissed') !== 'true';
+    }
+    return true;
+  });
+
+  const dismissPrivacyBanner = () => {
+    localStorage.setItem('privacyBannerDismissed', 'true');
+    setShowPrivacyBanner(false);
+  };
 
   // Sync state changes with history stack to ensure physical Android Back button closes the correct overlay
   const handleSetShowSettings = (val: boolean) => {
@@ -1421,6 +1470,23 @@ export default function App() {
         window.history.back();
       } else {
         setShowSettings(false);
+      }
+    }
+  };
+
+  const handleSetShowLegalDoc = (val: 'cgu' | 'privacy' | 'mentions' | 'ai' | 'local_data' | null) => {
+    console.log("handleSetShowLegalDoc called with", val);
+    if (val) {
+      window.history.pushState({ view: 'legal', doc: val }, '', window.location.pathname);
+      setCurrentView('legal');
+      setShowLegalDoc(val);
+      window.scrollTo(0, 0);
+    } else {
+      if (window.history.state?.view === 'legal') {
+        window.history.back();
+      } else {
+        setCurrentView('home');
+        setShowLegalDoc(null);
       }
     }
   };
@@ -1479,6 +1545,10 @@ export default function App() {
         setShowHistory(false);
         setShowReleaseNotes(false);
         setShowExitConfirm(false);
+      } else if (state.view === 'legal') {
+        setCurrentView('legal');
+        if (state.doc) setShowLegalDoc(state.doc);
+        setShowExitConfirm(false);
       } else if (state.view === 'app') {
         setCurrentView('app');
         setShowExitConfirm(false);
@@ -1513,16 +1583,18 @@ export default function App() {
   return (
     <ErrorBoundary>
       <div className={designSystem === 'classic' ? 'classic-design' : ''}>
-        {currentView === 'home' ? (
+        {currentView === 'home' && (
           <LandingPage 
             onStart={() => {
               window.history.pushState({ view: 'app' }, '');
               setCurrentView('app');
             }} 
             theme={theme} 
-            toggleTheme={toggleTheme} 
+            toggleTheme={toggleTheme}
+            onShowLegalDoc={handleSetShowLegalDoc}
           />
-        ) : (
+        )}
+        {currentView === 'app' && (
           <DocumentationGenerator 
             onNavigateHome={() => {
               if (window.history.state?.view === 'app') {
@@ -1542,6 +1614,15 @@ export default function App() {
             setShowHistory={handleSetShowHistory}
             showReleaseNotes={showReleaseNotes}
             setShowReleaseNotes={handleSetShowReleaseNotes}
+            onShowLegalDoc={handleSetShowLegalDoc}
+          />
+        )}
+        {currentView === 'legal' && showLegalDoc && (
+          <LegalPage 
+            docType={showLegalDoc}
+            onBack={() => handleSetShowLegalDoc(null)}
+            onNavigate={handleSetShowLegalDoc}
+            theme={theme}
           />
         )}
         <ReloadPrompt />
@@ -1584,6 +1665,38 @@ export default function App() {
                 </div>
               </motion.div>
             </div>
+          )}
+        </AnimatePresence>
+
+        {/* Privacy & Local Storage Information Banner */}
+        <AnimatePresence>
+          {showPrivacyBanner && (
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 50 }}
+              className="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-96 bg-white dark:bg-neutral-900 rounded-2xl shadow-2xl border border-neutral-200 dark:border-neutral-800 p-5 z-[90]"
+            >
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 flex items-center justify-center shrink-0 border border-brand-100 dark:border-brand-800/20">
+                  <Database size={20} />
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-sm font-black text-neutral-900 dark:text-white mb-1">Stockage Local Uniquement</h4>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-4 leading-relaxed">
+                    Pour garantir votre confidentialité, DocuGen Pro sauvegarde vos projets et historiques exclusivement sur votre appareil. Aucune base de données centrale n'est utilisée.
+                  </p>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={dismissPrivacyBanner}
+                      className="flex-1 py-2 px-3 bg-brand-600 text-white rounded-xl text-[11px] font-bold hover:bg-brand-700 transition-colors"
+                    >
+                      J'ai compris
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
           )}
         </AnimatePresence>
       </div>

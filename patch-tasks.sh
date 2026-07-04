@@ -1,0 +1,2 @@
+sed -i 's/- \[ \] Rédaction du Registre des Traitements (REGISTRE_TRAITEMENTS.md)./- [x] Rédaction du Registre des Traitements (REGISTRE_TRAITEMENTS.md)./' docs/tasks_tracking.md
+sed -i 's/- \[ \] Mises à jour des documents légaux (Mentions Légales, Politique de Confidentialité) selon la Loi n° 2017-20./- [x] Mises à jour des documents légaux (Mentions Légales, Politique de Confidentialité) selon la Loi n° 2017-20./' docs/tasks_tracking.md

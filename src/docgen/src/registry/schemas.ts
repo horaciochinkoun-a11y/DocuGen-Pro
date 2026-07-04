@@ -36,7 +36,7 @@ export const attestationSchema: any = {
     },
     "formData": {
       "type": "object",
-      "additionalProperties": false,
+      "additionalProperties": true,
       "required": ["developerName", "developerStatus", "clientName", "companyName", "projectName"],
       "properties": {
         "developerName":   { "type": "string" },
@@ -45,6 +45,7 @@ export const attestationSchema: any = {
         "companyName":     { "type": "string" },
         "projectName":     { "type": "string" },
         "projectType":     { "type": "string" },
+        "description":     { "type": "string", "maxLength": 1000 },
         "technologies":    { "type": "string" },
         "keyFeatures":     { "type": "string" },
         "results":         { "type": "string" },

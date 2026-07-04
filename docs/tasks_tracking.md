@@ -79,7 +79,21 @@
 
 ## Tâches en cours
 - [ ] Maintenance et mise à jour continue de la documentation du projet.
+- [x] Rédaction de la Politique de Confidentialité (conformité APDP/RGPD/Google).
+- [x] Mise à jour et renforcement des Conditions Générales d'Utilisation (CGU).
+- [x] Rédaction des Mentions Légales.
+- [x] Rédaction de la Charte IA (AI_POLICY.md).
+- [x] Rédaction de la Politique de Données Locales (LOCAL_DATA_POLICY.md).
+- [x] Création du Registre des Traitements (REGISTRE_TRAITEMENTS.md).
+- [x] Intégration d'un bandeau d'information UI pour le stockage local.
+- [x] Intégration des liens vers les documents légaux dans les pieds de page (Landing Page, Application, Mentions).
+- [x] Remplacement du Modal des documents légaux par une vue en pleine page dédiée (`LegalPage`) avec sommaires interactifs.
+- [ ] Surveillance de la stabilité du déploiement suite aux dernières corrections.
+
+## Tâches terminées (Documentation & Divers)
 - [x] Création du document `structure_projet.md` pour détailler l'architecture.
 - [x] Harmonisation du branding et de la documentation juridique (Aurion Labs-G).
 - [x] Audit et correction des problèmes de mise en forme Word et prévisualisation ideation.
-- [ ] Surveillance de la stabilité du déploiement suite aux dernières corrections.
+- [x] Qualification documentaire post-audit juridique (Plan de conformité validé).
+## Corrections récentes
+- [x] Correction de l'erreur d'export PDF "unsupported color function oklab" provoquée par html2canvas.

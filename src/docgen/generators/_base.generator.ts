@@ -41,7 +41,7 @@ export async function generateBaseDocx(
         spacing: { before: 120 },
         children: [
           new TextRun({ text: `${documentTypeLabel} — ${projectName} — DocuGen Pro`, color: palette.text.muted, size: 16 }),
-          new TextRun({ children: [new PageNumber()], color: palette.text.muted, size: 16 }),
+          new TextRun({ children: [PageNumber.CURRENT], color: palette.text.muted, size: 16 }),
         ],
       }),
     ],

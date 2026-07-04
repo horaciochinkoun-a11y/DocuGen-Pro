@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body { color: oklch(50% 0 0); }
+</style>
+</head>
+<body>
+<script>
+let css = "";
+for (let i = 0; i < document.styleSheets.length; i++) {
+  try {
+    const rules = document.styleSheets[i].cssRules;
+    for (let j = 0; j < rules.length; j++) {
+      css += rules[j].cssText + "\n";
+    }
+  } catch(e) {}
+}
+console.log(css);
+</script>
+</body>
+</html>

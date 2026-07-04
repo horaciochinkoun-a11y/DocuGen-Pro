@@ -28,10 +28,12 @@ interface LandingPageProps {
   theme: 'light' | 'dark';
   // Fonction callback pour changer ou inverser le thème actif
   toggleTheme: () => void;
+  // Fonction callback pour afficher les documents légaux
+  onShowLegalDoc: (doc: 'cgu' | 'privacy' | 'mentions' | 'ai' | 'local_data') => void;
 }
 
 // Composant de la Landing Page professionnelle de DocuGen Pro
-export default function LandingPage({ onStart, theme, toggleTheme }: LandingPageProps) {
+export default function LandingPage({ onStart, theme, toggleTheme, onShowLegalDoc }: LandingPageProps) {
   // État local pour suivre l'ouverture des sections FAQ sous forme d'accordéon interactif
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
@@ -481,10 +483,19 @@ export default function LandingPage({ onStart, theme, toggleTheme }: LandingPage
             </div>
 
             {/* Liens de bascule rapides de navigation */}
-            <div className="flex flex-wrap justify-center gap-6 text-xs font-semibold uppercase tracking-wider text-neutral-500">
+            <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-6 text-xs font-semibold uppercase tracking-wider text-neutral-500">
               <button onClick={onStart} className="hover:text-white transition-colors duration-200">Générateur</button>
               <a href="#features" className="hover:text-white transition-colors duration-200">Fonctionnalités</a>
-              <span className="text-neutral-800 pointer-events-none">|</span>
+              
+              <span className="text-neutral-800 pointer-events-none hidden sm:inline">|</span>
+              
+              <button type="button" onClick={() => onShowLegalDoc('cgu')} className="hover:text-white transition-colors duration-200">CGU</button>
+              <button type="button" onClick={() => onShowLegalDoc('privacy')} className="hover:text-white transition-colors duration-200">Confidentialité</button>
+              <button type="button" onClick={() => onShowLegalDoc('mentions')} className="hover:text-white transition-colors duration-200">Mentions Légales</button>
+              <button type="button" onClick={() => onShowLegalDoc('ai')} className="hover:text-white transition-colors duration-200">Charte IA</button>
+              <button type="button" onClick={() => onShowLegalDoc('local_data')} className="hover:text-white transition-colors duration-200">Données Locales</button>
+
+              <span className="text-neutral-800 pointer-events-none hidden sm:inline">|</span>
               <span className="cursor-default text-neutral-600 select-none">Horacio Chinkoun © 2026</span>
             </div>
           </div>
