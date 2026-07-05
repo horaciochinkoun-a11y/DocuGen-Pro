@@ -74,6 +74,11 @@
 - [x] Résolution de l'erreur d'import de `firebase-applet-config.json` suite à sa suppression en créant un stub Firebase robuste.
 - [x] Résolution de l'erreur d'exportation PDF due à l'incompatibilité de html2canvas avec les fonctions de couleur modernes (oklch/oklab) de Tailwind v4.
 - [x] Élaboration et rédaction du dossier de pré-audit juridique complet pour consultation d'avocat et de Perplexity AI.
+- [x] Nettoyage de l'UI d'authentification fantôme ("Tech-Larping") et suppression complète de ses boutons.
+- [x] Retrait du commutateur de design system, fixation sur le style poli "Classic" par défaut pour éliminer la complexité CSS superflue.
+- [x] Nettoyage du SDK Firebase dans `package.json` et suppression de `src/firebase.ts`.
+- [x] Suppression des fichiers d'audit temporaires et de transition de `docs/` (`AUDIT-GENERATION-DOCUMENTS.md` et `pre_audit_juridique.md`).
+- [x] Nettoyage des logs de développement résiduels en production.
 
 
 

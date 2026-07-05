@@ -15,13 +15,10 @@ import {
   Key,
   Download,
   FileDown,
-  LogIn,
-  LogOut,
   Settings,
   Sun,
   Moon,
   Sparkles,
-  Palette,
   MapPin,
   History,
   Trash2,
@@ -32,28 +29,13 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import Markdown from 'react-markdown';
 import { generateProfessionalDocs } from './services/geminiService';
-import { ProjectData, UserProfile, GeneratedDocs, HistoryItem } from './types';
+import { ProjectData, GeneratedDocs, HistoryItem } from './types';
 import { renderDocument, validateFormFields } from './docgen';
 import LandingPage from './components/LandingPage';
 import LegalPage from './components/LegalPage';
 import ReloadPrompt from './components/ReloadPrompt';
 import InstallPWA from './components/InstallPWA';
 import ReleaseNotes from './components/ReleaseNotes';
-import { 
-  auth, 
-  db, 
-  signInWithPopup, 
-  signOut, 
-  onAuthStateChanged, 
-  doc, 
-  setDoc, 
-  updateDoc, 
-  onSnapshot, 
-  googleProvider,
-  handleFirestoreError,
-  OperationType,
-  User
-} from './firebase';
 
 // Composant de gestion des erreurs (Error Boundary)
 interface ErrorBoundaryProps {
@@ -140,7 +122,6 @@ function DocumentationGenerator({
   theme, 
   toggleTheme,
   designSystem,
-  setDesignSystem,
   showSettings,
   setShowSettings,
   showHistory,
@@ -153,7 +134,6 @@ function DocumentationGenerator({
   theme: 'light' | 'dark';
   toggleTheme: () => void;
   designSystem: 'premium' | 'classic';
-  setDesignSystem: (ds: 'premium' | 'classic') => void;
   showSettings: boolean;
   setShowSettings: (val: boolean) => void;
   showHistory: boolean;
@@ -164,9 +144,6 @@ function DocumentationGenerator({
 }) {
   const [formData, setFormData] = useState<ProjectData>(initialFormData);
   const [projectPhase, setProjectPhase] = useState<'completion' | 'initiation'>('completion');
-  const [user, setUser] = useState<User | null>(null);
-  const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [isAuthReady, setIsAuthReady] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedDocs, setGeneratedDocs] = useState<GeneratedDocs | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -180,80 +157,9 @@ function DocumentationGenerator({
   // État local de la clé API (Mode autonome sans backend)
   const [localApiKey, setLocalApiKey] = useState(() => localStorage.getItem('gemini_api_key') || '');
 
-  // Écouteur d'état d'authentification Firebase
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setIsAuthReady(true);
-      if (!currentUser) {
-        setProfile(null);
-      }
-    });
-    return () => unsubscribe();
-  }, []);
-
-  // Écouteur pour récupérer et synchroniser le profil utilisateur depuis Firestore
-  useEffect(() => {
-    if (!user) return;
-
-    const profileRef = doc(db, 'users', user.uid);
-    const unsubscribe = onSnapshot(profileRef, (snapshot) => {
-      if (snapshot.exists()) {
-        const data = snapshot.data() as UserProfile;
-        setProfile(data);
-        // Sync Firebase key to local storage if local is empty
-        if (data.userApiKey && !localStorage.getItem('gemini_api_key')) {
-          setLocalApiKey(data.userApiKey);
-          localStorage.setItem('gemini_api_key', data.userApiKey);
-        }
-      } else {
-        // Create initial profile if it doesn't exist
-        const initialProfile = {
-          uid: user.uid,
-          email: user.email || '',
-          useCustomApiKey: false,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        };
-        setDoc(profileRef, initialProfile).catch(err => handleFirestoreError(err, OperationType.CREATE, 'users'));
-      }
-    }, (err) => {
-      handleFirestoreError(err, OperationType.GET, `users/${user.uid}`);
-    });
-
-    return () => unsubscribe();
-  }, [user]);
-
-  const handleLogin = async () => {
-    try {
-      await signInWithPopup(auth, googleProvider);
-    } catch (err) {
-      console.error("Login error:", err);
-      setError("Échec de la connexion. Veuillez réessayer.");
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      setShowSettings(false);
-    } catch (err) {
-      console.error("Logout error:", err);
-    }
-  };
-
   const handleApiKeyChange = (val: string) => {
     setLocalApiKey(val);
     localStorage.setItem('gemini_api_key', val);
-    
-    // Sync with Firebase if logged in
-    if (user && profile) {
-      updateDoc(doc(db, 'users', user.uid), {
-        userApiKey: val,
-        useCustomApiKey: true,
-        updatedAt: new Date()
-      }).catch(err => console.error("Failed to sync API key to profile", err));
-    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -453,7 +359,7 @@ RÈGLES DE FORMATAGE STRICTES :
                 for (let j = 0; j < sheet.cssRules.length; j++) {
                   combinedCSS += sheet.cssRules[j].cssText + '\n';
                 }
-              } catch (e) {
+              } catch {
                 // Ignore cross-origin stylesheets that cannot be read
               }
             }
@@ -591,7 +497,7 @@ RÈGLES DE FORMATAGE STRICTES :
         technologies: 'Next.js, Tailwind CSS, OpenAI API (pour suggestions)',
         keyFeatures: 'Scan de factures, alertes péremption, générateur de menus IA, analytics de gaspillage.',
         results: 'Réduire le gaspillage de 25% chez les restaurateurs partenaires.',
-        duration: '5 mois',
+        duration: '55 mois',
         clientContact: '',
         manualTime: '',
         manualLocation: 'Nantes, France',
@@ -631,14 +537,6 @@ RÈGLES DE FORMATAGE STRICTES :
     { id: 'backlog', label: 'Backlog/MVP', icon: Code },
     { id: 'pitch', label: 'Pitch/Stratégie', icon: Linkedin },
   ];
-
-  if (!isAuthReady) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-neutral-50 dark:bg-neutral-950">
-        <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-50 font-sans selection:bg-brand-100 selection:text-brand-900">
@@ -707,26 +605,6 @@ RÈGLES DE FORMATAGE STRICTES :
             >
               <Zap size={16} className="sm:w-[18px] sm:h-[18px]" />
             </button>
-
-            {user ? (
-              <div className="flex items-center gap-2 sm:gap-3 ml-0.5 sm:ml-2 pl-1.5 sm:pl-4 border-l border-neutral-200 dark:border-neutral-800">
-                <button 
-                  onClick={handleLogout}
-                  className="p-1.5 sm:p-2 text-neutral-500 hover:text-red-600 dark:text-neutral-400 dark:hover:text-red-400 transition-all"
-                  title="Déconnexion"
-                >
-                  <LogOut size={16} className="sm:w-[18px] sm:h-[18px]" />
-                </button>
-              </div>
-            ) : (
-              <button 
-                onClick={handleLogin}
-                className="flex items-center gap-2 bg-brand-600 text-white p-1.5 sm:px-5 sm:py-2.5 rounded-xl font-bold hover:bg-brand-700 transition-all shadow-lg shadow-brand-500/20 active:scale-95"
-              >
-                <LogIn size={16} className="sm:w-[18px] sm:h-[18px]" />
-                <span className="hidden sm:inline">Connexion</span>
-              </button>
-            )}
           </div>
         </div>
       </header>
@@ -849,36 +727,6 @@ RÈGLES DE FORMATAGE STRICTES :
                 </div>
 
                 <div className="space-y-6">
-                  {/* Sélecteur du système de design */}
-                  <div className="space-y-3">
-                    <label className="text-sm font-bold text-neutral-700 dark:text-neutral-300 flex items-center gap-2">
-                      <Palette size={16} className="text-brand-500" />
-                      Système de Design
-                    </label>
-                    <div className="flex bg-neutral-100 dark:bg-neutral-800 p-1 rounded-xl border border-neutral-200 dark:border-neutral-700">
-                      <button
-                        onClick={() => setDesignSystem('premium')}
-                        className={`flex-1 py-2 text-xs font-black uppercase tracking-widest rounded-lg transition-all ${
-                          designSystem === 'premium' 
-                            ? 'bg-white dark:bg-neutral-700 text-brand-600 dark:text-brand-400 shadow-sm' 
-                            : 'text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'
-                        }`}
-                      >
-                        Premium
-                      </button>
-                      <button
-                        onClick={() => setDesignSystem('classic')}
-                        className={`flex-1 py-2 text-xs font-black uppercase tracking-widest rounded-lg transition-all ${
-                          designSystem === 'classic' 
-                            ? 'bg-white dark:bg-neutral-700 text-brand-600 dark:text-brand-400 shadow-sm' 
-                            : 'text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'
-                        }`}
-                      >
-                        Classic
-                      </button>
-                    </div>
-                  </div>
-
                   <div className="space-y-3">
                     <label className="text-sm font-bold text-neutral-700 dark:text-neutral-300 flex items-center gap-2">
                       <Key size={16} className="text-brand-500" />
@@ -894,7 +742,6 @@ RÈGLES DE FORMATAGE STRICTES :
                     <div className="text-xs text-neutral-500 dark:text-neutral-400 space-y-1">
                       <p>✅ Stockée localement dans votre navigateur.</p>
                       <p>✅ Totalement sécurisé et indépendant.</p>
-                      {user && <p>✅ Synchronisée avec votre compte cloud.</p>}
                     </div>
                   </div>
                   
@@ -1433,13 +1280,7 @@ export default function App() {
     return 'light';
   });
 
-  const [designSystem, setDesignSystem] = useState<'premium' | 'classic'>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('designSystem');
-      return (saved === 'classic' || saved === 'premium') ? saved : 'classic';
-    }
-    return 'classic';
-  });
+  const designSystem = 'classic';
 
   // Global lifted states for deep mobile/back-button modal synchronization
   const [showSettings, setShowSettings] = useState(false);
@@ -1475,7 +1316,6 @@ export default function App() {
   };
 
   const handleSetShowLegalDoc = (val: 'cgu' | 'privacy' | 'mentions' | 'ai' | 'local_data' | null) => {
-    console.log("handleSetShowLegalDoc called with", val);
     if (val) {
       window.history.pushState({ view: 'legal', doc: val }, '', window.location.pathname);
       setCurrentView('legal');
@@ -1563,10 +1403,6 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('designSystem', designSystem);
-  }, [designSystem]);
-
-  useEffect(() => {
     const root = window.document.documentElement;
     if (theme === 'dark') {
       root.classList.add('dark');
@@ -1607,7 +1443,6 @@ export default function App() {
             theme={theme} 
             toggleTheme={toggleTheme}
             designSystem={designSystem}
-            setDesignSystem={setDesignSystem}
             showSettings={showSettings}
             setShowSettings={handleSetShowSettings}
             showHistory={showHistory}

@@ -1,5 +1,5 @@
-export const APP_VERSION = '2.5.0';
-export const RELEASE_DATE = '2026-06-17';
+export const APP_VERSION = '2.6.0';
+export const RELEASE_DATE = '2026-07-05';
 
 export interface ReleaseNote {
   version: string;
@@ -8,6 +8,18 @@ export interface ReleaseNote {
 }
 
 export const RELEASE_NOTES: ReleaseNote[] = [
+  {
+    version: '2.6.0',
+    date: '2026-07-05',
+    changes: [
+      'Nettoyage en profondeur de l\'UI d\'authentification fantôme ("Tech-Larping")',
+      'Retrait complet du commutateur de design system, fixation sur le style Classic poli par défaut',
+      'Suppression définitive du SDK Firebase et migration complète vers un stockage local décentralisé (localStorage)',
+      'Suppression des anciens fichiers d\'audit et de transition obsolètes de docs/',
+      'Suppression des logs de développement de l\'interface de production',
+      'Restauration et fiabilisation de la fonctionnalité d\'exemples aléatoires'
+    ]
+  },
   {
     version: '2.5.0',
     date: '2026-06-17',

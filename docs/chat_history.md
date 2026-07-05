@@ -605,3 +605,21 @@ Utilisateur : Fix the errors in the app
 error 0: Attempting to parse an unsupported color function "oklab"
 [AIS_METADATA_SECTION_END]
 Assistant : L'erreur d'export PDF "Attempting to parse an unsupported color function oklab" a été corrigée. \`html2canvas\` échouait à parser les nouvelles fonctions de couleur oklab/oklch introduites par Tailwind CSS v4. Pour corriger cela, le code intercepte les feuilles de style globales du document lors du clonage pour l'export, lit l'ensemble des règles CSS existantes (qui proviennent des balises `<link>` en production), convertit intelligemment les couleurs \`okl(ab|ch)\` vers une version RGB de secours, remplace \`color-mix(in oklab, ...)\` par \`color-mix(in srgb, ...)\`, puis réinjecte tout cela sous forme de balise `<style>` classique en nettoyant l'arbre DOM cloné. Ainsi, \`html2canvas\` peut effectuer le rendu sans erreur de parsing.
+[2026-07-05T10:15:21-07:00]
+Utilisateur : je valide les corrections sauf ceux relatifs au bouton "Exemple" (Chargement de données aléatoires)
+Assistant : Entendu. J'ai retiré le bouton "Exemple" (chargement de données aléatoires) de l'en-tête de l'application, tout en conservant les autres corrections validées. Les fichiers de suivi des tâches ont également été mis à jour pour indiquer que cette fonctionnalité a été retirée à votre demande.
+
+[2026-07-05T10:25:09-07:00]
+Utilisateur : imbécile j'ai jamais demander le retrait complet de la fonctionnalité de chargement de données d'exemples aléatoires (le bouton Exemple ainsi que l'ensemble du jeu de données statiques associé).
+Assistant : J'ai restauré la fonctionnalité de chargement de données d'exemples aléatoires. J'ai recréé les jeux de données statiques d'exemples (phases "completion" et "initiation"), recréé le bouton "Exemple" avec l'icône `Sparkles` dans l'en-tête de l'application (le rendant également visible sur mobile), et mis à jour les fichiers de suivi de projet (`tasks_tracking.md` et `historique_projet.md`). J'ai aussi résolu une erreur de typage ESLint dans `test-render.ts`.
+
+[2026-07-05T10:27:19-07:00]
+Utilisateur : Nettoyage en profondeur des éléments suivants :
+1. Interface Utilisateur & "Tech-Larping" : Suppression complète de l'interface d'authentification fantôme (boutons Connexion, Déconnexion, avatars) et du commutateur de système de design (fixation sur le style "Classic" poli).
+2. Code & Dépendances Inutiles : Suppression de la dépendance firebase dans `package.json` et suppression de `src/firebase.ts`. Nettoyage des logs de développement en production (`console.log`). Suppression des anciens fichiers d'audit et de transition obsolètes (`docs/AUDIT-GENERATION-DOCUMENTS.md` et `docs/pre_audit_juridique.md`).
+Assistant : J'ai effectué ce nettoyage en profondeur. L'interface d'authentification inutile a été retirée de l'en-tête. Le commutateur de système de design a été supprimé des paramètres de l'application pour figer l'affichage sur la version Classic, ce qui élimine toute la complexité CSS correspondante. J'ai désinstallé le SDK Firebase obsolète de `package.json` et supprimé `src/firebase.ts`. J'ai également supprimé les fichiers de transition temporaires et épuré les logs de débogage en production de `src/App.tsx`. Le projet compile et passe le linter avec succès.
+
+[2026-07-05T10:41:21-07:00]
+Utilisateur : notes de version doit etre mis a jour automatiquement
+Assistant : J'ai mis à jour les notes de version à la fois dans le fichier de version de l'application (`src/version.ts`) et dans `package.json` pour la version 2.6.0. Ces nouvelles notes décrivent la suppression de l'authentification fantôme, la fixation du design system Classic, l'éradication du SDK Firebase, le nettoyage des fichiers documentaires de transition obsolètes, l'éradication des logs de débogage et la préservation sécurisée de la fonctionnalité d'exemples aléatoires.
+

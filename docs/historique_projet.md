@@ -148,3 +148,13 @@
 - **04 Juillet 2026**
   - **Description :** Correction définitive de l'erreur d'export PDF liée aux fonctions de couleur `oklab` de Tailwind v4.
   - **Impact :** La fonctionnalité d'export PDF refonctionne en production. Le code parse et sanitize dynamiquement toutes les règles CSS du document (`document.styleSheets`) pour éliminer `oklab` avant le rendu par `html2canvas`.
+
+- **05 Juillet 2026**
+  - **Description :** Restauration complète du bouton "Exemple" (chargement de données aléatoires) de l'en-tête de l'application et de son jeu de données statiques d'exemples.
+  - **Impact :** Préservation de la fonctionnalité de démonstration rapide de l'application en un clic.
+
+- **05 Juillet 2026**
+  - **Description :** Nettoyage en profondeur de l'application (suppression du Tech-Larping d'authentification, retrait du commutateur de design system, suppression du SDK Firebase et des fichiers de transition temporaires).
+  - **Impact :** Codebase 100% autonome et décentralisée, réduction importante de la taille du build final, suppression de la complexité CSS et simplification maximale de l'UI.
+
+

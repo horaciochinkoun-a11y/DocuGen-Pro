@@ -27,8 +27,9 @@ async function run() {
   try {
     const { filename } = await renderDocument(docxData);
     console.log("Success:", filename);
-  } catch(e: any) {
-    console.error("Error:", e.message, e.details || e);
+  } catch(e) {
+    const err = e as { message?: string; details?: unknown };
+    console.error("Error:", err.message, err.details || err);
   }
 }
 
