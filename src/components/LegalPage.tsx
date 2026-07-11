@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Home } from 'lucide-react';
 import Markdown from 'react-markdown';
 import rehypeSlug from 'rehype-slug';
 import { motion } from 'motion/react';
@@ -8,11 +8,12 @@ import { termsOfServiceRaw, privacyPolicyRaw, legalMentionsRaw, aiPolicyRaw, loc
 interface LegalPageProps {
   docType: 'cgu' | 'privacy' | 'mentions' | 'ai' | 'local_data';
   onBack: () => void;
+  onHome?: () => void;
   onNavigate?: (doc: 'cgu' | 'privacy' | 'mentions' | 'ai' | 'local_data') => void;
   theme: 'light' | 'dark';
 }
 
-export default function LegalPage({ docType, onBack, onNavigate, theme }: LegalPageProps) {
+export default function LegalPage({ docType, onBack, onHome, onNavigate, theme }: LegalPageProps) {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [docType]);
@@ -40,14 +41,27 @@ export default function LegalPage({ docType, onBack, onNavigate, theme }: LegalP
   return (
     <div className={`min-h-screen bg-neutral-50 dark:bg-neutral-950 transition-colors duration-300 ${theme === 'dark' ? 'dark' : ''}`}>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <button type="button" onClick={onBack}
-          className="group flex items-center gap-2 text-sm font-semibold text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors mb-8"
-        >
-          <div className="w-8 h-8 rounded-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-center group-hover:border-neutral-300 dark:group-hover:border-neutral-700 transition-colors">
-            <ArrowLeft size={16} />
-          </div>
-          Retour à l'application
-        </button>
+        <div className="flex flex-wrap items-center gap-4 mb-8">
+          <button type="button" onClick={onBack}
+            className="group flex items-center gap-2 text-sm font-semibold text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors"
+          >
+            <div className="w-8 h-8 rounded-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-center group-hover:border-neutral-300 dark:group-hover:border-neutral-700 transition-colors">
+              <ArrowLeft size={16} />
+            </div>
+            Retour à l'application
+          </button>
+
+          {onHome && (
+            <button type="button" onClick={onHome}
+              className="group flex items-center gap-2 text-sm font-semibold text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors border-l border-neutral-200 dark:border-neutral-800 pl-4"
+            >
+              <div className="w-8 h-8 rounded-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-center group-hover:border-neutral-300 dark:group-hover:border-neutral-700 transition-colors">
+                <Home size={16} />
+              </div>
+              Retour à l'accueil
+            </button>
+          )}
+        </div>
 
         <motion.div 
           initial={{ opacity: 0, y: 20 }}

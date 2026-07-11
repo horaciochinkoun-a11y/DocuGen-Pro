@@ -623,3 +623,12 @@ Assistant : J'ai effectué ce nettoyage en profondeur. L'interface d'authentific
 Utilisateur : notes de version doit etre mis a jour automatiquement
 Assistant : J'ai mis à jour les notes de version à la fois dans le fichier de version de l'application (`src/version.ts`) et dans `package.json` pour la version 2.6.0. Ces nouvelles notes décrivent la suppression de l'authentification fantôme, la fixation du design system Classic, l'éradication du SDK Firebase, le nettoyage des fichiers documentaires de transition obsolètes, l'éradication des logs de débogage et la préservation sécurisée de la fonctionnalité d'exemples aléatoires.
 
+[2026-07-10T19:38:00-07:00]
+Utilisateur : problème d'ergonomie, propose une correction (en-tête trop encombré sur mobile)
+Assistant : J'ai optimisé l'en-tête de l'application pour les appareils mobiles afin d'améliorer l'ergonomie globale. Toutes les fonctionnalités secondaires (Historique, Charger un exemple, Clé API Gemini, Mode Sombre/Clair, Installation PWA, Informations de version) sont désormais regroupées de façon élégante dans un menu déroulant d'actions mobiles (`MoreVertical`) très propre et réactif, libérant tout l'espace requis. L'affichage du logo et du commutateur de phase projet s'ajuste également de façon adaptative sur mobile. L'application a été compilée et validée avec succès.
+
+[2026-07-10T19:43:22-07:00]
+Utilisateur : dans les pages légaux mettre un lien de retour vers l'accueil
+Assistant : J'ai ajouté une option de retour à l'accueil ("Retour à l'accueil") flanquée de l'icône `Home` sur l'ensemble des pages légales (CGU, Confidentialité, Mentions Légales, Charte IA, Données Locales) à côté du bouton "Retour à l'application", pour une meilleure fluidité de navigation sur tous les types d'écrans.
+
+

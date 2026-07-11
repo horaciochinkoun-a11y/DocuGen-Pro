@@ -24,7 +24,8 @@ import {
   Trash2,
   ChevronRight,
   Zap,
-  Database
+  Database,
+  MoreVertical
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Markdown from 'react-markdown';
@@ -156,6 +157,9 @@ function DocumentationGenerator({
   
   // État local de la clé API (Mode autonome sans backend)
   const [localApiKey, setLocalApiKey] = useState(() => localStorage.getItem('gemini_api_key') || '');
+  const [mobileActiveView, setMobileActiveView] = useState<'assistant' | 'documents'>('assistant');
+  const [mobileFormStep, setMobileFormStep] = useState(0);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   const handleApiKeyChange = (val: string) => {
     setLocalApiKey(val);
@@ -175,6 +179,30 @@ function DocumentationGenerator({
     const validation = validateFormFields(formData);
     if (!validation.isValid) {
       setError(`Erreur de validation des champs :\n${validation.errors?.join('\n')}`);
+      
+      // Auto-navigation vers l'étape contenant la première erreur de validation
+      const missingFields = validation.errors || [];
+      if (missingFields.length > 0) {
+        const firstErrorStr = missingFields[0].toLowerCase();
+        if (firstErrorStr.includes("developername") || firstErrorStr.includes("développeur") || 
+            firstErrorStr.includes("developerstatus") || firstErrorStr.includes("statut") ||
+            firstErrorStr.includes("clientname") || firstErrorStr.includes("client") ||
+            firstErrorStr.includes("companyname") || firstErrorStr.includes("entreprise")) {
+          setMobileFormStep(0);
+        } else if (firstErrorStr.includes("projectname") || firstErrorStr.includes("projet") ||
+                   firstErrorStr.includes("projecttype") || firstErrorStr.includes("type") ||
+                   firstErrorStr.includes("technologies")) {
+          setMobileFormStep(1);
+        } else if (firstErrorStr.includes("duration") || firstErrorStr.includes("durée") ||
+                   firstErrorStr.includes("manualtime") || firstErrorStr.includes("heure") ||
+                   firstErrorStr.includes("manuallocation") || firstErrorStr.includes("lieu")) {
+          setMobileFormStep(2);
+        } else if (firstErrorStr.includes("description") || firstErrorStr.includes("vision") ||
+                   firstErrorStr.includes("keyfeatures") || firstErrorStr.includes("fonctionnalités") ||
+                   firstErrorStr.includes("results") || firstErrorStr.includes("résultats")) {
+          setMobileFormStep(3);
+        }
+      }
       return;
     }
 
@@ -304,6 +332,7 @@ RÈGLES DE FORMATAGE STRICTES :
       const data = await generateProfessionalDocs(prompt, localApiKey, projectPhase);
       setGeneratedDocs(data);
       setActiveTab(projectPhase === 'completion' ? 'attestation' : 'roadmap');
+      setMobileActiveView('documents');
 
       // Save to history
       const newHistoryItem: HistoryItem = {
@@ -517,6 +546,7 @@ RÈGLES DE FORMATAGE STRICTES :
     setProjectPhase(item.phase);
     setActiveTab(item.phase === 'completion' ? 'attestation' : 'roadmap');
     setShowHistory(false);
+    setMobileActiveView('documents');
   };
 
   const deleteHistoryItem = (e: React.MouseEvent, id: string) => {
@@ -542,69 +572,268 @@ RÈGLES DE FORMATAGE STRICTES :
     <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-50 font-sans selection:bg-brand-100 selection:text-brand-900">
       <header className="glass sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div 
-            className="flex items-center gap-2 sm:gap-3 cursor-pointer group transition-all min-w-0"
-            onClick={onNavigateHome}
-            title="Retour à l'accueil"
-          >
-            <div className="bg-brand-600 text-white p-1.5 sm:p-2 rounded-lg sm:rounded-xl shadow-lg shadow-brand-500/20 group-hover:scale-110 transition-transform shrink-0">
-              <FileText size={18} className="sm:w-5 sm:h-5" />
+          <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+            <div 
+              className="flex items-center gap-2 sm:gap-3 cursor-pointer group transition-all shrink-0"
+              onClick={onNavigateHome}
+              title="Retour à l'accueil"
+            >
+              <div className="bg-brand-600 text-white p-1.5 sm:p-2 rounded-lg sm:rounded-xl shadow-lg shadow-brand-500/20 group-hover:scale-110 transition-transform shrink-0">
+                <FileText size={18} className="sm:w-5 sm:h-5" />
+              </div>
+              <h1 className="text-base sm:text-xl font-bold tracking-tight text-neutral-900 dark:text-white truncate hidden min-[370px]:inline-block">
+                DocuGen<span className="text-brand-600 dark:text-brand-400 hidden sm:inline"> Pro</span>
+              </h1>
             </div>
-            <h1 className="text-lg sm:text-xl font-bold tracking-tight text-neutral-900 dark:text-white truncate">
-              DocuGen <span className="text-brand-600 dark:text-brand-400">Pro</span>
-            </h1>
+
+            {/* Desktop Project Phase Switcher */}
+            <div className="hidden md:flex p-1 bg-neutral-100 dark:bg-neutral-900 rounded-xl border border-neutral-200/50 dark:border-neutral-800/50 shrink-0">
+              <button
+                type="button"
+                onClick={() => {
+                  setProjectPhase('completion');
+                  setGeneratedDocs(null);
+                }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all ${
+                  projectPhase === 'completion'
+                    ? 'bg-white dark:bg-neutral-800 text-brand-600 dark:text-brand-400 shadow-sm'
+                    : 'text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'
+                }`}
+              >
+                <CheckCircle2 size={12} />
+                Terminé
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setProjectPhase('initiation');
+                  setGeneratedDocs(null);
+                }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all ${
+                  projectPhase === 'initiation'
+                    ? 'bg-white dark:bg-neutral-800 text-brand-600 dark:text-brand-400 shadow-sm'
+                    : 'text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'
+                }`}
+              >
+                <Sparkles size={12} />
+                Nouveau
+              </button>
+            </div>
+
+            {/* Mobile Project Phase Toggle (Single Button) */}
+            <button
+              type="button"
+              onClick={() => {
+                const nextPhase = projectPhase === 'completion' ? 'initiation' : 'completion';
+                setProjectPhase(nextPhase);
+                setGeneratedDocs(null);
+              }}
+              className={`md:hidden flex items-center gap-1 px-2.5 py-1 text-[9px] font-black uppercase tracking-wider rounded-lg border transition-all shrink-0 ${
+                projectPhase === 'completion'
+                  ? 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200/50 dark:border-emerald-800/50 text-emerald-600 dark:text-emerald-400'
+                  : 'bg-indigo-50 dark:bg-indigo-950/30 border-indigo-200/50 dark:border-indigo-800/50 text-indigo-600 dark:text-indigo-400'
+              }`}
+              title={projectPhase === 'completion' ? 'Changer pour phase Idéation' : 'Changer pour phase Livraison'}
+            >
+              {projectPhase === 'completion' ? <CheckCircle2 size={10} /> : <Sparkles size={10} />}
+              <span>{projectPhase === 'completion' ? 'Terminé' : 'Nouveau'}</span>
+            </button>
           </div>
           
           <div className="flex items-center gap-1.5 sm:gap-4 shrink-0">
-            <button
-              type="button"
-              onClick={() => setShowHistory(!showHistory)}
-              className={`flex items-center gap-1.5 p-1.5 px-2 sm:p-2 sm:px-3 transition-all rounded-xl border shadow-sm ${
-                showHistory 
-                  ? "bg-brand-600 border-brand-600 text-white" 
-                  : "text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900"
-              }`}
-              title="Historique des documents"
-            >
-              <History size={16} />
-              <span className="hidden sm:inline text-[10px] font-black uppercase tracking-widest">Historique</span>
-            </button>
+            {/* Desktop Actions Row (Visible on tablet/desktop) */}
+            <div className="hidden md:flex items-center gap-1.5 sm:gap-3">
+              <button
+                type="button"
+                onClick={() => setShowHistory(!showHistory)}
+                className={`flex items-center gap-1.5 p-1.5 px-2 sm:p-2 sm:px-3 transition-all rounded-xl border shadow-sm ${
+                  showHistory 
+                    ? "bg-brand-600 border-brand-600 text-white" 
+                    : "text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900"
+                }`}
+                title="Historique des documents"
+              >
+                <History size={16} />
+                <span className="hidden sm:inline text-[10px] font-black uppercase tracking-widest">Historique</span>
+              </button>
 
-            <button
-              type="button"
-              onClick={fillSampleData}
-              className="flex items-center gap-1.5 p-1.5 px-2 sm:p-2 sm:px-3 text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/20 transition-all rounded-xl border border-brand-200 dark:border-brand-800 bg-brand-50/50 dark:bg-brand-900/10 shadow-sm"
-              title="Charger un exemple"
-            >
-              <Sparkles size={16} />
-              <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest">Exemple</span>
-            </button>
+              <button
+                type="button"
+                onClick={fillSampleData}
+                className="flex items-center gap-1.5 p-1.5 px-2 sm:p-2 sm:px-3 text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/20 transition-all rounded-xl border border-brand-200 dark:border-brand-800 bg-brand-50/50 dark:bg-brand-900/10 shadow-sm"
+                title="Charger un exemple"
+              >
+                <Sparkles size={16} />
+                <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest">Exemple</span>
+              </button>
 
-            <button 
-              onClick={() => setShowSettings(!showSettings)}
-              className="flex items-center gap-2 p-1.5 sm:p-2 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-all border border-neutral-200 dark:border-neutral-700 shadow-sm"
-              title="Configuration API"
-            >
-              <Key size={16} className={`sm:w-[18px] sm:h-[18px] ${localApiKey ? "text-green-500" : "text-amber-500"}`} />
-              <span className="hidden md:inline text-[10px] font-black uppercase tracking-widest">Clé API</span>
-            </button>
+              <button 
+                type="button"
+                onClick={() => setShowSettings(!showSettings)}
+                className={`flex items-center gap-2 p-1.5 sm:p-2 rounded-xl transition-all border shadow-sm relative ${
+                  !localApiKey 
+                    ? "text-amber-600 dark:text-amber-400 bg-amber-500/5 dark:bg-amber-500/10 border-amber-300/60 dark:border-amber-700/60" 
+                    : "text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900"
+                }`}
+                title="Configuration de la Clé API Gemini"
+              >
+                <span className="relative flex h-4 w-4 sm:h-5 sm:w-5 items-center justify-center">
+                  <Key size={16} className={localApiKey ? "text-green-500" : "text-amber-500"} />
+                  {!localApiKey && (
+                    <span className="absolute -top-1 -right-1 flex h-1.5 w-1.5 sm:h-2 sm:w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 sm:h-2 sm:w-2 bg-amber-500"></span>
+                    </span>
+                  )}
+                </span>
+                <span className="hidden md:inline text-[10px] font-black uppercase tracking-widest">
+                  {localApiKey ? 'Clé Active' : 'Clé API'}
+                </span>
+              </button>
 
-            <button
-              onClick={toggleTheme}
-              className="p-1.5 sm:p-2 text-neutral-500 hover:text-brand-600 dark:text-neutral-400 dark:hover:text-brand-400 transition-all rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm"
-            >
-              {theme === 'light' ? <Moon size={16} className="sm:w-[18px] sm:h-[18px]" /> : <Sun size={16} className="sm:w-[18px] sm:h-[18px]" />}
-            </button>
+              <button
+                type="button"
+                onClick={toggleTheme}
+                className="p-1.5 sm:p-2 text-neutral-500 hover:text-brand-600 dark:text-neutral-400 dark:hover:text-brand-400 transition-all rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm"
+              >
+                {theme === 'light' ? <Moon size={16} className="sm:w-[18px] sm:h-[18px]" /> : <Sun size={16} className="sm:w-[18px] sm:h-[18px]" />}
+              </button>
 
-            <InstallPWA />
+              <InstallPWA />
 
-            <button
-               onClick={() => setShowReleaseNotes(true)}
-               className="p-1.5 sm:p-2 text-neutral-500 hover:text-brand-600 dark:text-neutral-400 dark:hover:text-brand-400 transition-all rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm"
-               title="Notes de version"
-            >
-              <Zap size={16} className="sm:w-[18px] sm:h-[18px]" />
-            </button>
+              <button
+                type="button"
+                onClick={() => setShowReleaseNotes(true)}
+                className="p-1.5 sm:p-2 text-neutral-500 hover:text-brand-600 dark:text-neutral-400 dark:hover:text-brand-400 transition-all rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm"
+                title="Notes de version"
+              >
+                <Zap size={16} className="sm:w-[18px] sm:h-[18px]" />
+              </button>
+            </div>
+
+            {/* Mobile Actions Menu (Dropdown for mobile devices to prevent overlaps) */}
+            <div className="relative md:hidden flex items-center">
+              <button
+                type="button"
+                onClick={() => setShowMobileMenu(!showMobileMenu)}
+                className={`flex items-center justify-center p-2 rounded-xl border shadow-sm transition-all relative ${
+                  showMobileMenu 
+                    ? "bg-brand-600 border-brand-600 text-white" 
+                    : "text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900"
+                }`}
+                aria-label="Menu d'actions"
+                title="Plus d'actions"
+              >
+                <MoreVertical size={18} />
+                {!localApiKey && (
+                  <span className="absolute top-1.5 right-1.5 flex h-1.5 w-1.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-500"></span>
+                  </span>
+                )}
+              </button>
+
+              <AnimatePresence>
+                {showMobileMenu && (
+                  <>
+                    <div 
+                      className="fixed inset-0 z-40 bg-transparent" 
+                      onClick={() => setShowMobileMenu(false)}
+                    />
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute right-0 mt-12 w-56 bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-xl p-2 z-50 space-y-1"
+                    >
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowMobileMenu(false);
+                          setShowHistory(true);
+                        }}
+                        className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-left text-xs font-bold uppercase tracking-wider transition-all ${
+                          showHistory
+                            ? "bg-brand-50 dark:bg-brand-950/30 text-brand-600 dark:text-brand-400"
+                            : "text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800/50"
+                        }`}
+                      >
+                        <History size={15} className="shrink-0" />
+                        <span className="flex-1">Historique</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowMobileMenu(false);
+                          fillSampleData();
+                        }}
+                        className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-left text-xs font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/10 transition-all"
+                      >
+                        <Sparkles size={15} className="shrink-0" />
+                        <span className="flex-1">Charger Exemple</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowMobileMenu(false);
+                          setShowSettings(true);
+                        }}
+                        className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-left text-xs font-bold uppercase tracking-wider transition-all relative ${
+                          !localApiKey
+                            ? "bg-amber-500/5 text-amber-600 dark:text-amber-400"
+                            : "text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800/50"
+                        }`}
+                      >
+                        <Key size={15} className={`shrink-0 ${localApiKey ? "text-green-500" : "text-amber-500"}`} />
+                        <span className="flex-1">Clé API Gemini</span>
+                        {!localApiKey && (
+                          <span className="flex h-1.5 w-1.5 rounded-full bg-amber-500"></span>
+                        )}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          toggleTheme();
+                        }}
+                        className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-left text-xs font-bold uppercase tracking-wider text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800/50 transition-all"
+                      >
+                        {theme === 'light' ? (
+                          <>
+                            <Moon size={15} className="shrink-0 text-neutral-500" />
+                            <span className="flex-1">Mode Sombre</span>
+                          </>
+                        ) : (
+                          <>
+                            <Sun size={15} className="shrink-0 text-amber-500" />
+                            <span className="flex-1">Mode Clair</span>
+                          </>
+                        )}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowMobileMenu(false);
+                          setShowReleaseNotes(true);
+                        }}
+                        className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-left text-xs font-bold uppercase tracking-wider text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800/50 transition-all"
+                      >
+                        <Zap size={15} className="shrink-0 text-neutral-500 dark:text-neutral-400" />
+                        <span className="flex-1">Version Info</span>
+                      </button>
+
+                      <div className="pt-1 border-t border-neutral-100 dark:border-neutral-800">
+                        <InstallPWA />
+                      </div>
+                    </motion.div>
+                  </>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
       </header>
@@ -759,344 +988,462 @@ RÈGLES DE FORMATAGE STRICTES :
           )}
         </AnimatePresence>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start pb-24 lg:pb-0">
           
           {/* Left Column: Form */}
-          <div className="lg:col-span-5 xl:col-span-4 space-y-8">
-            <div className="bg-white dark:bg-neutral-900 rounded-3xl p-8 border border-neutral-200 dark:border-neutral-800 shadow-soft">
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-12 h-12 bg-brand-50 dark:bg-brand-900/20 rounded-2xl flex items-center justify-center text-brand-600 dark:text-brand-400">
-                  <Settings size={24} />
+          <div className={`lg:col-span-5 xl:col-span-4 space-y-8 ${mobileActiveView === 'assistant' ? 'block' : 'hidden lg:block'}`}>
+            
+            {/* Conversational Mobile Intro (Gemini / Claude / ChatGPT style) */}
+            <div className="lg:hidden bg-gradient-to-br from-brand-600 to-indigo-700 text-white rounded-3xl p-6 shadow-xl mb-6 relative overflow-hidden">
+              {/* Subtle background glow */}
+              <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+              <div className="absolute -left-10 -top-10 w-40 h-40 bg-indigo-500/20 rounded-full blur-2xl pointer-events-none" />
+
+              <div className="relative z-10 space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-white/10 backdrop-blur-md rounded-xl text-brand-200">
+                    <Sparkles size={20} className="animate-pulse" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-black tracking-tight">Assistant DocuGen Pro</h3>
+                    <p className="text-[10px] uppercase tracking-widest text-brand-200 font-bold">Rédacteur de confiance</p>
+                  </div>
                 </div>
-                <div>
-                  <h2 className="text-xl font-black text-neutral-900 dark:text-white tracking-tight">Configuration</h2>
-                  <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
-                    {projectPhase === 'completion' ? 'Phase de Livraison' : 'Phase d\'Idéation'}
-                  </p>
+
+                <p className="text-sm font-medium leading-relaxed text-brand-100">
+                  Bonjour ! Je suis prêt à vous aider à rédiger votre documentation professionnelle de niveau senior. Que souhaitez-vous faire aujourd'hui ?
+                </p>
+
+                {/* Direct Action Suggestion Bubbles */}
+                <div className="grid grid-cols-1 gap-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setProjectPhase('completion');
+                      fillSampleData();
+                    }}
+                    className="flex items-center justify-between p-3 bg-white/10 hover:bg-white/15 active:bg-white/20 transition-all rounded-xl text-left border border-white/10 group"
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <CheckCircle2 size={16} className="text-brand-200 shrink-0" />
+                      <div className="truncate">
+                        <p className="text-xs font-bold truncate">Documenter une Livraison de Projet</p>
+                        <p className="text-[10px] text-brand-200/80 truncate">Générer Attestation, Résumé CV & Post LinkedIn</p>
+                      </div>
+                    </div>
+                    <ChevronRight size={14} className="text-brand-300 group-hover:translate-x-1 transition-transform" />
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setProjectPhase('initiation');
+                      fillSampleData();
+                    }}
+                    className="flex items-center justify-between p-3 bg-white/10 hover:bg-white/15 active:bg-white/20 transition-all rounded-xl text-left border border-white/10 group"
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <Sparkles size={16} className="text-brand-200 shrink-0" />
+                      <div className="truncate">
+                        <p className="text-xs font-bold truncate">Lancer une Idée de Projet (MVP)</p>
+                        <p className="text-[10px] text-brand-200/80 truncate">Générer Roadmap, Architecture, Backlog MVP</p>
+                      </div>
+                    </div>
+                    <ChevronRight size={14} className="text-brand-300 group-hover:translate-x-1 transition-transform" />
+                  </button>
                 </div>
-              </div>
-              
-              <div className="flex p-1.5 bg-neutral-100 dark:bg-neutral-950 rounded-2xl w-full mb-10">
-                <button
-                  onClick={() => {
-                    setProjectPhase('completion');
-                    setGeneratedDocs(null);
-                  }}
-                  className={`flex-1 flex items-center justify-center gap-2 py-3 text-xs font-black uppercase tracking-widest rounded-xl transition-all ${
-                    projectPhase === 'completion'
-                      ? 'bg-white dark:bg-neutral-800 text-brand-600 dark:text-brand-400 shadow-soft'
-                      : 'text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'
-                  }`}
-                >
-                  <CheckCircle2 size={16} />
-                  Terminé
-                </button>
-                <button
-                  onClick={() => {
-                    setProjectPhase('initiation');
-                    setGeneratedDocs(null);
-                  }}
-                  className={`flex-1 flex items-center justify-center gap-2 py-3 text-xs font-black uppercase tracking-widest rounded-xl transition-all ${
-                    projectPhase === 'initiation'
-                      ? 'bg-white dark:bg-neutral-800 text-brand-600 dark:text-brand-400 shadow-soft'
-                      : 'text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'
-                  }`}
-                >
-                  <Sparkles size={16} />
-                  Nouveau
-                </button>
               </div>
             </div>
 
             <form onSubmit={handleGenerate} className="space-y-6 bg-white dark:bg-neutral-900 p-8 rounded-3xl border border-neutral-200 dark:border-neutral-800 shadow-soft">
-              
-              {!localApiKey && (
-                <div className="mb-8 p-5 bg-brand-50 dark:bg-brand-900/20 border border-brand-200 dark:border-brand-800 rounded-2xl flex items-start gap-4">
-                  <div className="w-10 h-10 bg-brand-100 dark:bg-brand-800 rounded-xl flex items-center justify-center text-brand-600 dark:text-brand-400 shrink-0">
-                    <Key size={20} />
-                  </div>
-                  <div className="text-sm text-brand-900 dark:text-brand-100">
-                    <p className="font-bold mb-1">Mode Autonome : Clé API requise</p>
-                    <p className="opacity-80">Pour utiliser l'application sans compte, veuillez renseigner votre propre clé API Gemini.</p>
-                    <button type="button" onClick={() => setShowSettings(true)} className="mt-3 font-black uppercase tracking-widest text-xs underline hover:text-brand-700 transition-colors">
-                      Configurer maintenant
+
+              {/* Step Navigation Header for Mobile (Claude / ChatGPT style) */}
+              <div className="lg:hidden flex flex-col gap-4 mb-6">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-brand-600 dark:text-brand-400">
+                    Configuration — Étape {mobileFormStep + 1} sur 4
+                  </span>
+                  <span className="text-xs font-black text-neutral-700 dark:text-neutral-300">
+                    {mobileFormStep === 0 && '👥 Intervenants'}
+                    {mobileFormStep === 1 && '💻 Produit'}
+                    {mobileFormStep === 2 && '📅 Cadre'}
+                    {mobileFormStep === 3 && '📝 Contenu'}
+                  </span>
+                </div>
+                
+                {/* Progress Bar */}
+                <div className="h-1.5 w-full bg-neutral-100 dark:bg-neutral-800 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-brand-600 transition-all duration-300 rounded-full" 
+                    style={{ width: `${((mobileFormStep + 1) / 4) * 100}%` }}
+                  />
+                </div>
+
+                {/* Horizontal tabs */}
+                <div className="flex gap-1.5 overflow-x-auto no-scrollbar pb-1">
+                  {['Acteurs', 'Produit', 'Cadre', 'Contenu'].map((label, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setMobileFormStep(idx)}
+                      className={`flex-1 min-w-[70px] py-2 text-[9px] font-black uppercase tracking-widest rounded-xl transition-all ${
+                        mobileFormStep === idx
+                          ? 'bg-brand-600 text-white shadow-md shadow-brand-500/10'
+                          : 'text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-300 bg-neutral-50 dark:bg-neutral-950/40 border border-neutral-200/40 dark:border-neutral-800/40'
+                      }`}
+                    >
+                      {label}
                     </button>
-                  </div>
-                </div>
-              )}
-
-              <div className="space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
-                      <UserIcon size={12} className="text-brand-500" />
-                      {projectPhase === 'completion' ? 'Développeur' : 'Porteur du Projet'}
-                    </label>
-                    <input
-                      required
-                      type="text"
-                      name="developerName"
-                      value={formData.developerName || ''}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
-                      placeholder={projectPhase === 'completion' ? "Jean Dupont" : "Votre nom"}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
-                      <Briefcase size={12} className="text-brand-500" />
-                      {projectPhase === 'completion' ? 'Statut' : 'Rôle visé'}
-                    </label>
-                    <input
-                      list="status-options"
-                      name="developerStatus"
-                      value={formData.developerStatus || ''}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
-                      placeholder="ex: Architecte Senior"
-                    />
-                    <datalist id="status-options">
-                      <option value="Junior" />
-                      <option value="Senior" />
-                      <option value="Architecte" />
-                      <option value="Analyste" />
-                      <option value="Lead Developer" />
-                      <option value="Consultant" />
-                    </datalist>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
-                      <UserIcon size={12} className="text-brand-500"/> {projectPhase === 'completion' ? 'Nom du Client' : 'Cible / Client visé'}
-                    </label>
-                    <input
-                      required
-                      type="text"
-                      name="clientName"
-                      value={formData.clientName || ''}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
-                      placeholder={projectPhase === 'completion' ? "Marie Martin" : "ex: Freelances, PME..."}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
-                      <Building2 size={12} className="text-brand-500"/> {projectPhase === 'completion' ? 'Entreprise' : 'Nom du SaaS / Entité'}
-                    </label>
-                    <input
-                      required
-                      type="text"
-                      name="companyName"
-                      value={formData.companyName || ''}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
-                      placeholder="Acme Corp"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
-                      <Clock size={12} className="text-brand-500"/> Heure / Date
-                    </label>
-                    <input
-                      type="text"
-                      name="manualTime"
-                      value={formData.manualTime || ''}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
-                      placeholder="ex: 02 Avril 2026"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
-                      <MapPin size={12} className="text-brand-500"/> Lieu
-                    </label>
-                    <input
-                      type="text"
-                      name="manualLocation"
-                      value={formData.manualLocation || ''}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
-                      placeholder="ex: Paris, France"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
-                      <Clock size={12} className="text-brand-500"/> Durée
-                    </label>
-                    <input
-                      required
-                      type="text"
-                      name="duration"
-                      value={formData.duration || ''}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
-                      placeholder="ex: 3 mois"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
-                      <Laptop size={12} className="text-brand-500"/> Type du Projet
-                    </label>
-                    <input
-                      list="project-types"
-                      name="projectType"
-                      value={formData.projectType || ''}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
-                      placeholder="ex: SaaS B2B"
-                    />
-                    <datalist id="project-types">
-                      <option value="SaaS" />
-                      <option value="Application Web" />
-                      <option value="Application Mobile" />
-                      <option value="API / Backend" />
-                      <option value="E-commerce" />
-                      <option value="Dashboard" />
-                    </datalist>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
-                    <Laptop size={12} className="text-brand-500" /> Nom du Projet
-                  </label>
-                  <input
-                    required
-                    type="text"
-                    name="projectName"
-                    value={formData.projectName || ''}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
-                    placeholder="Projet Alpha"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
-                      <Code size={12} className="text-brand-500" /> Lien GitHub (Optionnel)
-                    </label>
-                    <input
-                      type="url"
-                      name="githubLink"
-                      value={formData.githubLink || ''}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
-                      placeholder="https://github.com/..."
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
-                      <Linkedin size={12} className="text-brand-500" /> Lien LinkedIn (Optionnel)
-                    </label>
-                    <input
-                      type="url"
-                      name="linkedinLink"
-                      value={formData.linkedinLink || ''}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
-                      placeholder="https://linkedin.com/in/..."
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
-                    <FileText size={12} className="text-brand-500" />
-                    {projectPhase === 'completion' ? 'Description' : 'Vision du Projet'}
-                  </label>
-                  <textarea
-                    required
-                    name="description"
-                    value={formData.description || ''}
-                    onChange={handleInputChange}
-                    rows={3}
-                    className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all resize-none dark:text-white"
-                    placeholder={projectPhase === 'completion' ? "Décrivez brièvement ce que fait le projet..." : "Quelle est l'idée principale et le problème résolu ?"}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
-                    <Laptop size={12} className="text-brand-500" />
-                    {projectPhase === 'completion' ? 'Technologies Utilisées' : 'Technologies Envisagées'}
-                  </label>
-                  <input
-                    required
-                    type="text"
-                    name="technologies"
-                    value={formData.technologies || ''}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
-                    placeholder="React, Node.js, PostgreSQL..."
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-xs font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
-                    <Sparkles size={14} className="text-brand-500" />
-                    {projectPhase === 'completion' ? 'Fonctionnalités Clés Livrées' : 'Fonctionnalités Principales Souhaitées'}
-                  </label>
-                  <textarea
-                    required
-                    name="keyFeatures"
-                    value={formData.keyFeatures || ''}
-                    onChange={handleInputChange}
-                    rows={3}
-                    className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all resize-none dark:text-white"
-                    placeholder="Authentification utilisateur, intégration de paiement, tableau de bord en temps réel..."
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-xs font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
-                    <CheckCircle2 size={14} className="text-brand-500" />
-                    {projectPhase === 'completion' ? 'Résultats Obtenus' : 'Objectifs Attendus'}
-                  </label>
-                  <textarea
-                    required
-                    name="results"
-                    value={formData.results || ''}
-                    onChange={handleInputChange}
-                    rows={2}
-                    className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all resize-none dark:text-white"
-                    placeholder={projectPhase === 'completion' ? "Augmentation de la conversion de 20%..." : "Quels sont les indicateurs de succès visés ?"}
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300">Contact Client (Optionnel)</label>
-                  <input
-                    type="text"
-                    name="clientContact"
-                    value={formData.clientContact || ''}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all dark:text-white"
-                    placeholder="email@exemple.com ou numéro de téléphone"
-                  />
+                  ))}
                 </div>
               </div>
 
-              <button
-                type="submit"
-                disabled={isGenerating}
-                className="w-full py-4 bg-brand-600 hover:bg-brand-700 text-white rounded-2xl font-black uppercase tracking-[0.2em] text-sm transition-all shadow-xl shadow-brand-500/20 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed group active:scale-[0.98]"
-              >
-                {isGenerating ? (
-                  <>
-                    <Loader2 size={20} className="animate-spin" />
-                    Génération...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles size={20} className="group-hover:rotate-12 transition-transform" />
-                    Générer la Documentation
-                  </>
+              <div className="space-y-6">
+                
+                {/* Étape 1 : Intervenants */}
+                <div className={`${mobileFormStep === 0 ? 'block' : 'hidden lg:block'} space-y-6`}>
+                  <div className="hidden lg:flex items-center gap-2 text-xs font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500 mb-2">
+                    <UserIcon size={14} className="text-brand-500" />
+                    1. Intervenants & Acteurs
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                        <UserIcon size={12} className="text-brand-500" />
+                        {projectPhase === 'completion' ? 'Développeur' : 'Porteur du Projet'}
+                      </label>
+                      <input
+                        type="text"
+                        name="developerName"
+                        value={formData.developerName || ''}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
+                        placeholder={projectPhase === 'completion' ? "Jean Dupont" : "Votre nom"}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                        <Briefcase size={12} className="text-brand-500" />
+                        {projectPhase === 'completion' ? 'Statut' : 'Rôle visé'}
+                      </label>
+                      <input
+                        list="status-options"
+                        name="developerStatus"
+                        value={formData.developerStatus || ''}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
+                        placeholder="ex: Architecte Senior"
+                      />
+                      <datalist id="status-options">
+                        <option value="Junior" />
+                        <option value="Senior" />
+                        <option value="Architecte" />
+                        <option value="Analyste" />
+                        <option value="Lead Developer" />
+                        <option value="Consultant" />
+                      </datalist>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                        <UserIcon size={12} className="text-brand-500"/> {projectPhase === 'completion' ? 'Nom du Client' : 'Cible / Client visé'}
+                      </label>
+                      <input
+                        type="text"
+                        name="clientName"
+                        value={formData.clientName || ''}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
+                        placeholder={projectPhase === 'completion' ? "Marie Martin" : "ex: Freelances, PME..."}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                        <Building2 size={12} className="text-brand-500"/> {projectPhase === 'completion' ? 'Entreprise' : 'Nom du SaaS / Entité'}
+                      </label>
+                      <input
+                        type="text"
+                        name="companyName"
+                        value={formData.companyName || ''}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
+                        placeholder="Acme Corp"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Étape 2 : Produit */}
+                <div className={`${mobileFormStep === 1 ? 'block' : 'hidden lg:block'} space-y-6`}>
+                  <div className="hidden lg:flex items-center gap-2 text-xs font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500 mb-2">
+                    <Laptop size={14} className="text-brand-500" />
+                    2. Identité & Caractéristiques
+                  </div>
+                  <div className="space-y-6">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                        <Laptop size={12} className="text-brand-500" /> Nom du Projet
+                      </label>
+                      <input
+                        type="text"
+                        name="projectName"
+                        value={formData.projectName || ''}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
+                        placeholder="Projet Alpha"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                          <Laptop size={12} className="text-brand-500"/> Type du Projet
+                        </label>
+                        <input
+                          list="project-types"
+                          name="projectType"
+                          value={formData.projectType || ''}
+                          onChange={handleInputChange}
+                          className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
+                          placeholder="ex: SaaS B2B"
+                        />
+                        <datalist id="project-types">
+                          <option value="SaaS" />
+                          <option value="Application Web" />
+                          <option value="Application Mobile" />
+                          <option value="API / Backend" />
+                          <option value="E-commerce" />
+                          <option value="Dashboard" />
+                        </datalist>
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                          <Laptop size={12} className="text-brand-500" />
+                          {projectPhase === 'completion' ? 'Technologies Utilisées' : 'Technologies Envisagées'}
+                        </label>
+                        <input
+                          type="text"
+                          name="technologies"
+                          value={formData.technologies || ''}
+                          onChange={handleInputChange}
+                          className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
+                          placeholder="React, Node.js, PostgreSQL..."
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Étape 3 : Cadre */}
+                <div className={`${mobileFormStep === 2 ? 'block' : 'hidden lg:block'} space-y-6`}>
+                  <div className="hidden lg:flex items-center gap-2 text-xs font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500 mb-2">
+                    <Clock size={14} className="text-brand-500" />
+                    3. Cadre & Variables
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                        <Clock size={12} className="text-brand-500"/> Durée
+                      </label>
+                      <input
+                        type="text"
+                        name="duration"
+                        value={formData.duration || ''}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
+                        placeholder="ex: 3 mois"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                        <Clock size={12} className="text-brand-500"/> Heure / Date
+                      </label>
+                      <input
+                        type="text"
+                        name="manualTime"
+                        value={formData.manualTime || ''}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
+                        placeholder="ex: 02 Avril 2026"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                        <MapPin size={12} className="text-brand-500"/> Lieu de Signature
+                      </label>
+                      <input
+                        type="text"
+                        name="manualLocation"
+                        value={formData.manualLocation || ''}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
+                        placeholder="ex: Paris, France"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                        <UserIcon size={12} className="text-brand-500" /> Contact Client (Optionnel)
+                      </label>
+                      <input
+                        type="text"
+                        name="clientContact"
+                        value={formData.clientContact || ''}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
+                        placeholder="email@exemple.com ou téléphone"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Étape 4 : Contenu */}
+                <div className={`${mobileFormStep === 3 ? 'block' : 'hidden lg:block'} space-y-6`}>
+                  <div className="hidden lg:flex items-center gap-2 text-xs font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500 mb-2">
+                    <FileText size={14} className="text-brand-500" />
+                    4. Contexte & Contenu
+                  </div>
+                  <div className="space-y-6">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                        <FileText size={12} className="text-brand-500" />
+                        {projectPhase === 'completion' ? 'Description' : 'Vision du Projet'}
+                      </label>
+                      <textarea
+                        name="description"
+                        value={formData.description || ''}
+                        onChange={handleInputChange}
+                        rows={3}
+                        className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all resize-none dark:text-white"
+                        placeholder={projectPhase === 'completion' ? "Décrivez brièvement ce que fait le projet..." : "Quelle est l'idée principale et le problème résolu ?"}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                        <Sparkles size={12} className="text-brand-500" />
+                        {projectPhase === 'completion' ? 'Fonctionnalités Clés Livrées' : 'Fonctionnalités Principales Souhaitées'}
+                      </label>
+                      <textarea
+                        name="keyFeatures"
+                        value={formData.keyFeatures || ''}
+                        onChange={handleInputChange}
+                        rows={3}
+                        className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all resize-none dark:text-white"
+                        placeholder="Authentification utilisateur, intégration de paiement, tableau de bord en temps réel..."
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                        <CheckCircle2 size={12} className="text-brand-500" />
+                        {projectPhase === 'completion' ? 'Résultats Obtenus' : 'Objectifs Attendus'}
+                      </label>
+                      <textarea
+                        name="results"
+                        value={formData.results || ''}
+                        onChange={handleInputChange}
+                        rows={2}
+                        className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all resize-none dark:text-white"
+                        placeholder={projectPhase === 'completion' ? "Augmentation de la conversion de 20%..." : "Quels sont les indicateurs de succès visés ?"}
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                          <Code size={12} className="text-brand-500" /> GitHub (Optionnel)
+                        </label>
+                        <input
+                          type="url"
+                          name="githubLink"
+                          value={formData.githubLink || ''}
+                          onChange={handleInputChange}
+                          className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
+                          placeholder="https://github.com/..."
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                          <Linkedin size={12} className="text-brand-500" /> LinkedIn (Optionnel)
+                        </label>
+                        <input
+                          type="url"
+                          name="linkedinLink"
+                          value={formData.linkedinLink || ''}
+                          onChange={handleInputChange}
+                          className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all dark:text-white"
+                          placeholder="https://linkedin.com/in/..."
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Mobile Step Navigation Buttons (Claude style) */}
+              <div className="lg:hidden flex gap-3 pt-4 border-t border-neutral-100 dark:border-neutral-800/60 mt-6">
+                {mobileFormStep > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setMobileFormStep((prev) => Math.max(0, prev - 1))}
+                    className="flex-1 py-3 px-4 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300 rounded-xl font-bold text-xs uppercase tracking-widest transition-all active:scale-[0.98]"
+                  >
+                    Précédent
+                  </button>
                 )}
-              </button>
+                
+                {mobileFormStep < 3 ? (
+                  <button
+                    type="button"
+                    onClick={() => setMobileFormStep((prev) => Math.min(3, prev + 1))}
+                    className="flex-1 py-3 px-4 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-black text-xs uppercase tracking-widest transition-all shadow-md shadow-brand-500/10 active:scale-[0.98]"
+                  >
+                    Suivant
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    disabled={isGenerating}
+                    className="flex-1 py-3 px-4 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-black text-xs uppercase tracking-widest transition-all shadow-md shadow-brand-500/10 flex items-center justify-center gap-2 disabled:opacity-50 active:scale-[0.98]"
+                  >
+                    {isGenerating ? (
+                      <>
+                        <Loader2 size={14} className="animate-spin" />
+                        Génération...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles size={14} />
+                        Générer
+                      </>
+                    )}
+                  </button>
+                )}
+              </div>
+
+              {/* Desktop-only main generate button */}
+              <div className="hidden lg:block mt-6">
+                <button
+                  type="submit"
+                  disabled={isGenerating}
+                  className="w-full py-4 bg-brand-600 hover:bg-brand-700 text-white rounded-2xl font-black uppercase tracking-[0.2em] text-sm transition-all shadow-xl shadow-brand-500/20 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed group active:scale-[0.98]"
+                >
+                  {isGenerating ? (
+                    <>
+                      <Loader2 size={20} className="animate-spin" />
+                      Génération en cours...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles size={20} className="group-hover:rotate-12 transition-transform" />
+                      Générer la Documentation
+                    </>
+                  )}
+                </button>
+              </div>
 
               {error && (
                 <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-start gap-2 text-red-700 dark:text-red-400 text-sm">
@@ -1108,7 +1455,7 @@ RÈGLES DE FORMATAGE STRICTES :
           </div>
 
           {/* Right Column: Results */}
-          <div className="lg:col-span-7 xl:col-span-8 h-full">
+          <div className={`lg:col-span-7 xl:col-span-8 h-full ${mobileActiveView === 'documents' ? 'block' : 'hidden lg:block'}`}>
             {generatedDocs ? (
               <div className="bg-white dark:bg-neutral-900 rounded-3xl border border-neutral-200 dark:border-neutral-800 shadow-soft overflow-hidden h-full flex flex-col min-h-[700px]">
                 {/* Tabs */}
@@ -1240,6 +1587,38 @@ RÈGLES DE FORMATAGE STRICTES :
           </div>
 
         </div>
+
+        {/* Floating Navigation Bar for mobile (Gemini / Claude Style) */}
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 lg:hidden flex p-1.5 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-md rounded-full shadow-2xl border border-neutral-200/50 dark:border-neutral-800/50 gap-1.5 max-w-[90vw] w-max">
+          <button
+            type="button"
+            onClick={() => setMobileActiveView('assistant')}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-wider transition-all duration-300 active:scale-95 ${
+              mobileActiveView === 'assistant'
+                ? 'bg-brand-600 text-white shadow-lg shadow-brand-500/20'
+                : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300'
+            }`}
+          >
+            <Sparkles size={14} className={mobileActiveView === 'assistant' ? 'animate-pulse' : ''} />
+            Assistant
+          </button>
+          <button
+            type="button"
+            onClick={() => setMobileActiveView('documents')}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-wider transition-all duration-300 active:scale-95 relative ${
+              mobileActiveView === 'documents'
+                ? 'bg-brand-600 text-white shadow-lg shadow-brand-500/20'
+                : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300'
+            }`}
+          >
+            <FileText size={14} />
+            Documents
+            {generatedDocs && mobileActiveView !== 'documents' && (
+              <span className="absolute top-1.5 right-2.5 w-2 h-2 bg-brand-500 rounded-full animate-ping" />
+            )}
+          </button>
+        </div>
+
       </main>
 
       <footer className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-neutral-200 dark:border-neutral-800 mt-auto flex flex-col justify-center w-full">
@@ -1456,6 +1835,11 @@ export default function App() {
           <LegalPage 
             docType={showLegalDoc}
             onBack={() => handleSetShowLegalDoc(null)}
+            onHome={() => {
+              setCurrentView('home');
+              setShowLegalDoc(null);
+              window.history.pushState({ view: 'home' }, '');
+            }}
             onNavigate={handleSetShowLegalDoc}
             theme={theme}
           />

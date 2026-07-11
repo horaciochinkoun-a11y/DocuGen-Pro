@@ -29,6 +29,14 @@
 - **Justification de chaque décision :** Voir le fichier `decisions_log.md` pour plus de détails.
 
 ## Historique des modifications
+- **10 Juillet 2026**
+  - **Description :** Ajout d'une fonctionnalité de retour à l'accueil sur l'ensemble des pages légales de l'application (CGU, Confidentialité, Mentions Légales, Charte IA, Données Locales). Intégration d'un bouton de retour d'accueil ("Retour à l'accueil") flanqué de l'icône `Home` à côté du bouton de retour contextuel, s'adaptant de façon fluide au format d'écran.
+  - **Impact :** Cohérence de navigation améliorée, permettant aux utilisateurs de rejoindre instantanément la Landing Page d'accueil de DocuGen Pro en un seul clic depuis n'importe quel document légal.
+
+- **10 Juillet 2026**
+  - **Description :** Amélioration majeure de l'ergonomie mobile et réorganisation de l'en-tête (Header). Implémentation d'un menu d'actions contextuel mobile (`MoreVertical`) pour regrouper de façon fluide les fonctions secondaires (Historique, Exemple, configuration Clé API, Mode Sombre/Clair, Installation PWA, Notes de version) afin d'éviter tout chevauchement ou retour à la ligne intempestif des boutons sur smartphone. Simplification adaptative de l'affichage du logo et du commutateur de phase projet sur petit écran.
+  - **Impact :** Une interface mobile ultra-épurée, parfaitement alignée sur les standards ergonomiques de ChatGPT et Claude, offrant une navigation et un accès aux outils sans aucune friction.
+
 - **03 Juillet 2026**
   - **Description :** Mise en conformité juridique complète suite à un audit (RGPD/APDP). Rédaction et intégration d'une Politique de Confidentialité détaillant l'architecture Client-Side exclusive (`localStorage`) et le transit via Google Gemini API. Refonte des Mentions Légales et renforcement des CGU avec une clause limitative de responsabilité face à l'IA. Intégration d'un bandeau UI informatif ("Stockage Local Uniquement") dès le lancement de l'application géré de façon révocable via le cache du navigateur.
   - **Impact :** Protection juridique formelle de l'Éditeur, conformité totale en matière de transparence sur le traitement des données et renforcement de la confiance utilisateur grâce au design privacy-first.
@@ -156,5 +164,14 @@
 - **05 Juillet 2026**
   - **Description :** Nettoyage en profondeur de l'application (suppression du Tech-Larping d'authentification, retrait du commutateur de design system, suppression du SDK Firebase et des fichiers de transition temporaires).
   - **Impact :** Codebase 100% autonome et décentralisée, réduction importante de la taille du build final, suppression de la complexité CSS et simplification maximale de l'UI.
+
+- **10 Juillet 2026**
+  - **Description :** Refonte de l'interface mobile pour intégrer un assistant de configuration par étapes (Form Wizard) inspiré de Claude et ChatGPT. Séparation des champs du formulaire en 4 sections thématiques distinctes gérées via des onglets horizontaux défilants et une barre de progression en temps réel, évitant ainsi tout défilement vertical fastidieux sur smartphone.
+  - **Impact :** Expérience utilisateur mobile hautement interactive et élégante, préservation de la hauteur de l'écran, et réduction radicale de la fatigue cognitive lors de la configuration du projet.
+
+- **10 Juillet 2026**
+  - **Description :** Dissimulation totale des blocs "Configuration" (choix de la phase du projet) et "Mode Autonome" (clé API) de la zone principale du formulaire. Migration transparente de ces contrôles dans l'en-tête (Header) de l'application sous forme de boutons d'action et commutateurs réactifs, avec signal lumineux d'alerte pulsé pour la configuration de la clé API.
+  - **Impact :** Interface visuelle extrêmement épurée et recentrée uniquement sur la saisie de données, suppression de tout encombrement informatif, et accès instantané et omniprésent aux options globales sur tous les formats d'écran.
+
 
 
