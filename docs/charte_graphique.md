@@ -227,6 +227,26 @@ DocuGen Pro utilise la couleur et le contraste plutôt que l'empilement d'ombres
    *Exemple correct* : `border-0 shadow-none rounded-none sm:border sm:border-neutral-200 sm:shadow-sm sm:rounded-2xl`
 4. **Séparateur par défaut** : Sur mobile, l'espace vertical libre (`gap-y-*`, `space-y-*`) constitue le seul séparateur légitime entre les sections. Pas de "boîtes" dessinées visibles.
 
+### C. Fenêtre de Prévisualisation et Page A4 strictes (office automation)
+Afin de préserver l'intégrité de la mise en page, de l'alignement et d'éviter que les retours à la ligne ne changent de manière imprévisible selon l'écran (comportement responsive classique), le document officiel utilise une structure d'impression physique figée et miniaturisée :
+
+1. **La Fenêtre de Prévisualisation (`.preview-window`)** :
+   - Rôle : Cadre d'arrière-plan contrasté simulant un bureau d'examen de document.
+   - Largeur : `100%` (fluide).
+   - Fond : `#f3f4f6` (Clair) / `#0a0a0a` (Mode nuit sombre).
+   - Comportement : Masque tout débordement horizontal (`overflow-hidden`) pour éliminer le besoin de barres de défilement latérales sur smartphone.
+
+2. **La Page A4 rigide (`.a4-page`)** :
+   - Dimensions strictes : Largeur fixe de `794px` et hauteur fixe de `1123px` (ratio d'aspect A4 standardisé à 96 DPI).
+   - Comportement de fluidité : Retrait de tout flex ou étirement (`flex-shrink-0`) pour figer la disposition et figer les retours à la ligne de manière immuable.
+   - Fond : Blanc pur (`#ffffff`) / `#171717` (Mode nuit sombre).
+   - Ombres portées de relief : `0 4px 15px rgba(0, 0, 0, 0.1)` (Clair) / `0 4px 15px rgba(0, 0, 0, 0.5)` (Sombre) pour détacher visuellement la feuille blanche de la surface grise.
+   - Marges internes : Marges physiques uniformes de `40px` (`padding: 40px` stable) avec un dimensionnement de boîte `box-sizing: border-box`.
+
+3. **Mise à l'échelle dynamique (`transform: scale()`)** :
+   - Pour intégrer cette page de `794px` de large sur des terminaux mobiles de 320px ou 400px de large, l'application utilise l'attribut CSS `transform: scale(factor)` avec un point d'ancrage `transform-origin: top center`.
+   - Le facteur d'échelle est calculé de manière dynamique par un `ResizeObserver` qui surveille la largeur du conteneur parent et ajuste instantanément la taille visuelle globale de la feuille tout en maintenant la mise en page d'origine au pixel près.
+
 ---
 
 ## 10. Imagerie & Traitements Graphiques

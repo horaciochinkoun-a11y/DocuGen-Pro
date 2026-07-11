@@ -1523,7 +1523,7 @@ RÈGLES DE FORMATAGE STRICTES :
                       ref={a4ContainerRef}
                       className={`flex-1 overflow-auto relative transition-all duration-300 ${
                         isA4Doc 
-                          ? 'bg-neutral-100 dark:bg-neutral-950 p-4 sm:p-6 md:p-8 lg:p-10' 
+                          ? 'bg-neutral-100 dark:bg-neutral-950 p-0' 
                           : 'p-6 lg:p-8 bg-white dark:bg-neutral-900'
                       }`}
                     >
@@ -1586,19 +1586,18 @@ RÈGLES DE FORMATAGE STRICTES :
 
                           {isA4Doc ? (
                             <div 
-                              className="w-full flex justify-center items-start overflow-visible"
+                              className="preview-window"
                               style={{
-                                height: `calc(297mm * ${a4Scale})`,
-                                minHeight: `calc(297mm * ${a4Scale})`,
+                                height: `calc(1123px * ${a4Scale} + 40px)`,
+                                minHeight: `calc(1123px * ${a4Scale} + 40px)`,
                               }}
                             >
                               <div 
                                 id="markdown-content" 
-                                className={`markdown-${activeTab} font-serif leading-relaxed text-neutral-800 dark:text-neutral-200 relative w-[210mm] min-w-[210mm] min-h-[297mm] bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-2xl rounded-sm p-[20mm] flex flex-col print:shadow-none print:border-none print:p-0`}
+                                className={`a4-page markdown-${activeTab} font-serif leading-relaxed text-neutral-800 dark:text-neutral-200 relative flex flex-col print:shadow-none print:border-none print:p-0`}
                                 style={{
                                   transform: `scale(${a4Scale})`,
                                   transformOrigin: 'top center',
-                                  margin: '0 auto',
                                 }}
                               >
                                 {isA4Doc && (

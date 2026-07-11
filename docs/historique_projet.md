@@ -30,8 +30,8 @@
 
 ## Historique des modifications
 - **11 Juillet 2026**
-  - **Description :** Implémentation d'un redimensionnement intelligent et fluide du format A4 sur mobile. Grâce à un `ResizeObserver` performant, l'application calcule un facteur d'échelle dynamique (`a4Scale`) qui applique une transformation CSS `scale` et ajuste la hauteur du conteneur parent pour épouser parfaitement la largeur de l'écran (avec un padding esthétique de 16px). Les boutons d'export (PDF, Word, Copier) et l'en-tête de conformité A4 ont été rendus pleinement réactifs et fluides, s'alignant de façon adaptative au-dessus du document miniaturisé sans aucun débordement ni coupure de mot.
-  - **Impact :** Élimination totale de tout besoin d'interaction ou de défilement horizontal (scroll/pan) sur mobile, tout en conservant une géométrie de page A4 et un rendu visuel d'un réalisme et d'une rigueur de design absolus.
+  - **Description :** Implémentation du format A4 rigide (`794px` par `1123px`) sous forme de feuille blanche `.a4-page` encapsulée dans une fenêtre de prévisualisation `.preview-window` grise. Pour préserver l'intégrité de la mise en page et éliminer tout saut de ligne responsive indésirable sur mobile, le conteneur A4 utilise des dimensions physiques d'impression strictement figées à 96 DPI, couplées à une mise à l'échelle dynamique par transformation CSS `scale()` calculée par un `ResizeObserver` de l'application.
+  - **Impact :** Garantie absolue du respect de la mise en page, de l'emplacement des éléments et des sauts de ligne exacts de chaque document généré, tout en s'adaptant impeccablement à la largeur de tous les smartphones.
 
 - **10 Juillet 2026**
   - **Description :** Correction du bug d'écrasement (squeezing) du format A4 sur les écrans étroits et la zone d'aperçu d'AI Studio. Fixation d'une largeur absolue de `210mm` (min-width) avec défilement horizontal fluide sur le parent (`overflow-auto`) et unification des marges intérieures à un format physique stable de `20mm`. Suppression également des styles de mise en page conflictuels (paddings, shadow, border) dans la classe CSS `.markdown-attestation`.

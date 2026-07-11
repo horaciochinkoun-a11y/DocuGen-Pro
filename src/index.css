@@ -249,6 +249,43 @@
   .classic-design .prose h2 {
     @apply border-b-2 border-neutral-100 dark:border-neutral-800 pb-2 mb-6;
   }
+
+  /* Preview window (gray frame) */
+  .preview-window {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    overflow: hidden; /* Empêche le débordement horizontal */
+    background-color: #f3f4f6; /* Fond gris */
+    padding: 20px 0;
+  }
+  :where(.dark) .preview-window {
+    background-color: #0a0a0a; /* Fond sombre en mode nuit */
+  }
+
+  /* La page A4 avec des dimensions strictement figées */
+  .a4-page {
+    /* Dimensions exactes d'un A4 à 96 DPI */
+    width: 794px; 
+    height: 1123px; 
+    
+    /* Retrait du flex/fluidité pour figer le contenu */
+    flex-shrink: 0; 
+    
+    /* L'astuce magique : on réduit la page pour qu'elle tienne dans les petits écrans */
+    transform-origin: top center;
+    
+    /* Style de la feuille */
+    background-color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 40px; /* Marges internes fixes */
+    box-sizing: border-box;
+  }
+  :where(.dark) .a4-page {
+    background-color: #171717; /* Neutral 900 en mode nuit */
+    border: 1px solid #262626; /* Neutral 800 */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  }
 }
 
 @layer components {

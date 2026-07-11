@@ -51,7 +51,7 @@
 - [x] Mise à jour complète de `charte_graphique.md` avec directives de conception d'office automation.
 - [x] Déplacement et organisation des fichiers exemples `.docx` dans le dossier dédié `/docgen/templates/`.
 - [x] Mise en page au format A4 obligatoire (`210mm x 297mm`) pour les documents officiels : Attestations, Roadmap, Backlog et Pitch avec filigranes professionnels d'arrière-plan personnalisés.
-- [x] Redimensionnement intelligent et fluide du format A4 sur mobile (auto-scaling dynamique par `ResizeObserver` éliminant tout défilement horizontal et besoin d'interaction manuelle).
+- [x] Mise en page au format A4 strictement figé (794px par 1123px) avec feuille blanche (.a4-page) encapsulée dans une fenêtre de prévisualisation (.preview-window) et mise à l'échelle via CSS transform: scale() contrôlée par ResizeObserver, éliminant tout défilement et garantissant des sauts de lignes fixes sur mobile.
 
 
 ## Bogues corrigés
