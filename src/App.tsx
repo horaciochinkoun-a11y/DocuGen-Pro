@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Component, ErrorInfo, ReactNode } from 'react';
+import React, { useState, useEffect, useRef, Component, ErrorInfo, ReactNode } from 'react';
 import { 
   FileText, 
   Briefcase, 
@@ -160,6 +160,36 @@ function DocumentationGenerator({
   const [mobileActiveView, setMobileActiveView] = useState<'assistant' | 'documents'>('assistant');
   const [mobileFormStep, setMobileFormStep] = useState(0);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+
+  // État et Ref pour le redimensionnement intelligent du format A4 sur mobile
+  const a4ContainerRef = useRef<HTMLDivElement>(null);
+  const [a4Scale, setA4Scale] = useState(1);
+
+  useEffect(() => {
+    const container = a4ContainerRef.current;
+    if (!container) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const width = entry.contentRect.width;
+        // 210mm en pixels est ~794px (96 DPI)
+        const targetWidth = 794;
+        if (width > 0 && width < targetWidth) {
+          // On garde un petit padding de 16px sur les bords pour l'esthétique
+          const padding = 16;
+          const availableWidth = Math.max(280, width - padding);
+          setA4Scale(availableWidth / targetWidth);
+        } else {
+          setA4Scale(1);
+        }
+      }
+    });
+
+    resizeObserver.observe(container);
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [activeTab, mobileActiveView]);
 
   const handleApiKeyChange = (val: string) => {
     setLocalApiKey(val);
@@ -965,7 +995,11 @@ RÈGLES DE FORMATAGE STRICTES :
                       type="password"
                       value={localApiKey || ''}
                       onChange={(e) => handleApiKeyChange(e.target.value)}
-                      placeholder="AIza..."
+                      placeholder="AIza…"
+                      autoComplete="off"
+                      autoCorrect="off"
+                      autoCapitalize="off"
+                      spellCheck="false"
                       className="w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm font-mono dark:text-white"
                     />
                     <div className="text-xs text-neutral-500 dark:text-neutral-400 space-y-1">
@@ -1412,7 +1446,7 @@ RÈGLES DE FORMATAGE STRICTES :
                     {isGenerating ? (
                       <>
                         <Loader2 size={14} className="animate-spin" />
-                        Génération...
+                        Génération…
                       </>
                     ) : (
                       <>
@@ -1434,7 +1468,7 @@ RÈGLES DE FORMATAGE STRICTES :
                   {isGenerating ? (
                     <>
                       <Loader2 size={20} className="animate-spin" />
-                      Génération en cours...
+                      Génération en cours…
                     </>
                   ) : (
                     <>
@@ -1482,82 +1516,139 @@ RÈGLES DE FORMATAGE STRICTES :
                 </div>
 
                 {/* Content Area */}
-                <div className="flex-1 p-6 lg:p-8 overflow-y-auto relative bg-white dark:bg-neutral-900">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={activeTab}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.2 }}
-                      className="max-w-none"
+                {(() => {
+                  const isA4Doc = activeTab === 'attestation' || activeTab === 'roadmap' || activeTab === 'backlog' || activeTab === 'pitch';
+                  return (
+                    <div 
+                      ref={a4ContainerRef}
+                      className={`flex-1 overflow-auto relative transition-all duration-300 ${
+                        isA4Doc 
+                          ? 'bg-neutral-100 dark:bg-neutral-950 p-4 sm:p-6 md:p-8 lg:p-10' 
+                          : 'p-6 lg:p-8 bg-white dark:bg-neutral-900'
+                      }`}
                     >
-                      <div className="flex justify-end mb-6 sticky top-0 z-10 gap-3">
-                        <button
-                          type="button"
-                          onClick={exportToPDF}
-                          className="flex items-center gap-2 px-4 py-2 text-xs font-black uppercase tracking-widest text-red-600 dark:text-red-400 bg-white dark:bg-neutral-900 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all shadow-soft border border-neutral-200 dark:border-neutral-800"
+                      <AnimatePresence mode="wait">
+                        <motion.div
+                          key={activeTab}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          transition={{ duration: 0.2 }}
+                          className="max-w-none"
                         >
-                          <FileDown size={14} />
-                          PDF
-                        </button>
-                        <button
-                          type="button"
-                          onClick={exportToWord}
-                          className="flex items-center gap-2 px-4 py-2 text-xs font-black uppercase tracking-widest text-brand-600 dark:text-brand-400 bg-white dark:bg-neutral-900 hover:bg-brand-50 dark:hover:bg-brand-900/20 rounded-xl transition-all shadow-soft border border-neutral-200 dark:border-neutral-800"
-                        >
-                          <Download size={14} />
-                          Word
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => copyToClipboard(generatedDocs[activeTab], activeTab)}
-                          className="flex items-center gap-2 px-4 py-2 text-xs font-black uppercase tracking-widest text-neutral-600 dark:text-neutral-400 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 rounded-xl transition-all shadow-soft border border-neutral-200 dark:border-neutral-800"
-                        >
-                          {copiedTab === activeTab ? (
-                            <>
-                              <CheckCircle2 size={14} className="text-green-600 dark:text-green-400" />
-                              <span className="text-green-700 dark:text-green-300">Copié</span>
-                            </>
-                          ) : (
-                            <>
-                              <Copy size={14} />
-                              Copier
-                            </>
-                          )}
-                        </button>
-                      </div>
-                      <div 
-                        id="markdown-content" 
-                        className={`markdown-${activeTab} font-serif leading-relaxed text-neutral-800 dark:text-neutral-200 relative ${
-                          activeTab === 'attestation' || activeTab === 'roadmap'
-                            ? 'border-4 border-double border-neutral-300 dark:border-neutral-600 p-8 sm:p-12 bg-white dark:bg-neutral-900 shadow-sm min-h-[500px]' 
-                            : ''
-                        }`}
-                      >
-                        {(activeTab === 'attestation' || activeTab === 'roadmap') && (
-                          <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none overflow-hidden opacity-[0.04] dark:opacity-[0.08]">
-                            <span className="text-7xl md:text-[120px] font-black tracking-widest text-neutral-900 dark:text-white -rotate-45 select-none">
-                              {activeTab === 'attestation' ? 'CERTIFIÉ' : 'ROADMAP'}
-                            </span>
+                          <div className={`flex justify-end mb-6 sticky top-0 z-10 gap-3 ${
+                            isA4Doc ? 'w-full max-w-[794px] mx-auto' : ''
+                          }`}>
+                            <button
+                              type="button"
+                              onClick={exportToPDF}
+                              className="flex items-center gap-2 px-4 py-2 text-xs font-black uppercase tracking-widest text-red-600 dark:text-red-400 bg-white dark:bg-neutral-900 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all active:scale-[0.98] shadow-soft border border-neutral-200 dark:border-neutral-800"
+                            >
+                              <FileDown size={14} />
+                              PDF
+                            </button>
+                            <button
+                              type="button"
+                              onClick={exportToWord}
+                              className="flex items-center gap-2 px-4 py-2 text-xs font-black uppercase tracking-widest text-brand-600 dark:text-brand-400 bg-white dark:bg-neutral-900 hover:bg-brand-50 dark:hover:bg-brand-900/20 rounded-xl transition-all active:scale-[0.98] shadow-soft border border-neutral-200 dark:border-neutral-800"
+                            >
+                              <Download size={14} />
+                              Word
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => copyToClipboard(generatedDocs[activeTab], activeTab)}
+                              className="flex items-center gap-2 px-4 py-2 text-xs font-black uppercase tracking-widest text-neutral-600 dark:text-neutral-400 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 rounded-xl transition-all active:scale-[0.98] shadow-soft border border-neutral-200 dark:border-neutral-800"
+                            >
+                              {copiedTab === activeTab ? (
+                                <>
+                                  <CheckCircle2 size={14} className="text-green-600 dark:text-green-400" />
+                                  <span className="text-green-700 dark:text-green-300">Copié</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Copy size={14} />
+                                  Copier
+                                </>
+                              )}
+                            </button>
                           </div>
-                        )}
-                        <div className="relative z-10">
-                          {(() => {
-                            let docContent = generatedDocs[activeTab] || '';
-                            if (activeTab === 'attestation') {
-                              const verificationLink = formData.linkedinLink || formData.githubLink || 'https://github.com';
-                              const qrColor = designSystem === 'classic' ? '22-163-74' : '0-116-202';
-                              const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&color=${qrColor}&data=${encodeURIComponent(verificationLink)}`;
-                              docContent = docContent.replace(/QR_CODE_AUTHENTICATION_URL_PLACEHOLDER/g, qrCodeUrl);
-                            }
-                            return <Markdown>{docContent}</Markdown>;
-                          })()}
-                        </div>
-                      </div>
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
+
+                          {isA4Doc && (
+                             <div className="w-full max-w-[794px] mx-auto flex items-center justify-between mb-3 text-neutral-400 dark:text-neutral-500 text-[10px] font-black uppercase tracking-widest select-none">
+                              <span className="flex items-center gap-1.5 bg-neutral-200/50 dark:bg-neutral-900 py-1 px-2.5 rounded-full border border-neutral-300 dark:border-neutral-800 shadow-sm">
+                                <span className="w-1.5 h-1.5 bg-brand-500 rounded-full animate-pulse" />
+                                Format A4 Obligatoire (210 x 297 mm)
+                              </span>
+                              <span className="hidden sm:inline">Aperçu Impression Réaliste</span>
+                            </div>
+                          )}
+
+                          {isA4Doc ? (
+                            <div 
+                              className="w-full flex justify-center items-start overflow-visible"
+                              style={{
+                                height: `calc(297mm * ${a4Scale})`,
+                                minHeight: `calc(297mm * ${a4Scale})`,
+                              }}
+                            >
+                              <div 
+                                id="markdown-content" 
+                                className={`markdown-${activeTab} font-serif leading-relaxed text-neutral-800 dark:text-neutral-200 relative w-[210mm] min-w-[210mm] min-h-[297mm] bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-2xl rounded-sm p-[20mm] flex flex-col print:shadow-none print:border-none print:p-0`}
+                                style={{
+                                  transform: `scale(${a4Scale})`,
+                                  transformOrigin: 'top center',
+                                  margin: '0 auto',
+                                }}
+                              >
+                                {isA4Doc && (
+                                  <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none overflow-hidden opacity-[0.03] dark:opacity-[0.06]">
+                                    <span className="text-6xl sm:text-7xl md:text-[110px] font-black tracking-widest text-neutral-900 dark:text-white -rotate-45 select-none uppercase">
+                                      {activeTab === 'attestation' && 'CERTIFIÉ'}
+                                      {activeTab === 'roadmap' && 'ROADMAP'}
+                                      {activeTab === 'backlog' && 'MVP BACKLOG'}
+                                      {activeTab === 'pitch' && 'PITCH DECK'}
+                                    </span>
+                                  </div>
+                                )}
+                                <div className={`relative z-10 h-full flex flex-col justify-between ${
+                                  activeTab === 'attestation' 
+                                    ? 'border-4 border-double border-neutral-300 dark:border-neutral-700 p-10' 
+                                    : ''
+                                }`}>
+                                  <div>
+                                    {(() => {
+                                      let docContent = generatedDocs[activeTab] || '';
+                                      if (activeTab === 'attestation') {
+                                        const verificationLink = formData.linkedinLink || formData.githubLink || 'https://github.com';
+                                        const qrColor = designSystem === 'classic' ? '22-163-74' : '0-116-202';
+                                        const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&color=${qrColor}&data=${encodeURIComponent(verificationLink)}`;
+                                        docContent = docContent.replace(/QR_CODE_AUTHENTICATION_URL_PLACEHOLDER/g, qrCodeUrl);
+                                      }
+                                      return <Markdown>{docContent}</Markdown>;
+                                    })()}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          ) : (
+                            <div 
+                              id="markdown-content" 
+                              className={`markdown-${activeTab} font-serif leading-relaxed text-neutral-800 dark:text-neutral-200 relative bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-xl rounded-sm p-6 sm:p-10`}
+                            >
+                              <div className="relative z-10 h-full">
+                                {(() => {
+                                  const docContent = generatedDocs[activeTab] || '';
+                                  return <Markdown>{docContent}</Markdown>;
+                                })()}
+                               </div>
+                            </div>
+                          )}
+                        </motion.div>
+                      </AnimatePresence>
+                    </div>
+                  );
+                })()}
               </div>
             ) : (
               <div className="h-full min-h-[400px] sm:min-h-[600px] bg-white dark:bg-neutral-900 rounded-2xl sm:rounded-3xl border border-neutral-200 dark:border-neutral-800 flex flex-col items-center justify-center text-center p-6 sm:p-12 shadow-soft">

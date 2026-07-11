@@ -50,9 +50,13 @@
 - [x] Traduction et portage TypeScript de tous les générateurs de documents et validation JSON Schema via Ajv.
 - [x] Mise à jour complète de `charte_graphique.md` avec directives de conception d'office automation.
 - [x] Déplacement et organisation des fichiers exemples `.docx` dans le dossier dédié `/docgen/templates/`.
+- [x] Mise en page au format A4 obligatoire (`210mm x 297mm`) pour les documents officiels : Attestations, Roadmap, Backlog et Pitch avec filigranes professionnels d'arrière-plan personnalisés.
+- [x] Redimensionnement intelligent et fluide du format A4 sur mobile (auto-scaling dynamique par `ResizeObserver` éliminant tout défilement horizontal et besoin d'interaction manuelle).
 
 
 ## Bogues corrigés
+- [x] Correction de l'écrasement/squeezing du format A4 sur les écrans étroits et la zone d'aperçu d'AI Studio. En fixant une largeur absolue de `210mm` (min-width) avec une barre de défilement horizontale fluide sur le parent (`overflow-auto`) et en unifiant les marges intérieures à un format physique de `20mm` stable, les textes et titres ne subissent plus aucun retour à la ligne ou découpage intempestif.
+- [x] Correction du défilement horizontal obligatoire et de l'obstruction visuelle de l'A4 sur mobile grâce au scaling réactif.
 - [x] Échec du déploiement Cloud Run (Port binding 0.0.0.0:3000).
 - [x] Erreur de routage Express 5 (remplacement de `*` par `*all`).
 - [x] Dépendances manquantes en production (bundling complet avec esbuild).
@@ -96,9 +100,16 @@
 - [ ] Surveillance de la stabilité du déploiement suite aux dernières corrections.
 
 ## Tâches terminées (Documentation & Divers)
+- [x] Réorganisation globale des fichiers du projet (regroupement de tous les scripts de tests, de patchs et de corrections obsolètes dans `/scripts`).
+- [x] Audit de conformité de l'interface aux standards web de performance et d'accessibilité (`Agents_Standards_Interface_Web.md`).
+- [x] Ajout du support global pour `prefers-reduced-motion` dans `src/index.css`.
+- [x] Ajout d'un retour d'état tactile `:active` (échelle `scale-[0.98]`) sur les boutons principaux d'export (PDF, Word, Copier).
+- [x] Intégration d'attributs de sécurité et d'auto-correction sur le champ de clé d'API (`autoCorrect="off"`, etc.).
+- [x] Remplacement des trois points ordinaires par le caractère d'ellipse typographique (`…`) pour les indicateurs de chargement et formulaires.
 - [x] Création du document `structure_projet.md` pour détailler l'architecture.
 - [x] Harmonisation du branding et de la documentation juridique (Aurion Labs-G).
 - [x] Audit et correction des problèmes de mise en forme Word et prévisualisation ideation.
 - [x] Qualification documentaire post-audit juridique (Plan de conformité validé).
 ## Corrections récentes
 - [x] Correction de l'erreur d'export PDF "unsupported color function oklab" provoquée par html2canvas.
+- [x] Audit et correction de l'interface web pour une ergonomie et accessibilité d'un niveau professionnel supérieur.

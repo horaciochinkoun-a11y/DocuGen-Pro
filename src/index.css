@@ -152,7 +152,7 @@
 
   /* Attestation Style (Formal, Paper-like) */
   .markdown-attestation {
-    @apply font-serif bg-white dark:bg-neutral-900 p-10 sm:p-16 border border-neutral-200 dark:border-neutral-800 shadow-xl rounded-sm max-w-3xl mx-auto text-neutral-900 dark:text-neutral-100;
+    @apply font-serif text-neutral-900 dark:text-neutral-100;
   }
   .markdown-attestation h1 {
     @apply text-3xl sm:text-4xl font-black text-center text-neutral-900 dark:text-white mb-12 uppercase tracking-[0.2em] leading-tight;
@@ -289,3 +289,17 @@
     @apply border-l-4 border-brand-500 pl-4 py-1 my-6 text-neutral-500 dark:text-neutral-400 italic bg-neutral-50 dark:bg-neutral-900/50 rounded-r-lg;
   }
 }
+
+/* Base animation reduction for prefers-reduced-motion (Quality Audit Standard) */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-delay: -1ms !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    background-attachment: initial !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+  }
+}
+

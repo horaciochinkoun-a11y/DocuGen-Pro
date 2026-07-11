@@ -29,6 +29,18 @@
 - **Justification de chaque décision :** Voir le fichier `decisions_log.md` pour plus de détails.
 
 ## Historique des modifications
+- **11 Juillet 2026**
+  - **Description :** Implémentation d'un redimensionnement intelligent et fluide du format A4 sur mobile. Grâce à un `ResizeObserver` performant, l'application calcule un facteur d'échelle dynamique (`a4Scale`) qui applique une transformation CSS `scale` et ajuste la hauteur du conteneur parent pour épouser parfaitement la largeur de l'écran (avec un padding esthétique de 16px). Les boutons d'export (PDF, Word, Copier) et l'en-tête de conformité A4 ont été rendus pleinement réactifs et fluides, s'alignant de façon adaptative au-dessus du document miniaturisé sans aucun débordement ni coupure de mot.
+  - **Impact :** Élimination totale de tout besoin d'interaction ou de défilement horizontal (scroll/pan) sur mobile, tout en conservant une géométrie de page A4 et un rendu visuel d'un réalisme et d'une rigueur de design absolus.
+
+- **10 Juillet 2026**
+  - **Description :** Correction du bug d'écrasement (squeezing) du format A4 sur les écrans étroits et la zone d'aperçu d'AI Studio. Fixation d'une largeur absolue de `210mm` (min-width) avec défilement horizontal fluide sur le parent (`overflow-auto`) et unification des marges intérieures à un format physique stable de `20mm`. Suppression également des styles de mise en page conflictuels (paddings, shadow, border) dans la classe CSS `.markdown-attestation`.
+  - **Impact :** Une présentation d'une constance et d'une rigueur absolues pour les documents au format A4, sans aucun retour à la ligne ou débordement sauvage de texte, quel que soit l'espace disponible de l'écran.
+
+- **10 Juillet 2026**
+  - **Description :** Implémentation d'une mise en page au format A4 obligatoire (`210mm x 297mm`) pour l'ensemble des documents professionnels officiels (Attestations de prestation, Roadmap, Backlog et Pitch). Mise en scène visuelle réaliste imitant un bureau virtuel avec un arrière-plan contrasté, une page blanche stylisée avec des ombres de relief, et l'intégration de filigranes d'arrière-plan personnalisés pour chaque type de document ("CERTIFIÉ", "ROADMAP", "MVP BACKLOG", "PITCH DECK"). Ajout d'un badge d'authenticité discret indiquant le respect du format A4 officiel.
+  - **Impact :** Une expérience d'aperçu d'impression réaliste inégalée et une conformité esthétique et géométrique absolue avec les exigences de mise en page d'office automation.
+
 - **10 Juillet 2026**
   - **Description :** Ajout d'une fonctionnalité de retour à l'accueil sur l'ensemble des pages légales de l'application (CGU, Confidentialité, Mentions Légales, Charte IA, Données Locales). Intégration d'un bouton de retour d'accueil ("Retour à l'accueil") flanqué de l'icône `Home` à côté du bouton de retour contextuel, s'adaptant de façon fluide au format d'écran.
   - **Impact :** Cohérence de navigation améliorée, permettant aux utilisateurs de rejoindre instantanément la Landing Page d'accueil de DocuGen Pro en un seul clic depuis n'importe quel document légal.
@@ -169,9 +181,12 @@
   - **Description :** Refonte de l'interface mobile pour intégrer un assistant de configuration par étapes (Form Wizard) inspiré de Claude et ChatGPT. Séparation des champs du formulaire en 4 sections thématiques distinctes gérées via des onglets horizontaux défilants et une barre de progression en temps réel, évitant ainsi tout défilement vertical fastidieux sur smartphone.
   - **Impact :** Expérience utilisateur mobile hautement interactive et élégante, préservation de la hauteur de l'écran, et réduction radicale de la fatigue cognitive lors de la configuration du projet.
 
-- **10 Juillet 2026**
-  - **Description :** Dissimulation totale des blocs "Configuration" (choix de la phase du projet) et "Mode Autonome" (clé API) de la zone principale du formulaire. Migration transparente de ces contrôles dans l'en-tête (Header) de l'application sous forme de boutons d'action et commutateurs réactifs, avec signal lumineux d'alerte pulsé pour la configuration de la clé API.
-  - **Impact :** Interface visuelle extrêmement épurée et recentrée uniquement sur la saisie de données, suppression de tout encombrement informatif, et accès instantané et omniprésent aux options globales sur tous les formats d'écran.
+- **11 Juillet 2026**
+  - **Description :** Audit de conformité complet de l'interface utilisateur selon les standards web professionnels d'ergonomie et d'accessibilité (`Agents_Standards_Interface_Web.md`). Intégration du support global pour la réduction des mouvements (`prefers-reduced-motion`) dans `src/index.css`. Ajout d'animations tactiles `:active` de micro-mise à l'échelle (`scale-[0.98]`) sur tous les boutons d'export (PDF, Word, Copier). Sécurisation de l'input de clé API Gemini avec des attributs bloquant l'auto-correction, l'auto-capitalisation et le correcteur d'orthographe. Remplacement de l'ensemble des points de suspension ordinaires (`...`) par de véritables ellipses typographiques (`…`) dans les textes de chargement et d'attente.
+  - **Impact :** Interface visuelle d'une fluidité et d'une réactivité tactiles irréprochables, élimination de tout frottement cognitif ou textuel, et accessibilité universelle accrue pour les utilisateurs présentant des sensibilités aux mouvements.
+
+  - **Description (bis) :** Réorganisation physique complète de la structure du projet. Tous les scripts de tests, de patchs accumulés, d'utilitaires de correction et les fichiers doublonnés ont été migrés proprement vers un dossier `/scripts` à la racine, purgeant le répertoire racine pour ne laisser que la structure essentielle et standard (Vite, TypeScript, Tailwind, Express).
+  - **Impact :** Racine extrêmement propre, claire et organisée facilitant l'onboarding, tout en conservant une compatibilité à 100% avec les routes API, les scripts npm de build/dev et les outils de CI/CD.
 
 
 

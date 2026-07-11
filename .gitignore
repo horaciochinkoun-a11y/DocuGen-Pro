@@ -6,3 +6,8 @@ coverage/
 .env*
 !.env.example
 firebase-applet-config.json
+INTEGRATION.md
+AGENTS.md
+Agents_Standards_Interface_Web.md
+REGISTRE_TRAITEMENTS.md
+chat_history.md
